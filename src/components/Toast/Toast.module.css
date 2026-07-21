@@ -1,0 +1,106 @@
+.toast {
+  position: fixed;
+  z-index: 9999;
+  bottom: 8rem;
+  left: 1.6rem;
+  right: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.2rem 1.6rem;
+  border-radius: var(--btn-radius-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideInBottom 0.25s ease-out;
+}
+
+@media (min-width: 768px) {
+  .toast {
+    bottom: auto;
+    top: 2.4rem;
+    right: 2.4rem;
+    left: auto;
+    width: 36rem;
+    animation: slideInRight 0.25s ease-out;
+  }
+}
+
+/* Type variants */
+.success {
+  background-color: var(--color-success);
+  color: #ffffff;
+}
+
+.error {
+  background-color: var(--color-error);
+  color: #ffffff;
+}
+
+.info {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+/* Icon */
+.icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Message */
+.message {
+  flex: 1;
+  font-size: var(--text-body-4);
+  font-weight: 500;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Close button */
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 4.4rem;
+  min-height: 4.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  opacity: 0.8;
+  padding: 0;
+  margin: -1rem -0.8rem -1rem 0;
+  transition: opacity 0.15s ease;
+}
+
+.closeButton:hover {
+  opacity: 1;
+}
+
+/* Animations */
+@keyframes slideInBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
