@@ -1,0 +1,45 @@
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface-subtle);
+  padding: 2.4rem 1.6rem;
+}
+
+.container {
+  width: 100%;
+  max-width: 44rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.4rem;
+}
+
+/* ─── Logo image ───────────────────────────────────────────────────────────────
+   Centered above the form card. Height fixed, width scales automatically.
+──────────────────────────────────────────────────────────────────────────────── */
+.logo {
+  height: 4rem;
+  width: auto;
+}
+
+.card {
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: var(--btn-radius-lg);
+  padding: 3.2rem 2.4rem;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+@media (max-width: 767px) {
+  .card {
+    padding: 2.4rem 1.6rem;
+  }
+
+  .logo {
+    height: 3.2rem;
+  }
+}
