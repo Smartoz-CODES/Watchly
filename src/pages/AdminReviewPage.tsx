@@ -1,7 +1,5 @@
 const AdminReviewPage = () => {
-  return (
-    <div>AdminReviewPage</div>
-  )
-}
+  return <div>AdminReviewPage</div>;
+};
 
-export default AdminReviewPage
+export default AdminReviewPage;

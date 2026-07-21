@@ -1,7 +1,5 @@
 const PlatformAdminPage = () => {
-  return (
-    <div>PlatformAdminPage</div>
-  )
-}
+  return <div>PlatformAdminPage</div>;
+};
 
-export default PlatformAdminPage
+export default PlatformAdminPage;

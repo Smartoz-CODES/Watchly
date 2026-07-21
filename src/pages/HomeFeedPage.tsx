@@ -1,7 +1,5 @@
 const HomeFeedPage = () => {
-  return (
-    <div>HomeFeedPage</div>
-  )
-}
+  return <div>HomeFeedPage</div>;
+};
 
-export default HomeFeedPage
+export default HomeFeedPage;

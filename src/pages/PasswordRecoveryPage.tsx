@@ -1,7 +1,5 @@
 const PasswordRecoveryPage = () => {
-  return (
-    <div>PasswordRecoveryPage</div>
-  )
-}
+  return <div>PasswordRecoveryPage</div>;
+};
 
-export default PasswordRecoveryPage
+export default PasswordRecoveryPage;

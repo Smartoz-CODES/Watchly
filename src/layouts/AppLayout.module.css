@@ -1,8 +1,3 @@
-/* ─── Shell styles ─────────────────────────────────────────────────────────────
-   Minimal layout for the Day 1 shell.
-   Full navigation styles ship with the Day 2 feature/layout implementation.
-──────────────────────────────────────────────────────────────────────────────── */
-
 .wrapper {
   min-height: 100vh;
   display: flex;

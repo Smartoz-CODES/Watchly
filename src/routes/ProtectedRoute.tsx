@@ -1,24 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/use-auth";
 
-// ─── ProtectedRoute ───────────────────────────────────────────────────────────
-// Wraps every authenticated page in AppRouter.
-//
-// Three possible states:
-//
-// 1. loading = true  →  Show a full-page spinner. This covers the window
-//    between the app mounting and Supabase's onAuthStateChange firing with
-//    the initial session. Without it, every page refresh would briefly show
-//    the login screen even for authenticated users because user is null for
-//    a split second before the session is read from localStorage.
-//
-// 2. user exists     →  Render <Outlet /> (React Router renders the matched
-//    child route inside this component).
-//
-// 3. user is null    →  Navigate to /login with replace: true so the browser
-//    back button doesn't loop. Without replace, pressing Back would return
-//    to the protected page, which would redirect to /login again, creating
-//    an infinite loop in the navigation history.
+// ProtectedRoute
 
 export default function ProtectedRoute() {
   const { user, loading } = useAuth();

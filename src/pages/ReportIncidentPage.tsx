@@ -1,7 +1,5 @@
 const ReportIncidentPage = () => {
-  return (
-    <div>ReportIncidentPage</div>
-  )
-}
+  return <div>ReportIncidentPage</div>;
+};
 
-export default ReportIncidentPage
+export default ReportIncidentPage;

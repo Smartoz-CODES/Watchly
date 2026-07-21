@@ -16,7 +16,12 @@ html {
 
 body {
   font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif;
+    "Outfit",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   font-size: 1.6rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -72,10 +77,12 @@ a {
 
 /* ─── Color tokens ─────────────────────────────────────────────────────────────
    Source: Figma Color_Tokens.png and Colors.png
-   Primary scale: teal/cyan
-   All values confirmed from design files.
 ──────────────────────────────────────────────────────────────────────────────── */
 :root {
+  /* Font families */
+  --font-heading: "Playfair Display", Georgia, serif;
+  --font-body: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
+
   /* Primary (Teal) */
   --color-primary-subtle: #dafafe;
   --color-primary-lighter: #a3f3fd;
@@ -113,23 +120,23 @@ a {
   --color-warning-dark: #bc8027;
   --color-warning-darker: #2d1f09;
 
-  /* Red (Error / Danger) */
+  /* Red (Error) */
   --color-error-subtle: #f9dcdc;
   --color-error-light: #ea8c8c;
   --color-error: #df5252;
   --color-error-dark: #953737;
   --color-error-darker: #2d1010;
 
-  /* Button tokens — Medium size (primary use case in app) */
-  --btn-radius-sm: 0.8rem; /* M(8)  */
-  --btn-radius-md: 1.2rem; /* L(12) */
-  --btn-radius-lg: 1.6rem; /* XL(16) */
-  --btn-h-padding-sm: 1.6rem; /* 16px */
-  --btn-h-padding-md: 2rem; /* 20px */
-  --btn-h-padding-lg: 2.4rem; /* 24px */
-  --btn-v-padding-sm: 0.8rem; /* 8px */
-  --btn-v-padding-md: 1.2rem; /* 12px */
-  --btn-v-padding-lg: 1.6rem; /* 16px */
+  /* Button tokens */
+  --btn-radius-sm: 0.8rem;
+  --btn-radius-md: 1.2rem;
+  --btn-radius-lg: 1.6rem;
+  --btn-h-padding-sm: 1.6rem;
+  --btn-h-padding-md: 2rem;
+  --btn-h-padding-lg: 2.4rem;
+  --btn-v-padding-sm: 0.8rem;
+  --btn-v-padding-md: 1.2rem;
+  --btn-v-padding-lg: 1.6rem;
 
   /* Typography scale */
   --text-h1: 6.4rem;
@@ -144,15 +151,15 @@ a {
   --text-body-4: 1.4rem;
   --text-body-5: 1.2rem;
 
-  /* Status badge colors — used by StatusBadge component */
-  --color-badge-reported-bg: #f9ebd5; /* Amber subtle */
-  --color-badge-reported-text: #bc8027; /* Amber dark */
-  --color-badge-under-review-bg: #dafafe; /* Primary subtle */
-  --color-badge-under-review-text: #23737d; /* Primary darker */
-  --color-badge-verified-bg: #cff1e6; /* Green subtle */
-  --color-badge-verified-text: #0d9a6c; /* Green dark */
-  --color-badge-resolved-bg: #d4d4d8; /* Grey disabled */
-  --color-badge-resolved-text: #3f3f46; /* Grey subtitle */
-  --color-badge-not-verified-bg: #f9dcdc; /* Red subtle */
-  --color-badge-not-verified-text: #953737; /* Red dark */
+  /* Status badge colors */
+  --color-badge-reported-bg: #f9ebd5;
+  --color-badge-reported-text: #bc8027;
+  --color-badge-under-review-bg: #dafafe;
+  --color-badge-under-review-text: #23737d;
+  --color-badge-verified-bg: #cff1e6;
+  --color-badge-verified-text: #0d9a6c;
+  --color-badge-resolved-bg: #d4d4d8;
+  --color-badge-resolved-text: #3f3f46;
+  --color-badge-not-verified-bg: #f9dcdc;
+  --color-badge-not-verified-text: #953737;
 }

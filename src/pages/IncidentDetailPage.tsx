@@ -1,7 +1,5 @@
 const IncidentDetailPage = () => {
-  return (
-    <div>IncidentDetailPage</div>
-  )
-}
+  return <div>IncidentDetailPage</div>;
+};
 
-export default IncidentDetailPage
+export default IncidentDetailPage;

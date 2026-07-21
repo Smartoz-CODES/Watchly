@@ -11,22 +11,17 @@ const LandingLayout = ({ children }: LandingLayoutProps) => {
 
   return (
     <div className={styles.wrapper}>
-      {/* ── Public header ─────────────────────────────────────────────────────
-          Sticky header visible on the landing page only.
-          Logo left, Sign Up button right.
-          TRD FR-04: "The landing page header includes a Sign Up button
-          for direct registration without browsing."
-      ──────────────────────────────────────────────────────────────────── */}
+      {/* ── Public header  */}
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          {/* Watchly logo — color variant for white header background */}
+          {/* Watchly logo */}
           <img
             src="/assets/logo/watchly-logo-color.png"
             alt="Watchly"
             className={styles.logo}
           />
 
-          {/* Sign Up button — Primary Medium per Button_Token spec */}
+          {/* Sign Up button */}
           <button
             className={styles.signUpButton}
             onClick={() => navigate("/signup")}
@@ -37,9 +32,7 @@ const LandingLayout = ({ children }: LandingLayoutProps) => {
         </div>
       </header>
 
-      {/* ── Main content ───────────────────────────────────────────────────────
-          LandingPage renders here — hero section, filters, community cards.
-      ──────────────────────────────────────────────────────────────────── */}
+      {/* Main content, renders here — hero section, filters, community cards */}
       <main className={styles.main}>{children}</main>
     </div>
   );

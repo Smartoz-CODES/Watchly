@@ -1,7 +1,5 @@
 const AdminQueuePage = () => {
-  return (
-    <div>AdminQueuePage</div>
-  )
-}
+  return <div>AdminQueuePage</div>;
+};
 
-export default AdminQueuePage
+export default AdminQueuePage;

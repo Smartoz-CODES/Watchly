@@ -1,7 +1,5 @@
 const CommunityDetailPage = () => {
-  return (
-    <div>CommunityDetailPage</div>
-  )
-}
+  return <div>CommunityDetailPage</div>;
+};
 
-export default CommunityDetailPage
+export default CommunityDetailPage;

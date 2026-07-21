@@ -1,7 +1,5 @@
 const AlertFeedPage = () => {
-  return (
-    <div>AlertFeedPage</div>
-  )
-}
+  return <div>AlertFeedPage</div>;
+};
 
-export default AlertFeedPage
+export default AlertFeedPage;

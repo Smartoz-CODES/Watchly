@@ -23,10 +23,7 @@
   justify-content: space-between;
 }
 
-/* ─── Logo image ───────────────────────────────────────────────────────────────
-   Height controlled here. Width scales automatically with the SVG aspect ratio.
-   Max height keeps it proportional inside the 64px header.
-──────────────────────────────────────────────────────────────────────────────── */
+/* Logo image */
 .logo {
   height: 3.2rem;
   width: auto;
