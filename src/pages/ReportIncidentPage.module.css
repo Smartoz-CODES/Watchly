@@ -1,0 +1,121 @@
+.page {
+  min-height: 100vh;
+  background-color: var(--color-surface-subtle);
+  padding: 2rem 1.6rem 4rem;
+}
+
+.card {
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: var(--color-surface-default);
+  border-radius: var(--btn-radius-lg);
+  padding: 2.4rem 1.6rem;
+}
+
+@media (min-width: 768px) {
+  .card {
+    max-width: 56rem;
+    padding: 3.2rem 4rem;
+    border: 1px solid var(--color-border-default);
+    margin-top: 2.4rem;
+  }
+}
+
+.title {
+  font-family: var(--font-body);
+  font-size: var(--text-h5);
+  font-weight: 600;
+  color: var(--color-text-title);
+  margin-bottom: 0.4rem;
+}
+
+.stepSection {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.stepHeading {
+  font-family: var(--font-body);
+  font-size: var(--text-body-1);
+  font-weight: 600;
+  color: var(--color-text-title);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 12rem;
+  padding: 1.2rem 1.6rem;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--btn-radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-body-3);
+  color: var(--color-text-body);
+  resize: vertical;
+}
+
+.textarea:focus,
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.input {
+  width: 100%;
+  padding: 1.2rem 1.6rem;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--btn-radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-body-3);
+  color: var(--color-text-body);
+  background-color: var(--color-surface-default);
+}
+
+.placeholderStep {
+  padding: 4rem 1.6rem;
+  text-align: center;
+  color: var(--color-text-caption);
+  font-size: var(--text-body-3);
+}
+
+.actions {
+  margin-top: 2.4rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1.2rem;
+}
+
+.backButton {
+  padding: var(--btn-v-padding-md) var(--btn-h-padding-md);
+  border-radius: var(--btn-radius-md);
+  border: 1px solid var(--color-border-default);
+  background-color: transparent;
+  color: var(--color-text-body);
+  font-family: var(--font-body);
+  font-size: var(--text-body-3);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.backButton:hover {
+  background-color: var(--color-surface-subtle);
+}
+
+.nextButton {
+  margin-left: auto;
+  padding: var(--btn-v-padding-md) var(--btn-h-padding-md);
+  border-radius: var(--btn-radius-md);
+  border: none;
+  background-color: var(--color-primary);
+  color: var(--color-text-negative);
+  font-family: var(--font-body);
+  font-size: var(--text-body-3);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.nextButton:hover {
+  background-color: var(--color-primary-dark);
+}

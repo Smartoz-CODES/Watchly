@@ -1,11 +1,12 @@
 import { useCommunity } from "../hooks/use-community";
+import styles from "./HomeFeedPage.module.css";
 
 const HomeFeedPage = () => {
   const { activeCommunity } = useCommunity();
 
   if (!activeCommunity) {
     return (
-      <div>
+      <div className={styles.emptyState}>
         <h2>Home Feed</h2>
         <p>Join a community to see the feed.</p>
       </div>
@@ -31,21 +32,13 @@ const HomeFeedPage = () => {
   ];
 
   return (
-    <div>
-      <h2>{activeCommunity.name}</h2>
+    <div className={styles.container}>
+      <h2 className={styles.communityName}>{activeCommunity.name}</h2>
 
       {mockIncidents.map((incident) => (
-        <div
-          key={incident.id}
-          style={{
-            border: "1px solid #ddd",
-            padding: "16px",
-            marginBottom: "16px",
-            borderRadius: "8px",
-          }}
-        >
-          <h3>{incident.category}</h3>
-          <p>{incident.description}</p>
+        <div key={incident.id} className={styles.incidentCard}>
+          <p className={styles.incidentCategory}>{incident.category}</p>
+          <p className={styles.incidentDescription}>{incident.description}</p>
         </div>
       ))}
     </div>
