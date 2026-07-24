@@ -1,33 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, Info, Lock, Mail, X } from "lucide-react";
 
-import OTPInput from "../components/OTPInput/OTPInput";
 import { useToast } from "../hooks/use-toast";
+import { supabase } from "../lib/supabase";
 
-import styles from "../styles/PasswordRecoveryPage.module.css";
+import styles from "./PasswordRecoveryPage.module.css";
 
 const PasswordRecoveryPage = () => {
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  const [step, setStep] = useState(1);
+  const [mode, setMode] = useState<"request" | "reset">("request");
+  const [bannerVisible, setBannerVisible] = useState(false);
 
   const [email, setEmail] = useState("");
-
-  const [otp, setOtp] = useState("");
-  const [otpError, setOtpError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [newPasswordError, setNewPasswordError] = useState<string | null>(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState<
+    string | null
+  >(null);
 
-  const [loading] = useState(false);
+  // Supabase fires PASSWORD_RECOVERY when the user lands here via the email link
+  useEffect(() => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setMode("reset");
+      }
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
 
-  const handleSendResetLink = (e: FormEvent<HTMLFormElement>) => {
+  const handleSendResetLink = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!email) {
@@ -35,110 +45,162 @@ const PasswordRecoveryPage = () => {
       return;
     }
 
-    setStep(2);
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/forgot-password`,
+      });
+
+      if (error) {
+        showToast("Failed to send reset link. Please try again.", "error");
+        return;
+      }
+
+      setBannerVisible(true);
+    } catch {
+      showToast("Failed to send reset link. Please try again.", "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleResetPassword = () => {
-    if (otp.length !== 6) {
-      setOtpError("Enter the 6-digit code");
-      return;
+  const handleResetPassword = async () => {
+    let hasError = false;
+
+    if (!newPassword) {
+      setNewPasswordError("Password is required");
+      hasError = true;
+    } else if (newPassword.length < 8) {
+      setNewPasswordError("Password must be at least 8 characters");
+      hasError = true;
+    } else {
+      setNewPasswordError(null);
     }
 
-    if (newPassword.length < 8) {
-      showToast("Password must be at least 8 characters", "error");
-      return;
+    if (!confirmPassword || confirmPassword !== newPassword) {
+      setConfirmPasswordError("Password must match");
+      hasError = true;
+    } else {
+      setConfirmPasswordError(null);
     }
 
-    if (newPassword !== confirmPassword) {
-      showToast("Passwords do not match", "error");
-      return;
+    if (hasError) return;
+
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) {
+        showToast("Failed to update password. Please try again.", "error");
+        return;
+      }
+
+      showToast("Password updated. Please log in.", "success");
+      navigate("/login");
+    } catch {
+      showToast("Failed to update password. Please try again.", "error");
+    } finally {
+      setLoading(false);
     }
-
-    showToast("Password updated. Please log in.", "success");
-
-    navigate("/login");
   };
 
   return (
     <>
-      {step === 1 && (
-        <form className={styles.form} onSubmit={handleSendResetLink}>
-          <div className={styles.header}>
-            <h1 className={styles.title}>Reset Your Password</h1>
-
-            <p className={styles.subtitle}>
-              Enter your email to receive a reset link.
-            </p>
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label htmlFor="email">Email</label>
-
-            <div className={styles.inputWrapper}>
-              <Mail size={20} className={styles.icon} />
-
-              <input
-                id="email"
-                type="email"
-                placeholder="Input your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+      {mode === "request" && (
+        <>
+          {bannerVisible && (
+            <div className={styles.banner}>
+              <Info size={20} className={styles.bannerIcon} />
+              <div className={styles.bannerText}>
+                <p className={styles.bannerTitle}>Check your email</p>
+                <p className={styles.bannerBody}>
+                  Password reset instructions sent to your email.
+                </p>
+              </div>
+              <button
+                type="button"
+                className={styles.bannerClose}
+                onClick={() => setBannerVisible(false)}
+                aria-label="Dismiss"
+              >
+                <X size={18} />
+              </button>
             </div>
-          </div>
+          )}
 
+          <form className={styles.form} onSubmit={handleSendResetLink}>
+            <div className={styles.header}>
+              <h1 className={styles.title}>Reset Your Password</h1>
+              <p className={styles.subtitle}>
+                Enter your email to receive a reset link
+              </p>
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label htmlFor="email">Email</label>
+              <div className={styles.inputWrapper}>
+                <Mail size={20} className={styles.icon} />
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="Input your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className={styles.primaryButton}
+              disabled={loading}
+            >
+              {loading ? "Sending..." : "Send Reset Link"}
+            </button>
+
+            <p className={styles.footerText}>
+              Go back to login? <Link to="/login">Login Here</Link>
+            </p>
+          </form>
+        </>
+      )}
+
+      {mode === "reset" && (
+        <div className={styles.form}>
           <button
-            type="submit"
-            className={styles.primaryButton}
-            disabled={loading}
+            type="button"
+            className={styles.backLink}
+            onClick={() => navigate("/login")}
           >
-            {loading ? "Sending..." : "Send Reset Link"}
+            ‹ Back
           </button>
 
-          <p className={styles.footerText}>
-            Go back to login? <Link to="/login">Login Here</Link>
-          </p>
-        </form>
-      )}
-      {step === 2 && (
-        <div className={styles.form}>
           <div className={styles.header}>
             <h1 className={styles.title}>Reset Your Password</h1>
-
             <p className={styles.subtitle}>
               Reset password to gain access to your profile.
             </p>
           </div>
 
           <div className={styles.inputGroup}>
-            <label>Enter the verification code</label>
-
-            <OTPInput
-              length={6}
-              value={otp}
-              onChange={(code) => {
-                setOtp(code);
-                setOtpError(null);
-              }}
-              error={otpError}
-            />
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label htmlFor="newPassword">New Password</label>
-
-            <div className={styles.inputWrapper}>
+            <label htmlFor="newPassword">New password</label>
+            <div
+              className={`${styles.inputWrapper} ${newPasswordError ? styles.inputError : ""}`}
+            >
               <Lock size={20} className={styles.icon} />
-
               <input
                 id="newPassword"
                 type={showNewPassword ? "text" : "password"}
                 placeholder="New password"
                 value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                onChange={(e) => {
+                  setNewPassword(e.target.value);
+                  setNewPasswordError(null);
+                }}
               />
-
               <button
                 type="button"
                 className={styles.eyeButton}
@@ -147,22 +209,33 @@ const PasswordRecoveryPage = () => {
                 {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
+            {newPasswordError ? (
+              <p className={styles.fieldError}>{newPasswordError}</p>
+            ) : (
+              <p className={styles.helperText}>
+                Your password should be at least 8 characters, mix of uppercase
+                letters, lowercase letters, numbers, and special characters
+                (e.g., @, #, $, %).
+              </p>
+            )}
           </div>
 
           <div className={styles.inputGroup}>
-            <label htmlFor="confirmPassword">Confirm Password</label>
-
-            <div className={styles.inputWrapper}>
+            <label htmlFor="confirmPassword">Confirm password</label>
+            <div
+              className={`${styles.inputWrapper} ${confirmPasswordError ? styles.inputError : ""}`}
+            >
               <Lock size={20} className={styles.icon} />
-
               <input
                 id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setConfirmPasswordError(null);
+                }}
               />
-
               <button
                 type="button"
                 className={styles.eyeButton}
@@ -171,14 +244,18 @@ const PasswordRecoveryPage = () => {
                 {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
+            {confirmPasswordError && (
+              <p className={styles.fieldError}>{confirmPasswordError}</p>
+            )}
           </div>
 
           <button
             type="button"
             className={styles.primaryButton}
             onClick={handleResetPassword}
+            disabled={loading}
           >
-            Reset Password
+            {loading ? "Resetting..." : "Reset Password"}
           </button>
 
           <p className={styles.footerText}>

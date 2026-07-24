@@ -6,7 +6,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../hooks/use-auth";
 import { useToast } from "../hooks/use-toast";
 
-import styles from "../styles/LoginPage.module.css";
+import styles from "./LoginPage.module.css";
 
 const LoginPage = () => {
   const { signIn } = useAuth();

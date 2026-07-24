@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Lock, Mail, Phone, User } from "lucide-react";
+import { Eye, EyeOff, Lock } from "lucide-react";
 
 import OTPInput from "../components/OTPInput/OTPInput";
 import { useAuth } from "../hooks/use-auth";
 import { useToast } from "../hooks/use-toast";
+import { supabase } from "../lib/supabase";
+import { normalizePhoneE164 } from "../lib/phone";
 
-import styles from "../styles/SignupPage.module.css";
+import styles from "./SignupPage.module.css";
+
+const maskPhone = (e164: string): string => {
+  const digits = e164.replace(/\D/g, "");
+  const last4 = digits.slice(-4);
+  return `+234 *** *** ${last4}`;
+};
 
 const SignupPage = () => {
   const { signUp, verifyOtp } = useAuth();
@@ -15,6 +23,7 @@ const SignupPage = () => {
   const navigate = useNavigate();
 
   const [step, setStep] = useState<1 | 2>(1);
+  const [verified, setVerified] = useState(false);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,25 +31,40 @@ const SignupPage = () => {
   const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
-
   const [agreePolicy, setAgreePolicy] = useState(false);
 
   const [otp, setOtp] = useState("");
   const [otpError, setOtpError] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(false);
-
+  const [resending, setResending] = useState(false);
   const [countdown, setCountdown] = useState(60);
+
+  const goToNextStep = () => {
+    const slug = new URLSearchParams(window.location.search).get("community");
+    // TODO Day 2: call useCommunities().joinCommunity(slug) here before navigating
+    // TODO Day 2: call useCommunity().refreshCommunities() after joining
+    navigate(slug ? "/home" : "/communities");
+  };
 
   useEffect(() => {
     if (step !== 2 || countdown === 0) return;
-
-    const timer = setTimeout(() => {
-      setCountdown((prev) => prev - 1);
-    }, 1000);
-
+    const timer = setTimeout(() => setCountdown((prev) => prev - 1), 1000);
     return () => clearTimeout(timer);
   }, [countdown, step]);
+
+  // Mobile: auto-dismiss the verified screen and continue on. Desktop keeps the Continue button.
+  useEffect(() => {
+    if (!verified) return;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (!isMobile) return;
+
+    const timer = setTimeout(() => {
+      goToNextStep();
+    }, 3000);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [verified]);
 
   const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,22 +73,18 @@ const SignupPage = () => {
       showToast("Please fill all fields.", "error");
       return;
     }
-
     if (!/\S+@\S+\.\S+/.test(email)) {
       showToast("Enter a valid email address.", "error");
       return;
     }
-
     if (!/^(0|\+234)\d{10}$/.test(phone)) {
       showToast("Enter a valid Nigerian phone number.", "error");
       return;
     }
-
     if (password.length < 8) {
       showToast("Password must be at least 8 characters.", "error");
       return;
     }
-
     if (!agreePolicy) {
       showToast("Please agree to the Privacy Policy.", "error");
       return;
@@ -72,9 +92,8 @@ const SignupPage = () => {
 
     try {
       setLoading(true);
-
-      await signUp(name, email, phone, password);
-
+      const normalizedPhone = normalizePhoneE164(phone);
+      await signUp(name, email, normalizedPhone, password);
       setStep(2);
       setCountdown(60);
     } catch {
@@ -92,12 +111,9 @@ const SignupPage = () => {
 
     try {
       setLoading(true);
-
-      await verifyOtp(phone, otp);
-
-      const slug = new URLSearchParams(window.location.search).get("community");
-
-      navigate(slug ? "/home" : "/communities");
+      const normalizedPhone = normalizePhoneE164(phone);
+      await verifyOtp(normalizedPhone, otp);
+      setVerified(true);
     } catch {
       setOtpError("Invalid verification code.");
     } finally {
@@ -105,10 +121,29 @@ const SignupPage = () => {
     }
   };
 
-  const handleResendCode = () => {
-    setCountdown(60);
+  const handleResendCode = async () => {
+    if (resending || countdown > 0) return;
 
-    showToast("Verification code sent.", "success");
+    try {
+      setResending(true);
+      const normalizedPhone = normalizePhoneE164(phone);
+      const { error } = await supabase.auth.resend({
+        type: "sms",
+        phone: normalizedPhone,
+      });
+
+      if (error) {
+        showToast("Failed to resend code. Please try again.", "error");
+        return;
+      }
+
+      setCountdown(60);
+      showToast("Verification code sent.", "success");
+    } catch {
+      showToast("Failed to resend code. Please try again.", "error");
+    } finally {
+      setResending(false);
+    }
   };
 
   return (
@@ -117,7 +152,6 @@ const SignupPage = () => {
         <form className={styles.form} onSubmit={handleSignup}>
           <div className={styles.header}>
             <h1 className={styles.title}>Let's get started</h1>
-
             <p className={styles.subtitle}>
               Create your account to start reporting, corroborating, and staying
               informed.
@@ -126,14 +160,11 @@ const SignupPage = () => {
 
           <div className={styles.inputGroup}>
             <label htmlFor="name">Name</label>
-
             <div className={styles.inputWrapper}>
-              <User size={20} className={styles.icon} />
-
               <input
                 id="name"
                 type="text"
-                placeholder="Enter your name"
+                placeholder="Input your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -143,14 +174,11 @@ const SignupPage = () => {
 
           <div className={styles.inputGroup}>
             <label htmlFor="email">Email</label>
-
             <div className={styles.inputWrapper}>
-              <Mail size={20} className={styles.icon} />
-
               <input
                 id="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder="Input your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -159,21 +187,17 @@ const SignupPage = () => {
           </div>
 
           <div className={styles.inputGroup}>
-            <label htmlFor="phone">Phone Number</label>
-
+            <label htmlFor="phone">Phone number</label>
             <div className={styles.inputWrapper}>
-              <Phone size={20} className={styles.icon} />
-
               <input
                 id="phone"
                 type="text"
-                placeholder="Enter your phone number"
+                placeholder="Input your phone number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 required
               />
             </div>
-
             <p className={styles.helperText}>
               You will receive SMS alerts when incidents are verified in your
               community.
@@ -182,10 +206,7 @@ const SignupPage = () => {
 
           <div className={styles.inputGroup}>
             <label htmlFor="password">Password</label>
-
             <div className={styles.inputWrapper}>
-              <Lock size={20} className={styles.icon} />
-
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -194,7 +215,6 @@ const SignupPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-
               <button
                 type="button"
                 className={styles.eyeButton}
@@ -204,11 +224,10 @@ const SignupPage = () => {
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
-
             <p className={styles.helperText}>
-              Your password should be at least 8 characters and include
-              uppercase, lowercase, numbers and a special character (e.g. @, #,
-              $, %).
+              Your password should be at least 8 characters, mix of uppercase
+              letters, lowercase letters, numbers, and special characters (e.g.,
+              @, #, $, %).
             </p>
           </div>
 
@@ -218,9 +237,8 @@ const SignupPage = () => {
               checked={agreePolicy}
               onChange={(e) => setAgreePolicy(e.target.checked)}
             />
-
             <span>
-              I agree with the{" "}
+              Agree with{" "}
               <span className={styles.policyLink}>Privacy Policy</span>
             </span>
           </label>
@@ -230,7 +248,7 @@ const SignupPage = () => {
             className={styles.primaryButton}
             disabled={loading}
           >
-            {loading ? "Creating Account..." : "Get Started"}
+            {loading ? "Creating Account..." : "Get started"}
           </button>
 
           <p className={styles.footerText}>
@@ -241,11 +259,18 @@ const SignupPage = () => {
 
       {step === 2 && (
         <div className={styles.form}>
-          <div className={styles.header}>
-            <h1 className={styles.title}>Verify Phone Number</h1>
+          <button
+            type="button"
+            className={styles.backLink}
+            onClick={() => setStep(1)}
+          >
+            ‹ Back
+          </button>
 
+          <div className={styles.header}>
+            <h1 className={styles.title}>Verification code</h1>
             <p className={styles.subtitle}>
-              Enter the verification code sent to <strong>{phone}</strong>
+              Check your SMS messages for a 6-digit verification code
             </p>
           </div>
 
@@ -260,15 +285,14 @@ const SignupPage = () => {
           />
 
           <div className={styles.resendContainer}>
-            <span>Didn't receive the code?</span>
-
+            <span>Didn't receive code?</span>
             <button
               type="button"
               className={styles.resendButton}
-              disabled={countdown > 0}
+              disabled={countdown > 0 || resending}
               onClick={handleResendCode}
             >
-              {countdown > 0 ? `Resend Code (${countdown}s)` : "Resend Code"}
+              Resend Code
             </button>
           </div>
 
@@ -280,6 +304,47 @@ const SignupPage = () => {
           >
             {loading ? "Verifying..." : "Verify"}
           </button>
+
+          {verified && (
+            <div className={styles.overlay}>
+              <div className={styles.modalCard}>
+                <div className={styles.verifiedIconWrap}>
+                  <div className={styles.verifiedIcon}>✓</div>
+                </div>
+
+                <h2 className={styles.verifiedTitle}>Phone Verified</h2>
+                <p className={styles.verifiedBody}>
+                  Your phone number has been successfully verified. You can now
+                  report incidents and confirm reports in your community.
+                </p>
+
+                <div className={styles.numberCard}>
+                  <div className={styles.numberIconWrap}>
+                    <Lock size={18} />
+                  </div>
+                  <div className={styles.numberText}>
+                    <span className={styles.numberLabel}>Verified Number</span>
+                    <span className={styles.numberValue}>
+                      {maskPhone(normalizePhoneE164(phone))}
+                    </span>
+                  </div>
+                  <span className={styles.confirmedPill}>✓ Confirmed</span>
+                </div>
+
+                <button
+                  type="button"
+                  className={styles.primaryButton}
+                  onClick={goToNextStep}
+                >
+                  Continue
+                </button>
+
+                <p className={styles.privacyNote}>
+                  Your number is private and never shared publicly
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>

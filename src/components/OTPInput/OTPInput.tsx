@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import type { ChangeEvent, KeyboardEvent } from "react";
+import type { ChangeEvent, KeyboardEvent, ClipboardEvent } from "react";
 
 import styles from "./OTPInput.module.css";
 
@@ -14,14 +14,18 @@ const OTPInput = ({ length, value, onChange, error }: OTPInputProps) => {
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
-    const digit = e.target.value.replace(/\D/g, "");
-
-    if (!digit) return;
-
+    const rawValue = e.target.value.replace(/\D/g, "");
     const otpArray = value.split("");
-    otpArray[index] = digit[0];
 
-    onChange(otpArray.join("").padEnd(length, "").slice(0, length));
+    if (!rawValue) {
+      otpArray[index] = "";
+      onChange(otpArray.join(""));
+      return;
+    }
+
+    const digit = rawValue[rawValue.length - 1];
+    otpArray[index] = digit;
+    onChange(otpArray.join("").slice(0, length));
 
     if (index < length - 1) {
       inputRefs.current[index + 1]?.focus();
@@ -31,27 +35,21 @@ const OTPInput = ({ length, value, onChange, error }: OTPInputProps) => {
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === "Backspace") {
       const otpArray = value.split("");
-
       if (!otpArray[index] && index > 0) {
         inputRefs.current[index - 1]?.focus();
       }
-
       otpArray[index] = "";
-
       onChange(otpArray.join(""));
     }
   };
 
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+  const handlePaste = (e: ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
-
     const pastedData = e.clipboardData
       .getData("text")
       .replace(/\D/g, "")
       .slice(0, length);
-
     onChange(pastedData);
-
     inputRefs.current[pastedData.length - 1]?.focus();
   };
 
@@ -75,7 +73,6 @@ const OTPInput = ({ length, value, onChange, error }: OTPInputProps) => {
           />
         ))}
       </div>
-
       {error && <p className={styles.errorText}>{error}</p>}
     </div>
   );
