@@ -49,6 +49,7 @@ const AppRouter = () => {
             <Route path="/report" element={<ReportIncidentPage />} />
             <Route path="/incidents/:id" element={<IncidentDetailPage />} />
             <Route path="/alerts" element={<AlertFeedPage />} />
+
             <Route path="/profile" element={<ProfilePage />} />
 
             {/* Admin routes */}

@@ -1,0 +1,36 @@
+.container {
+  width: 100%;
+}
+
+.inputs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.inputs input {
+  width: 4.8rem;
+  height: 4.8rem;
+  text-align: center;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--btn-radius-md);
+  font-size: var(--text-body-2);
+  color: var(--color-text-body);
+  outline: none;
+  background: #ffffff;
+}
+
+.inputs input:focus {
+  border-color: var(--color-primary);
+}
+
+.error {
+  border-color: red !important;
+}
+
+.errorText {
+  margin-top: 0.8rem;
+  text-align: center;
+  color: red;
+  font-size: var(--text-body-5);
+}

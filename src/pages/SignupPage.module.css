@@ -1,0 +1,313 @@
+.header {
+  margin-bottom: 2.4rem;
+  text-align: center;
+}
+
+.title {
+  font-family: var(--font-body);
+  font-size: var(--text-h6);
+  font-weight: 700;
+  color: var(--color-text-title);
+  margin-bottom: 0.8rem;
+}
+
+.subtitle {
+  font-size: var(--text-body-4);
+  color: var(--color-text-caption);
+  line-height: 1.6;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.inputGroup label {
+  font-size: var(--text-body-4);
+  font-weight: 600;
+  color: var(--color-text-body);
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--btn-radius-md);
+  padding: 0 1.4rem;
+  height: 5.2rem;
+  background: #fff;
+  transition: border-color 0.2s ease;
+}
+
+.inputWrapper:focus-within {
+  border-color: var(--color-primary);
+}
+
+.inputWrapper input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: var(--text-body-4);
+  color: var(--color-text-body);
+}
+
+.inputWrapper input::placeholder {
+  color: var(--color-text-disabled);
+}
+
+.eyeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-caption);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.helperText {
+  font-size: var(--text-body-5);
+  color: var(--color-text-caption);
+  line-height: 1.5;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  font-size: var(--text-body-5);
+  color: var(--color-text-body);
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.checkboxContainer input {
+  margin-top: 0.2rem;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.policyLink {
+  color: var(--color-primary-dark);
+  font-weight: 600;
+}
+
+.policyLink:hover {
+  text-decoration: underline;
+}
+
+.primaryButton {
+  width: 100%;
+  height: 5.2rem;
+  border: none;
+  border-radius: var(--btn-radius-md);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: var(--text-body-3);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.primaryButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.footerText {
+  text-align: center;
+  font-size: var(--text-body-4);
+  color: var(--color-text-caption);
+}
+
+.footerText a {
+  color: var(--color-primary-dark);
+  font-weight: 600;
+}
+
+.footerText a:hover {
+  text-decoration: underline;
+}
+
+.resendContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: var(--text-body-5);
+  color: var(--color-text-caption);
+}
+
+.resendButton {
+  background: none;
+  border: none;
+  color: var(--color-primary-dark);
+  font-size: var(--text-body-5);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.resendButton:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.resendButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.backLink {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  font-size: var(--text-body-4);
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 2rem;
+}
+
+.modalCard {
+  background: var(--color-primary-subtle);
+  border-radius: var(--btn-radius-lg);
+  padding: 3.2rem 2.4rem;
+  max-width: 40rem;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.verifiedIconWrap {
+  width: 6.4rem;
+  height: 6.4rem;
+  border-radius: 50%;
+  background: var(--color-primary-lighter);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verifiedIcon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: var(--color-primary-dark);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+
+.verifiedTitle {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--text-h6);
+  color: var(--color-text-title);
+}
+
+.verifiedBody {
+  font-size: var(--text-body-4);
+  color: var(--color-text-caption);
+  line-height: 1.5;
+}
+
+.numberCard {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  background: #fff;
+  border-radius: var(--btn-radius-md);
+  padding: 1.2rem 1.6rem;
+  text-align: left;
+}
+
+.numberIconWrap {
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: var(--btn-radius-sm);
+  background: var(--color-primary-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary-dark);
+  flex-shrink: 0;
+}
+
+.numberText {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.numberLabel {
+  font-size: var(--text-body-5);
+  color: var(--color-text-caption);
+}
+
+.numberValue {
+  font-size: var(--text-body-4);
+  font-weight: 600;
+  color: var(--color-text-body);
+}
+
+.confirmedPill {
+  background: var(--color-success-subtle);
+  color: var(--color-success-dark);
+  font-size: var(--text-body-5);
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.privacyNote {
+  font-size: var(--text-body-5);
+  color: var(--color-text-caption);
+}
+
+@media (max-width: 767px) {
+  .overlay {
+    position: static;
+    background: none;
+    padding: 0;
+  }
+  .modalCard {
+    background: transparent;
+    max-width: none;
+  }
+}
