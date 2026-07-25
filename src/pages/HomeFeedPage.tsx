@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState, useEffect, useCallback, useRef } from "react";
 import { Search, ChevronDown, Plus, Shield } from "lucide-react";
 import { useCommunity } from "../hooks/use-community";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,11 @@ import IncidentCard from "../components/IncidentCard/IncidentCard";
 import SkeletonCard from "../components/SkeletonCard/SkeletonCard";
 import EmptyState from "../components/EmptyState/EmptyState";
 import ErrorState from "../components/ErrorState/ErrorState";
-import type { Incident, IncidentCategory, IncidentStatus } from "../types/incident";
+import type {
+  Incident,
+  IncidentCategory,
+  IncidentStatus,
+} from "../types/incident";
 import styles from "./HomeFeedPage.module.css";
 
 type StatusFilter = "All Statuses" | IncidentStatus;
@@ -40,7 +44,8 @@ const MOCK_INCIDENTS: Incident[] = [
     community_name: "Landmark Estate",
     category: "Suspicious Person",
     other_description: null,
-    description: "Grey vehicle parked by the transformer since morning. Two occupants, not entering any house.",
+    description:
+      "Grey vehicle parked by the transformer since morning. Two occupants, not entering any house.",
     location: "Chevron Drive",
     occurred_at: new Date(Date.now() - 86400000).toISOString(),
     created_at: new Date(Date.now() - 86400000).toISOString(),
@@ -58,7 +63,8 @@ const MOCK_INCIDENTS: Incident[] = [
     community_name: "Landmark Estate",
     category: "Suspicious Person",
     other_description: null,
-    description: "Silver SUV with tinted windows parked near Gate 4 for over 2 hours. Driver has been seen photographing residential entrances. Security notified.",
+    description:
+      "Silver SUV with tinted windows parked near Gate 4 for over 2 hours. Driver has been seen photographing residential entrances. Security notified.",
     location: "Gate 4",
     occurred_at: new Date(Date.now() - 21600000).toISOString(),
     created_at: new Date(Date.now() - 21600000).toISOString(),
@@ -76,7 +82,8 @@ const MOCK_INCIDENTS: Incident[] = [
     community_name: "Landmark Estate",
     category: "Other",
     other_description: "Infrastructure",
-    description: "Multiple street lights are non-functional on Olubunmi Drive. Increased darkness poses a safety risk for evening commuters.",
+    description:
+      "Multiple street lights are non-functional on Olubunmi Drive. Increased darkness poses a safety risk for evening commuters.",
     location: "Olubunmi Drive",
     occurred_at: new Date(Date.now() - 7200000).toISOString(),
     created_at: new Date(Date.now() - 7200000).toISOString(),
@@ -94,7 +101,8 @@ const MOCK_INCIDENTS: Incident[] = [
     community_name: "Landmark Estate",
     category: "Other",
     other_description: "Infrastructure",
-    description: "Multiple street lights are non-functional on Olubunmi Drive. Increased darkness poses a safety risk for evening commuters.",
+    description:
+      "Multiple street lights are non-functional on Olubunmi Drive. Increased darkness poses a safety risk for evening commuters.",
     location: "Olubunmi Drive",
     occurred_at: new Date(Date.now() - 7200000).toISOString(),
     created_at: new Date(Date.now() - 7200000).toISOString(),
@@ -110,25 +118,65 @@ const HomeFeedPage = () => {
   const { activeCommunity } = useCommunity();
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!!activeCommunity);
   const [error, setError] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("All Statuses");
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("All Categories");
+  const [statusFilter, setStatusFilter] =
+    useState<StatusFilter>("All Statuses");
+  const [categoryFilter, setCategoryFilter] =
+    useState<CategoryFilter>("All Categories");
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
+
+  const statusDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  // Closes the status dropdown when the user clicks anywhere outside it,
+  // matching the same behavior already established in StateLGAFilter.
+  useEffect(() => {
+    if (!statusDropdownOpen) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        statusDropdownRef.current &&
+        !statusDropdownRef.current.contains(e.target as Node)
+      ) {
+        setStatusDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [statusDropdownOpen]);
+
+  const loadIncidents = useCallback((communityId: string) => {
+    console.debug("Loading incidents for community:", communityId);
+
+    setLoading(true);
+    setError(false);
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (!activeCommunity) return;
-    setLoading(true);
-    setError(false);
-    const timer = setTimeout(() => setLoading(false), 800);
-    return () => clearTimeout(timer);
-  }, [activeCommunity]);
+
+    let cleanup: (() => void) | undefined;
+
+    Promise.resolve().then(() => {
+      cleanup = loadIncidents(activeCommunity.community_id);
+    });
+
+    return () => {
+      cleanup?.();
+    };
+  }, [activeCommunity, loadIncidents]);
 
   const handleRetry = () => {
-    setError(false);
-    setLoading(true);
-    setTimeout(() => setLoading(false), 800);
+    if (!activeCommunity) return;
+    loadIncidents(activeCommunity.community_id);
   };
 
   if (!activeCommunity) {
@@ -143,8 +191,12 @@ const HomeFeedPage = () => {
   }
 
   const filteredIncidents = MOCK_INCIDENTS.filter((incident) => {
-    const matchesStatus = statusFilter === "All Statuses" || incident.current_status === statusFilter;
-    const matchesCategory = categoryFilter === "All Categories" || incident.category === categoryFilter;
+    const matchesStatus =
+      statusFilter === "All Statuses" ||
+      incident.current_status === statusFilter;
+    const matchesCategory =
+      categoryFilter === "All Categories" ||
+      incident.category === categoryFilter;
     const matchesSearch =
       searchTerm.trim() === "" ||
       incident.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -182,7 +234,7 @@ const HomeFeedPage = () => {
           />
         </div>
 
-        <div className={styles.statusDropdownWrapper}>
+        <div className={styles.statusDropdownWrapper} ref={statusDropdownRef}>
           <button
             type="button"
             className={styles.statusButton}
