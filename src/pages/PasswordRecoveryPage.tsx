@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, Eye, EyeOff, Info, Lock, Mail, X } from "lucide-react";
+import { ChevronLeft, Eye, EyeOff, Info, Mail, X } from "lucide-react";
 
 import { useToast } from "../hooks/use-toast";
 import { supabase } from "../lib/supabase";
+import { AUTH_TOASTS, VALIDATION_TOASTS } from "../lib/toast-messages";
 
 import styles from "./PasswordRecoveryPage.module.css";
 
@@ -23,9 +24,7 @@ const PasswordRecoveryPage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [newPasswordError, setNewPasswordError] = useState<string | null>(null);
-  const [confirmPasswordError, setConfirmPasswordError] = useState<
-    string | null
-  >(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
 
   // Supabase fires PASSWORD_RECOVERY when the user lands here via the email link
   useEffect(() => {
@@ -41,7 +40,7 @@ const PasswordRecoveryPage = () => {
     e.preventDefault();
 
     if (!email) {
-      showToast("Email is required", "error");
+      showToast(VALIDATION_TOASTS.emailRequired.title, VALIDATION_TOASTS.emailRequired.description, "error");
       return;
     }
 
@@ -52,13 +51,13 @@ const PasswordRecoveryPage = () => {
       });
 
       if (error) {
-        showToast("Failed to send reset link. Please try again.", "error");
+        showToast(VALIDATION_TOASTS.sendLinkFailed.title, VALIDATION_TOASTS.sendLinkFailed.description, "error");
         return;
       }
 
       setBannerVisible(true);
     } catch {
-      showToast("Failed to send reset link. Please try again.", "error");
+      showToast(VALIDATION_TOASTS.sendLinkFailed.title, VALIDATION_TOASTS.sendLinkFailed.description, "error");
     } finally {
       setLoading(false);
     }
@@ -93,14 +92,14 @@ const PasswordRecoveryPage = () => {
       });
 
       if (error) {
-        showToast("Failed to update password. Please try again.", "error");
+        showToast(VALIDATION_TOASTS.updateFailed.title, VALIDATION_TOASTS.updateFailed.description, "error");
         return;
       }
 
-      showToast("Password updated. Please log in.", "success");
+      showToast(AUTH_TOASTS.passwordReset.title, AUTH_TOASTS.passwordReset.description, "success");
       navigate("/login");
     } catch {
-      showToast("Failed to update password. Please try again.", "error");
+      showToast(VALIDATION_TOASTS.updateFailed.title, VALIDATION_TOASTS.updateFailed.description, "error");
     } finally {
       setLoading(false);
     }
@@ -223,7 +222,6 @@ const PasswordRecoveryPage = () => {
             <div
               className={`${styles.inputWrapper} ${confirmPasswordError ? styles.inputError : ""}`}
             >
-              <Lock size={20} className={styles.icon} /> 
               <input
                 id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}

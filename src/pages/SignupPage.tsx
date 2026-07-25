@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Check, ChevronLeft, Eye, EyeOff, Lock } from "lucide-react";
@@ -8,6 +8,7 @@ import { useAuth } from "../hooks/use-auth";
 import { useToast } from "../hooks/use-toast";
 import { supabase } from "../lib/supabase";
 import { normalizePhoneE164 } from "../lib/phone";
+import { AUTH_TOASTS, VALIDATION_TOASTS } from "../lib/toast-messages";
 
 import styles from "./SignupPage.module.css";
 
@@ -70,23 +71,23 @@ const SignupPage = () => {
     e.preventDefault();
 
     if (!name || !email || !phone || !password) {
-      showToast("Please fill all fields.", "error");
+      showToast(VALIDATION_TOASTS.missingFields.title, VALIDATION_TOASTS.missingFields.description, "error");
       return;
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
-      showToast("Enter a valid email address.", "error");
+      showToast(VALIDATION_TOASTS.invalidEmail.title, VALIDATION_TOASTS.invalidEmail.description, "error");
       return;
     }
     if (!/^(0|\+234)\d{10}$/.test(phone)) {
-      showToast("Enter a valid Nigerian phone number.", "error");
+      showToast(VALIDATION_TOASTS.invalidPhone.title, VALIDATION_TOASTS.invalidPhone.description, "error");
       return;
     }
     if (password.length < 8) {
-      showToast("Password must be at least 8 characters.", "error");
+      showToast(VALIDATION_TOASTS.passwordTooShort.title, VALIDATION_TOASTS.passwordTooShort.description, "error");
       return;
     }
     if (!agreePolicy) {
-      showToast("Please agree to the Privacy Policy.", "error");
+      showToast(VALIDATION_TOASTS.privacyPolicyRequired.title, VALIDATION_TOASTS.privacyPolicyRequired.description, "error");
       return;
     }
 
@@ -115,7 +116,7 @@ const SignupPage = () => {
       await verifyOtp(normalizedPhone, otp);
       setVerified(true);
     } catch {
-      setOtpError("Invalid verification code.");
+      setOtpError(AUTH_TOASTS.incorrectCode.description);
     } finally {
       setLoading(false);
     }
@@ -133,14 +134,15 @@ const SignupPage = () => {
       });
 
       if (error) {
-        showToast("Failed to resend code. Please try again.", "error");
+        showToast(VALIDATION_TOASTS.resendFailed.title, VALIDATION_TOASTS.resendFailed.description, "error");
         return;
       }
 
       setCountdown(60);
-      showToast("Verification code sent.", "success");
+      const codeSentMessage = AUTH_TOASTS.codeSent(maskPhone(normalizedPhone));
+      showToast(codeSentMessage.title, codeSentMessage.description, "info");
     } catch {
-      showToast("Failed to resend code. Please try again.", "error");
+      showToast(VALIDATION_TOASTS.resendFailed.title, VALIDATION_TOASTS.resendFailed.description, "error");
     } finally {
       setResending(false);
     }

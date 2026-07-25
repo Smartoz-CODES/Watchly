@@ -1,4 +1,4 @@
-import {
+﻿import {
   useState,
   useCallback,
   useEffect,
@@ -19,9 +19,12 @@ export function ToastProvider({ children }: ToastProviderProps) {
     setToast(null);
   }, []);
 
-  const showToast = useCallback((message: string, type: ToastType) => {
-    setToast({ message, type, id: Date.now() });
-  }, []);
+  const showToast = useCallback(
+    (title: string, description: string, type: ToastType) => {
+      setToast({ title, description, type, id: Date.now() });
+    },
+    []
+  );
 
   useEffect(() => {
     if (!toast) return;
@@ -32,7 +35,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
 
     timerRef.current = setTimeout(() => {
       setToast(null);
-    }, 3000);
+    }, 5000);
 
     return () => {
       if (timerRef.current) {

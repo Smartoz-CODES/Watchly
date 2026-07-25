@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 import { CheckCircle, AlertCircle, Info, X } from "lucide-react";
 import { useToastState } from "../../hooks/use-toast";
 import styles from "./Toast.module.css";
@@ -32,13 +32,13 @@ const Toast = () => {
       aria-live="polite"
       aria-atomic="true"
     >
-      {/* Type icon */}
       <span className={styles.icon}>{icons[toast.type]}</span>
 
-      {/* Message */}
-      <p className={styles.message}>{toast.message}</p>
+      <div className={styles.textGroup}>
+        <p className={styles.title}>{toast.title}</p>
+        <p className={styles.description}>{toast.description}</p>
+      </div>
 
-      {/* Manual dismiss */}
       <button
         className={styles.closeButton}
         onClick={clearToast}
