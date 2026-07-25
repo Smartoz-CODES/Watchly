@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback, type ReactNode } from "react";
+﻿import { useState, useEffect, useCallback, type ReactNode } from "react";
 import type { Session, AuthChangeEvent } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 import { AuthContext, type AuthContextValue } from "./AuthContext";
 import type { User } from "../types/user";
 import { useToast } from "../hooks/use-toast";
+import { AUTH_TOASTS } from "../lib/toast-messages";
 
 // Helper that fetch full user record from the users table
 async function fetchUserRecord(authUserId: string): Promise<User | null> {
@@ -12,16 +13,13 @@ async function fetchUserRecord(authUserId: string): Promise<User | null> {
     .select("*")
     .eq("user_id", authUserId)
     .single();
-
   if (error || !data) {
     return null;
   }
-
   return data as User;
 }
 
 // Provider
-
 interface AuthProviderProps {
   children: ReactNode;
 }
@@ -35,14 +33,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const isPlatformAdmin = user?.is_platform_admin ?? false;
 
   // Session listener
-
   useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
       async (_event: AuthChangeEvent, currentSession: Session | null) => {
         setSession(currentSession);
-
         if (currentSession?.user) {
           const userRecord = await fetchUserRecord(currentSession.user.id);
           setUser(userRecord);
@@ -50,11 +46,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
           // Logged out or no session, clear user state
           setUser(null);
         }
-
         setLoading(false);
       },
     );
-
     return () => {
       subscription.unsubscribe();
     };
@@ -71,9 +65,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
           data: { name },
         },
       });
-
       if (error) {
-        showToast(error.message, "error");
+        showToast("Sign up failed", error.message, "error");
         throw error;
       }
     },
@@ -81,7 +74,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 
   // verifyOtp
-
   const verifyOtp = useCallback(
     async (phone: string, token: string) => {
       const { error } = await supabase.auth.verifyOtp({
@@ -89,9 +81,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         token,
         type: "sms",
       });
-
       if (error) {
-        showToast(error.message, "error");
+        showToast("Verification failed", error.message, "error");
         throw error;
       }
     },
@@ -105,9 +96,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email,
         password,
       });
-
       if (error) {
-        showToast("Invalid email or password", "error");
+        showToast(AUTH_TOASTS.signInFailed.title, AUTH_TOASTS.signInFailed.description, "error");
         throw error;
       }
     },
@@ -117,9 +107,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // signOut
   const signOut = useCallback(async () => {
     const { error } = await supabase.auth.signOut();
-
     if (error) {
-      showToast(error.message, "error");
+      showToast("Sign out failed", error.message, "error");
       throw error;
     }
   }, [showToast]);
@@ -127,17 +116,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // deleteAccount
   const deleteAccount = useCallback(async () => {
     const { error } = await supabase.functions.invoke("delete-account");
-
     if (error) {
-      showToast("Failed to delete account. Please try again.", "error");
+      showToast("Failed to delete account", "Please try again.", "error");
       throw error;
     }
-
     await supabase.auth.signOut();
   }, [showToast]);
 
   // Context value
-
   const value: AuthContextValue = {
     user,
     session,
