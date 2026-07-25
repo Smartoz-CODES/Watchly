@@ -1,4 +1,4 @@
-export type IncidentCategory =
+﻿export type IncidentCategory =
   | "Theft"
   | "Fire"
   | "Suspicious Person"
@@ -30,6 +30,7 @@ export interface StatusHistoryEntry {
 export interface Incident {
   incident_id: string;
   reporter_id: string | null; // null for non-reporters and non-admin viewers
+  reporter_name: string; // resolved server-side. "Anonymous Resident" for non-reporters/non-admins per TRD privacy rules, real name for the reporter themself or a Community Admin
   community_id: string;
   community_name: string;
   category: IncidentCategory;

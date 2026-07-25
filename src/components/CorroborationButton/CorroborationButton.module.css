@@ -1,0 +1,49 @@
+﻿.activeButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-primary);
+  background: transparent;
+  color: var(--color-primary-dark);
+  font-size: var(--text-body-5);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.activeButton:hover:not(:disabled) {
+  background: var(--color-primary-subtle);
+}
+
+.activeButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.confirmedButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-warning);
+  color: #ffffff;
+  font-size: var(--text-body-5);
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 1;
+  cursor: default;
+}
+
+.reporterLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-text-caption);
+  font-size: var(--text-body-5);
+  font-weight: 500;
+}
