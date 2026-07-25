@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useToast } from "../hooks/use-toast";
 
 import CategorySelector from "../components/CategorySelector/CategorySelector";
@@ -37,29 +37,29 @@ const ReportIncidentPage = () => {
   const nextStep = () => {
     if (form.currentStep === 1) {
       if (!form.category) {
-        showToast("Please select a category.", "error");
+        showToast("Missing category", "Please select a category.", "error");
         return;
       }
       if (form.category === "Other" && form.otherDescription.trim() === "") {
-        showToast("Please specify the incident type.", "error");
+        showToast("Missing description", "Please specify the incident type.", "error");
         return;
       }
     }
 
     if (form.currentStep === 2) {
       if (form.description.trim().length < 10) {
-        showToast("Description must be at least 10 characters.", "error");
+        showToast("Description too short", "Description must be at least 10 characters.", "error");
         return;
       }
       if (!form.occurredAt) {
-        showToast("Please choose when the incident occurred.", "error");
+        showToast("Missing date", "Please choose when the incident occurred.", "error");
         return;
       }
     }
 
     if (form.currentStep === 3) {
       if (form.location.trim().length < 3) {
-        showToast("Please enter a valid location.", "error");
+        showToast("Invalid location", "Please enter a valid location.", "error");
         return;
       }
     }

@@ -1,4 +1,4 @@
-import { useRef, type ChangeEvent } from "react";
+﻿import { useRef, type ChangeEvent } from "react";
 import { Upload, X } from "lucide-react";
 
 import styles from "./EvidenceUploader.module.css";
@@ -46,12 +46,12 @@ const EvidenceUploader = ({
 
     Array.from(files).forEach((file) => {
       if (!ALLOWED_TYPES.includes(file.type)) {
-        showToast("Only JPEG and PNG images are allowed.", "error");
+        showToast("Invalid file type", "Only JPEG and PNG images are allowed.", "error");
         return;
       }
 
       if (file.size >= MAX_SIZE) {
-        showToast("Each image must be smaller than 5MB.", "error");
+        showToast("File too large", "Each image must be smaller than 5MB.", "error");
         return;
       }
 
