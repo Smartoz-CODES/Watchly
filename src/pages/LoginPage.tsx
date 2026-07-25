@@ -52,10 +52,9 @@ const LoginPage = () => {
           <input
             id="email"
             type="email"
-            placeholder="Enter your email"
+            placeholder="Enter your email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
         </div>
 
@@ -69,7 +68,6 @@ const LoginPage = () => {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
 
             <button
@@ -84,7 +82,7 @@ const LoginPage = () => {
         </div>
 
         <div className={styles.forgotPassword}>
-          <Link to="/forgot-password">Forgot password?</Link>
+          <Link to="/forgot-password">Forgot Password</Link>
         </div>
 
         <button

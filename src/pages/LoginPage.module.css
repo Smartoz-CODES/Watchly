@@ -8,7 +8,8 @@
 }
 
 .title {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
+  font-weight: 700;
   font-size: var(--text-h6);
   color: var(--color-text-title);
   margin-bottom: 0.8rem;

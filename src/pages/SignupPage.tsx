@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Lock } from "lucide-react";
+import { Check, ChevronLeft, Eye, EyeOff, Lock } from "lucide-react";
 
 import OTPInput from "../components/OTPInput/OTPInput";
 import { useAuth } from "../hooks/use-auth";
@@ -153,8 +153,8 @@ const SignupPage = () => {
           <div className={styles.header}>
             <h1 className={styles.title}>Let's get started</h1>
             <p className={styles.subtitle}>
-              Create your account to start reporting, corroborating, and staying
-              informed.
+              Create your account to start reporting, corroborating, and
+              staying informed.
             </p>
           </div>
 
@@ -167,7 +167,6 @@ const SignupPage = () => {
                 placeholder="Input your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
               />
             </div>
           </div>
@@ -181,7 +180,6 @@ const SignupPage = () => {
                 placeholder="Input your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
               />
             </div>
           </div>
@@ -195,7 +193,6 @@ const SignupPage = () => {
                 placeholder="Input your phone number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                required
               />
             </div>
             <p className={styles.helperText}>
@@ -213,7 +210,6 @@ const SignupPage = () => {
                 placeholder="Create your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
               />
               <button
                 type="button"
@@ -225,9 +221,9 @@ const SignupPage = () => {
               </button>
             </div>
             <p className={styles.helperText}>
-              Your password should be at least 8 characters, mix of uppercase
-              letters, lowercase letters, numbers, and special characters (e.g.,
-              @, #, $, %).
+              Your password should be at least 8 characters, mix of
+              uppercase letters, lowercase letters, numbers, and special
+              characters (e.g., @, #, $, %).
             </p>
           </div>
 
@@ -264,7 +260,7 @@ const SignupPage = () => {
             className={styles.backLink}
             onClick={() => setStep(1)}
           >
-            ‹ Back
+            <ChevronLeft size={18} /> Back
           </button>
 
           <div className={styles.header}>
@@ -309,13 +305,16 @@ const SignupPage = () => {
             <div className={styles.overlay}>
               <div className={styles.modalCard}>
                 <div className={styles.verifiedIconWrap}>
-                  <div className={styles.verifiedIcon}>✓</div>
+                  <div className={styles.verifiedIcon}>
+                    <Check size={20} color="#fff" />
+                  </div>
                 </div>
 
                 <h2 className={styles.verifiedTitle}>Phone Verified</h2>
                 <p className={styles.verifiedBody}>
-                  Your phone number has been successfully verified. You can now
-                  report incidents and confirm reports in your community.
+                  Your phone number has been successfully verified. You can
+                  now report incidents and confirm reports in your
+                  community.
                 </p>
 
                 <div className={styles.numberCard}>
@@ -323,12 +322,16 @@ const SignupPage = () => {
                     <Lock size={18} />
                   </div>
                   <div className={styles.numberText}>
-                    <span className={styles.numberLabel}>Verified Number</span>
+                    <span className={styles.numberLabel}>
+                      Verified Number
+                    </span>
                     <span className={styles.numberValue}>
                       {maskPhone(normalizePhoneE164(phone))}
                     </span>
                   </div>
-                  <span className={styles.confirmedPill}>✓ Confirmed</span>
+                  <span className={styles.confirmedPill}>
+                    <Check size={14} /> Confirmed
+                  </span>
                 </div>
 
                 <button

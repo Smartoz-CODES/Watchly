@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Info, Lock, Mail, X } from "lucide-react";
+import { ChevronLeft, Eye, EyeOff, Info, Lock, Mail, X } from "lucide-react";
 
 import { useToast } from "../hooks/use-toast";
 import { supabase } from "../lib/supabase";
@@ -148,7 +148,6 @@ const PasswordRecoveryPage = () => {
                   placeholder="Input your email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
                 />
               </div>
             </div>
@@ -175,7 +174,7 @@ const PasswordRecoveryPage = () => {
             className={styles.backLink}
             onClick={() => navigate("/login")}
           >
-            ‹ Back
+            <ChevronLeft size={18} /> Back
           </button>
 
           <div className={styles.header}>
@@ -190,7 +189,6 @@ const PasswordRecoveryPage = () => {
             <div
               className={`${styles.inputWrapper} ${newPasswordError ? styles.inputError : ""}`}
             >
-              <Lock size={20} className={styles.icon} />
               <input
                 id="newPassword"
                 type={showNewPassword ? "text" : "password"}
@@ -225,7 +223,7 @@ const PasswordRecoveryPage = () => {
             <div
               className={`${styles.inputWrapper} ${confirmPasswordError ? styles.inputError : ""}`}
             >
-              <Lock size={20} className={styles.icon} />
+              <Lock size={20} className={styles.icon} /> 
               <input
                 id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
