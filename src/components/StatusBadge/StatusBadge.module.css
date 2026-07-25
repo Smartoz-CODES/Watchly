@@ -1,0 +1,51 @@
+﻿.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.sm {
+  font-size: var(--text-body-5);
+  padding: 0.4rem 1rem;
+}
+
+.md {
+  font-size: var(--text-body-4);
+  padding: 0.6rem 1.2rem;
+}
+
+.reported {
+  background: #D4D4D8;
+  color: #3F3F46;
+}
+
+.underReview {
+  background: var(--color-badge-under-review-bg);
+  color: var(--color-badge-under-review-text);
+}
+
+.verified {
+  background: var(--color-badge-verified-bg);
+  color: var(--color-badge-verified-text);
+}
+
+.resolved {
+  background: var(--color-badge-resolved-bg);
+  color: var(--color-badge-resolved-text);
+}
+
+.notVerified {
+  background: #FED6D6;
+  color: #CF2A2A;
+}
+
+.notVerified .icon {
+  color: #ffffff;
+}
