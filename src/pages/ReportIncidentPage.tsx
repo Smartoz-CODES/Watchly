@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useState, useEffect } from "react";
 import { X, MapPin, Calendar as CalendarIcon, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../hooks/use-toast";
@@ -15,6 +15,11 @@ interface EvidenceFile {
 
 const MAX_DESCRIPTION_LENGTH = 500;
 
+// Reports can only be dated within the last 7 days, up to today.
+// Prevents both future-dated reports (a logical impossibility) and
+// stale reports that no longer reflect current community safety conditions.
+const MAX_PAST_DAYS = 7;
+
 const ReportIncidentPage = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
@@ -30,7 +35,22 @@ const ReportIncidentPage = () => {
   const [calendarMonth, setCalendarMonth] = useState(new Date());
   const [submitting, setSubmitting] = useState(false);
 
-  const closeForm = () => navigate(-1);
+  // Revoke all evidence object URLs on unmount to release memory held by
+  // any attached images that were never submitted (e.g. user closed the modal).
+  useEffect(() => {
+    return () => {
+      evidence.forEach((item) => URL.revokeObjectURL(item.url));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const closeForm = () => {
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate("/home");
+    }
+  };
 
   const handleUpload = (files: File[]) => {
     const newEvidence = files.map((file) => ({
@@ -42,18 +62,53 @@ const ReportIncidentPage = () => {
   };
 
   const handleRemoveEvidence = (index: number) => {
-    setEvidence((prev) => prev.filter((_, i) => i !== index));
+    setEvidence((prev) => {
+      URL.revokeObjectURL(prev[index].url);
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const earliestAllowedDate = new Date(today);
+  earliestAllowedDate.setDate(today.getDate() - MAX_PAST_DAYS);
+
+  const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+
+  const isDateOutOfRange = (day: number): boolean => {
+    const candidate = new Date(
+      calendarMonth.getFullYear(),
+      calendarMonth.getMonth(),
+      day,
+    );
+    return candidate > today || candidate < earliestAllowedDate;
   };
 
   const handleSelectDate = (day: number) => {
-    const selected = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
+    if (isDateOutOfRange(day)) return;
+
+    const selected = new Date(
+      calendarMonth.getFullYear(),
+      calendarMonth.getMonth(),
+      day,
+    );
     const formatted = `${String(selected.getDate()).padStart(2, "0")}/${String(selected.getMonth() + 1).padStart(2, "0")}/${selected.getFullYear()}`;
     setOccurredDate(formatted);
     setShowCalendar(false);
   };
 
   const changeMonth = (delta: number) => {
-    setCalendarMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + delta, 1));
+    const next = new Date(
+      calendarMonth.getFullYear(),
+      calendarMonth.getMonth() + delta,
+      1,
+    );
+
+    // Don't allow navigating past the current month — nothing selectable lives there.
+    if (next > currentMonthStart) return;
+
+    setCalendarMonth(next);
   };
 
   const getDaysInMonth = (): (number | null)[] => {
@@ -71,11 +126,19 @@ const ReportIncidentPage = () => {
 
   const handleSubmit = () => {
     if (!category) {
-      showToast("Missing category", "Please select an incident category.", "error");
+      showToast(
+        "Missing category",
+        "Please select an incident category.",
+        "error",
+      );
       return;
     }
     if (category === "Other" && otherDescription.trim() === "") {
-      showToast("Missing description", "Please specify the incident type.", "error");
+      showToast(
+        "Missing description",
+        "Please specify the incident type.",
+        "error",
+      );
       return;
     }
     if (location.trim().length < 3) {
@@ -83,15 +146,27 @@ const ReportIncidentPage = () => {
       return;
     }
     if (!occurredDate) {
-      showToast("Missing date", "Please select when the incident occurred.", "error");
+      showToast(
+        "Missing date",
+        "Please select when the incident occurred.",
+        "error",
+      );
       return;
     }
     if (!occurredTime) {
-      showToast("Missing time", "Please select when the incident occurred.", "error");
+      showToast(
+        "Missing time",
+        "Please select when the incident occurred.",
+        "error",
+      );
       return;
     }
     if (description.trim().length < 10) {
-      showToast("Description too short", "Description must be at least 10 characters.", "error");
+      showToast(
+        "Description too short",
+        "Description must be at least 10 characters.",
+        "error",
+      );
       return;
     }
 
@@ -99,24 +174,40 @@ const ReportIncidentPage = () => {
     // TODO Day 2: call useIncidents().createIncident(...) with real Supabase data
     setTimeout(() => {
       setSubmitting(false);
-      showToast("Report submitted", "Your neighbours and community admin have been notified.", "success");
+      showToast(
+        "Report submitted",
+        "Your neighbours and community admin have been notified.",
+        "success",
+      );
       navigate("/home");
     }, 1200);
   };
 
-  const monthLabel = calendarMonth.toLocaleString("default", { month: "long", year: "numeric" });
-  const weekdayLabels = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"];
+  const monthLabel = calendarMonth.toLocaleString("default", {
+    month: "long",
+    year: "numeric",
+  });
+  const weekdayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const isNextMonthDisabled =
+    new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1) >
+    currentMonthStart;
 
   return (
     <div className={styles.overlay}>
       <div className={styles.card}>
-        <button type="button" className={styles.closeButton} onClick={closeForm} aria-label="Close">
+        <button
+          type="button"
+          className={styles.closeButton}
+          onClick={closeForm}
+          aria-label="Close"
+        >
           <X size={20} />
         </button>
 
         <h1 className={styles.title}>Report an Incident</h1>
         <p className={styles.subtitle}>
-          Share what happened to your community can stay informed. Please only report what you personally observed
+          Share what happened to your community can stay informed. Please only
+          report what you personally observed
         </p>
 
         <div className={styles.field}>
@@ -139,13 +230,14 @@ const ReportIncidentPage = () => {
             <MapPin size={18} className={styles.icon} />
             <input
               type="text"
-              placeholder="Location"
+              placeholder="General area (e.g., near the main gate, Block C parking area)"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             />
           </div>
           <p className={styles.hint}>
-            This information stays within the community and will never be shared with third parties.
+            This information stays within the community and will never be shared
+            with third parties.
           </p>
         </div>
 
@@ -161,7 +253,11 @@ const ReportIncidentPage = () => {
                 onClick={() => setShowCalendar((prev) => !prev)}
               >
                 <CalendarIcon size={18} className={styles.icon} />
-                <span className={occurredDate ? styles.filledText : styles.placeholderText}>
+                <span
+                  className={
+                    occurredDate ? styles.filledText : styles.placeholderText
+                  }
+                >
                   {occurredDate || "Date"}
                 </span>
               </button>
@@ -169,11 +265,23 @@ const ReportIncidentPage = () => {
               {showCalendar && (
                 <div className={styles.calendarPopup}>
                   <div className={styles.calendarHeader}>
-                    <button type="button" onClick={() => changeMonth(-1)} aria-label="Previous month">
+                    <button
+                      type="button"
+                      onClick={() => changeMonth(-1)}
+                      aria-label="Previous month"
+                    >
                       ‹
                     </button>
                     <span>{monthLabel}</span>
-                    <button type="button" onClick={() => changeMonth(1)} aria-label="Next month">
+                    <button
+                      type="button"
+                      onClick={() => changeMonth(1)}
+                      aria-label="Next month"
+                      disabled={isNextMonthDisabled}
+                      className={
+                        isNextMonthDisabled ? styles.calendarNavDisabled : ""
+                      }
+                    >
                       ›
                     </button>
                   </div>
@@ -183,17 +291,20 @@ const ReportIncidentPage = () => {
                     ))}
                   </div>
                   <div className={styles.calendarGrid}>
-                    {getDaysInMonth().map((day, index) => (
-                      <button
-                        type="button"
-                        key={index}
-                        className={styles.calendarDay}
-                        disabled={day === null}
-                        onClick={() => day && handleSelectDate(day)}
-                      >
-                        {day ?? ""}
-                      </button>
-                    ))}
+                    {getDaysInMonth().map((day, index) => {
+                      const outOfRange = day !== null && isDateOutOfRange(day);
+                      return (
+                        <button
+                          type="button"
+                          key={index}
+                          className={`${styles.calendarDay} ${outOfRange ? styles.calendarDayDisabled : ""}`}
+                          disabled={day === null || outOfRange}
+                          onClick={() => day && handleSelectDate(day)}
+                        >
+                          {day ?? ""}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}

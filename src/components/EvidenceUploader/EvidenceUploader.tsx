@@ -46,12 +46,20 @@ const EvidenceUploader = ({
 
     Array.from(files).forEach((file) => {
       if (!ALLOWED_TYPES.includes(file.type)) {
-        showToast("Invalid file type", "Only JPEG and PNG images are allowed.", "error");
+        showToast(
+          "Invalid file type",
+          "Only JPEG and PNG images are allowed.",
+          "error",
+        );
         return;
       }
 
-      if (file.size >= MAX_SIZE) {
-        showToast("File too large", "Each image must be smaller than 5MB.", "error");
+      if (file.size > MAX_SIZE) {
+        showToast(
+          "File too large",
+          "Each image must be smaller than 5MB.",
+          "error",
+        );
         return;
       }
 
