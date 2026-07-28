@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect, useCallback, useRef } from "react";
-import { Search, ChevronDown, Plus, Shield } from "lucide-react";
+import { Search, ChevronDown, Shield } from "lucide-react";
 import { useCommunity } from "../hooks/use-community";
 import { useNavigate } from "react-router-dom";
 import IncidentCard from "../components/IncidentCard/IncidentCard";
@@ -35,87 +35,141 @@ const CATEGORY_FILTERS: CategoryFilter[] = [
   "Other",
 ];
 
-const MOCK_INCIDENTS: Incident[] = [
-  {
-    incident_id: "1",
-    reporter_id: null,
-    reporter_name: "Anonymous Resident",
-    community_id: "c1",
-    community_name: "Landmark Estate",
-    category: "Suspicious Person",
-    other_description: null,
-    description:
-      "Grey vehicle parked by the transformer since morning. Two occupants, not entering any house.",
-    location: "Chevron Drive",
-    occurred_at: new Date(Date.now() - 86400000).toISOString(),
-    created_at: new Date(Date.now() - 86400000).toISOString(),
-    current_status: "Not Verified",
-    corroboration_count: 14,
-    evidence: [],
-    status_history: [],
-    has_user_corroborated: false,
-  },
-  {
-    incident_id: "2",
-    reporter_id: null,
-    reporter_name: "Anonymous Resident",
-    community_id: "c1",
-    community_name: "Landmark Estate",
-    category: "Suspicious Person",
-    other_description: null,
-    description:
-      "Silver SUV with tinted windows parked near Gate 4 for over 2 hours. Driver has been seen photographing residential entrances. Security notified.",
-    location: "Gate 4",
-    occurred_at: new Date(Date.now() - 21600000).toISOString(),
-    created_at: new Date(Date.now() - 21600000).toISOString(),
-    current_status: "Under Review",
-    corroboration_count: 5,
-    evidence: [],
-    status_history: [],
-    has_user_corroborated: false,
-  },
-  {
-    incident_id: "3",
-    reporter_id: null,
-    reporter_name: "Anonymous Resident",
-    community_id: "c1",
-    community_name: "Landmark Estate",
-    category: "Other",
-    other_description: "Infrastructure",
-    description:
-      "Multiple street lights are non-functional on Olubunmi Drive. Increased darkness poses a safety risk for evening commuters.",
-    location: "Olubunmi Drive",
-    occurred_at: new Date(Date.now() - 7200000).toISOString(),
-    created_at: new Date(Date.now() - 7200000).toISOString(),
-    current_status: "Verified",
-    corroboration_count: 14,
-    evidence: [],
-    status_history: [],
-    has_user_corroborated: false,
-  },
-  {
-    incident_id: "4",
-    reporter_id: null,
-    reporter_name: "Anonymous Resident",
-    community_id: "c1",
-    community_name: "Landmark Estate",
-    category: "Other",
-    other_description: "Infrastructure",
-    description:
-      "Multiple street lights are non-functional on Olubunmi Drive. Increased darkness poses a safety risk for evening commuters.",
-    location: "Olubunmi Drive",
-    occurred_at: new Date(Date.now() - 7200000).toISOString(),
-    created_at: new Date(Date.now() - 7200000).toISOString(),
-    current_status: "Reported",
-    corroboration_count: 14,
-    evidence: [],
-    status_history: [],
-    has_user_corroborated: false,
-  },
+// ---------------------------------------------------------------------
+// Two distinct mock sets instead of one, indexed by the active
+// community's position in userCommunities — not by community_id, since
+// real Supabase IDs won't ever match a hardcoded "c1"/"c2" anyway. This
+// is still mocked, not a real per-community fetch, but it means
+// switching between any two real communities you've joined now visibly
+// changes the feed, instead of always showing the exact same content
+// regardless of which community is active.
+// ---------------------------------------------------------------------
+
+const MOCK_INCIDENT_SETS: Incident[][] = [
+  [
+    {
+      incident_id: "1",
+      reporter_id: null,
+      reporter_name: "Anonymous Resident",
+      community_id: "c1",
+      community_name: "Landmark Estate",
+      category: "Suspicious Person",
+      other_description: null,
+      description:
+        "Grey vehicle parked by the transformer since morning. Two occupants, not entering any house.",
+      location: "Chevron Drive",
+      occurred_at: new Date(Date.now() - 86400000).toISOString(),
+      created_at: new Date(Date.now() - 86400000).toISOString(),
+      current_status: "Not Verified",
+      corroboration_count: 14,
+      evidence: [],
+      status_history: [],
+      has_user_corroborated: false,
+    },
+    {
+      incident_id: "2",
+      reporter_id: null,
+      reporter_name: "Anonymous Resident",
+      community_id: "c1",
+      community_name: "Landmark Estate",
+      category: "Suspicious Person",
+      other_description: null,
+      description:
+        "Silver SUV with tinted windows parked near Gate 4 for over 2 hours. Driver has been seen photographing residential entrances. Security notified.",
+      location: "Gate 4",
+      occurred_at: new Date(Date.now() - 21600000).toISOString(),
+      created_at: new Date(Date.now() - 21600000).toISOString(),
+      current_status: "Under Review",
+      corroboration_count: 5,
+      evidence: [],
+      status_history: [],
+      has_user_corroborated: false,
+    },
+    {
+      incident_id: "3",
+      reporter_id: null,
+      reporter_name: "Anonymous Resident",
+      community_id: "c1",
+      community_name: "Landmark Estate",
+      category: "Other",
+      other_description: "Infrastructure",
+      description:
+        "Multiple street lights are non-functional on Olubunmi Drive. Increased darkness poses a safety risk for evening commuters.",
+      location: "Olubunmi Drive",
+      occurred_at: new Date(Date.now() - 7200000).toISOString(),
+      created_at: new Date(Date.now() - 7200000).toISOString(),
+      current_status: "Verified",
+      corroboration_count: 14,
+      evidence: [],
+      status_history: [],
+      has_user_corroborated: false,
+    },
+    {
+      incident_id: "4",
+      reporter_id: null,
+      reporter_name: "Anonymous Resident",
+      community_id: "c1",
+      community_name: "Landmark Estate",
+      category: "Other",
+      other_description: "Infrastructure",
+      description:
+        "Multiple street lights are non-functional on Olubunmi Drive. Increased darkness poses a safety risk for evening commuters.",
+      location: "Olubunmi Drive",
+      occurred_at: new Date(Date.now() - 7200000).toISOString(),
+      created_at: new Date(Date.now() - 7200000).toISOString(),
+      current_status: "Reported",
+      corroboration_count: 14,
+      evidence: [],
+      status_history: [],
+      has_user_corroborated: false,
+    },
+  ],
+  [
+    {
+      incident_id: "5",
+      reporter_id: null,
+      reporter_name: "Anonymous Resident",
+      community_id: "c2",
+      community_name: "City Gate Estate",
+      category: "Fire",
+      other_description: null,
+      description:
+        "Small electrical fire near the transformer behind Block C. Contained quickly, no injuries reported.",
+      location: "Block C",
+      occurred_at: new Date(Date.now() - 10800000).toISOString(),
+      created_at: new Date(Date.now() - 10800000).toISOString(),
+      current_status: "Verified",
+      corroboration_count: 9,
+      evidence: [],
+      status_history: [],
+      has_user_corroborated: false,
+    },
+    {
+      incident_id: "6",
+      reporter_id: null,
+      reporter_name: "Anonymous Resident",
+      community_id: "c2",
+      community_name: "City Gate Estate",
+      category: "Theft",
+      other_description: null,
+      description:
+        "Package reported missing from the front porch of a unit on Palm Close, sometime overnight.",
+      location: "Palm Close",
+      occurred_at: new Date(Date.now() - 43200000).toISOString(),
+      created_at: new Date(Date.now() - 43200000).toISOString(),
+      current_status: "Reported",
+      corroboration_count: 1,
+      evidence: [],
+      status_history: [],
+      has_user_corroborated: false,
+    },
+  ],
 ];
 
+const PAGE_SIZE = 10;
+
 const HomeFeedPage = () => {
-  const { activeCommunity } = useCommunity();
+  const { activeCommunity, userCommunities } = useCommunity();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(!!activeCommunity);
@@ -126,6 +180,7 @@ const HomeFeedPage = () => {
   const [categoryFilter, setCategoryFilter] =
     useState<CategoryFilter>("All Categories");
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const statusDropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -179,6 +234,20 @@ const HomeFeedPage = () => {
     loadIncidents(activeCommunity.community_id);
   };
 
+  // Resetting to page one whenever any filter changes. Not using an
+  // effect for this on purpose — React's own docs recommend against
+  // effects for "adjust state when something else changes," since that's
+  // exactly this case. Comparing during render and adjusting state
+  // directly is the documented alternative: React re-renders immediately
+  // before painting anything, so there's no flash of stale state, and no
+  // effect (and no state-set-in-effect concern) involved at all.
+  const filterKey = `${searchTerm}|${statusFilter}|${categoryFilter}`;
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+  if (filterKey !== prevFilterKey) {
+    setPrevFilterKey(filterKey);
+    setVisibleCount(PAGE_SIZE);
+  }
+
   if (!activeCommunity) {
     return (
       <EmptyState
@@ -190,7 +259,16 @@ const HomeFeedPage = () => {
     );
   }
 
-  const filteredIncidents = MOCK_INCIDENTS.filter((incident) => {
+  const communityIndex = activeCommunity
+    ? userCommunities.findIndex(
+        (c) => c.community_id === activeCommunity.community_id,
+      )
+    : -1;
+  const activeMockIncidents =
+    MOCK_INCIDENT_SETS[communityIndex % MOCK_INCIDENT_SETS.length] ??
+    MOCK_INCIDENT_SETS[0];
+
+  const filteredIncidents = activeMockIncidents.filter((incident) => {
     const matchesStatus =
       statusFilter === "All Statuses" ||
       incident.current_status === statusFilter;
@@ -203,6 +281,9 @@ const HomeFeedPage = () => {
     return matchesStatus && matchesCategory && matchesSearch;
   });
 
+  const visibleIncidents = filteredIncidents.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredIncidents.length;
+
   return (
     <div className={styles.container}>
       <div className={styles.headerRow}>
@@ -212,15 +293,6 @@ const HomeFeedPage = () => {
             Stay informed about what is happening nearby and review reports
           </p>
         </div>
-        {/* TODO: confirm with team whether this button belongs in AppLayout's shared top bar instead */}
-        <button
-          type="button"
-          className={styles.reportButton}
-          onClick={() => navigate("/report")}
-        >
-          <Plus size={18} />
-          Report
-        </button>
       </div>
 
       <div className={styles.filterBar}>
@@ -296,7 +368,7 @@ const HomeFeedPage = () => {
 
         {!loading &&
           !error &&
-          filteredIncidents.map((incident) => (
+          visibleIncidents.map((incident) => (
             <IncidentCard
               key={incident.incident_id}
               incident={incident}
@@ -304,6 +376,16 @@ const HomeFeedPage = () => {
               showCommunityName={false}
             />
           ))}
+
+        {!loading && !error && hasMore && (
+          <button
+            type="button"
+            className={styles.loadMoreButton}
+            onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
+          >
+            Load more
+          </button>
+        )}
       </div>
     </div>
   );

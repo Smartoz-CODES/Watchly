@@ -23,7 +23,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
     (title: string, description: string, type: ToastType) => {
       setToast({ title, description, type, id: Date.now() });
     },
-    []
+    [],
   );
 
   useEffect(() => {

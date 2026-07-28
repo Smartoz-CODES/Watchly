@@ -1,15 +1,21 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/use-auth";
-import PlatformAdminPage from "../pages/PlatformAdminPage";
 
 // PlatformAdminRoute
 
 export default function PlatformAdminRoute() {
-  const { isPlatformAdmin } = useAuth();
+  const { isPlatformAdmin, loading } = useAuth();
+
+  // Missing from the original — without this, the check below can run
+  // before the async user-record fetch in AuthProvider has resolved,
+  // redirecting away before isPlatformAdmin has its real value.
+  if (loading) {
+    return null;
+  }
 
   if (!isPlatformAdmin) {
     return <Navigate to="/home" replace />;
   }
 
-  return <PlatformAdminPage />;
+  return <Outlet />;
 }

@@ -13,7 +13,10 @@ export function useToast(): Pick<ToastContextValue, "showToast"> {
 }
 
 // Used exclusively by Toast.tsx to read state and clear the toast
-export function useToastState(): Pick<ToastContextValue, "toast" | "clearToast"> {
+export function useToastState(): Pick<
+  ToastContextValue,
+  "toast" | "clearToast"
+> {
   const context = useContext(ToastContext);
 
   if (!context) {

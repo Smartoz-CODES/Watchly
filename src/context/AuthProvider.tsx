@@ -97,7 +97,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password,
       });
       if (error) {
-        showToast(AUTH_TOASTS.signInFailed.title, AUTH_TOASTS.signInFailed.description, "error");
+        showToast(
+          AUTH_TOASTS.signInFailed.title,
+          AUTH_TOASTS.signInFailed.description,
+          "error",
+        );
         throw error;
       }
     },

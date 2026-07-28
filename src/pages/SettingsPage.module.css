@@ -1,0 +1,278 @@
+.container {
+  padding: 1.6rem;
+  max-width: 60rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.pageTitle {
+  font-size: var(--text-h5, 1.5rem);
+  font-weight: 700;
+  color: var(--color-text-title, #111827);
+}
+
+.pageSubtitle {
+  font-size: var(--text-body-4, 0.9rem);
+  color: var(--color-text-caption, #6b7280);
+  margin-top: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.card,
+.dangerCard {
+  background-color: #fff;
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-md, 0.75rem);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+.sectionHint {
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+  margin-top: -0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.communityGroup {
+  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.communityGroup:first-of-type {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.communityGroupTitle {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-primary, #0f766e);
+  margin-bottom: 0.5rem;
+}
+
+.emptyCommunitiesNote {
+  font-size: 0.85rem;
+  color: var(--color-text-caption, #6b7280);
+}
+
+.photoRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.photoWrapper {
+  position: relative;
+  width: 4rem;
+  height: 4rem;
+  flex-shrink: 0;
+}
+
+.photo,
+.photoFallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.photoFallback {
+  background-color: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.photoEditButton {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 1px solid var(--color-border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.photoLabel {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.photoHint {
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  margin-top: 1rem;
+}
+
+.fieldInput,
+.fieldInputDisabled {
+  width: 100%;
+  border: none;
+  border-radius: var(--btn-radius-sm, 0.5rem);
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  background-color: var(--color-surface-default, #f3f4f6);
+}
+
+.fieldInput {
+  color: var(--color-text-body, #111827);
+}
+
+.fieldInput:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.fieldInputDisabled {
+  color: var(--color-text-caption, #6b7280);
+  cursor: not-allowed;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-border-default, #e5e7eb);
+}
+
+.toggleRow:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.toggleLabel {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.toggleDescription {
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+  margin-top: 0.2rem;
+}
+
+.switchOn,
+.switchOff {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  padding: 0.15rem;
+  display: flex;
+  align-items: center;
+}
+
+.switchOn {
+  background-color: var(--color-primary, #0f766e);
+  justify-content: flex-end;
+}
+
+.switchOff {
+  background-color: var(--color-border-default, #d1d5db);
+  justify-content: flex-start;
+}
+
+.switchThumb {
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.dangerCard {
+  border-color: var(--color-error-subtle, #fecaca);
+}
+
+.dangerTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-error, #cf2a2a);
+  margin-bottom: 1.25rem;
+}
+
+.dangerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-border-default, #e5e7eb);
+}
+
+.dangerRow:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.dangerLabel {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.dangerDescription {
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+  margin-top: 0.2rem;
+}
+
+.leaveButton {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--color-primary, #0f766e);
+  color: var(--color-primary, #0f766e);
+  border-radius: var(--btn-radius-sm, 0.5rem);
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.leaveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.deleteButton {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--color-error, #cf2a2a);
+  color: var(--color-error, #cf2a2a);
+  border-radius: var(--btn-radius-sm, 0.5rem);
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}

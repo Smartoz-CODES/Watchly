@@ -24,7 +24,9 @@ const PasswordRecoveryPage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [newPasswordError, setNewPasswordError] = useState<string | null>(null);
-  const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState<
+    string | null
+  >(null);
 
   // Supabase fires PASSWORD_RECOVERY when the user lands here via the email link
   useEffect(() => {
@@ -40,7 +42,11 @@ const PasswordRecoveryPage = () => {
     e.preventDefault();
 
     if (!email) {
-      showToast(VALIDATION_TOASTS.emailRequired.title, VALIDATION_TOASTS.emailRequired.description, "error");
+      showToast(
+        VALIDATION_TOASTS.emailRequired.title,
+        VALIDATION_TOASTS.emailRequired.description,
+        "error",
+      );
       return;
     }
 
@@ -51,13 +57,21 @@ const PasswordRecoveryPage = () => {
       });
 
       if (error) {
-        showToast(VALIDATION_TOASTS.sendLinkFailed.title, VALIDATION_TOASTS.sendLinkFailed.description, "error");
+        showToast(
+          VALIDATION_TOASTS.sendLinkFailed.title,
+          VALIDATION_TOASTS.sendLinkFailed.description,
+          "error",
+        );
         return;
       }
 
       setBannerVisible(true);
     } catch {
-      showToast(VALIDATION_TOASTS.sendLinkFailed.title, VALIDATION_TOASTS.sendLinkFailed.description, "error");
+      showToast(
+        VALIDATION_TOASTS.sendLinkFailed.title,
+        VALIDATION_TOASTS.sendLinkFailed.description,
+        "error",
+      );
     } finally {
       setLoading(false);
     }
@@ -92,14 +106,26 @@ const PasswordRecoveryPage = () => {
       });
 
       if (error) {
-        showToast(VALIDATION_TOASTS.updateFailed.title, VALIDATION_TOASTS.updateFailed.description, "error");
+        showToast(
+          VALIDATION_TOASTS.updateFailed.title,
+          VALIDATION_TOASTS.updateFailed.description,
+          "error",
+        );
         return;
       }
 
-      showToast(AUTH_TOASTS.passwordReset.title, AUTH_TOASTS.passwordReset.description, "success");
+      showToast(
+        AUTH_TOASTS.passwordReset.title,
+        AUTH_TOASTS.passwordReset.description,
+        "success",
+      );
       navigate("/login");
     } catch {
-      showToast(VALIDATION_TOASTS.updateFailed.title, VALIDATION_TOASTS.updateFailed.description, "error");
+      showToast(
+        VALIDATION_TOASTS.updateFailed.title,
+        VALIDATION_TOASTS.updateFailed.description,
+        "error",
+      );
     } finally {
       setLoading(false);
     }
@@ -255,7 +281,13 @@ const PasswordRecoveryPage = () => {
           </button>
 
           <p className={styles.footerText}>
-            <Link to="/support">Experiencing Issues? Contact Support</Link>
+            {/* Was a dead /support link — no support page or route exists
+                anywhere in this app. Fixed to a working mailto: rather than
+                inventing a whole new page to solve one broken link. Worth
+                a real support page later if this becomes a common need. */}
+            <a href="mailto:support@watchly.app">
+              Experiencing Issues? Contact Support
+            </a>
           </p>
         </div>
       )}

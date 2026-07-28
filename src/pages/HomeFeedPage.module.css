@@ -27,26 +27,6 @@
   margin-top: 0.4rem;
 }
 
-.reportButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  height: 4.8rem;
-  padding: 0 2rem;
-  border: none;
-  border-radius: var(--btn-radius-md);
-  background: var(--color-primary-darker);
-  color: #ffffff;
-  font-weight: 600;
-  font-size: var(--text-body-4);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.reportButton:hover {
-  background: var(--color-primary-dark);
-}
-
 .filterBar {
   display: flex;
   gap: 1.2rem;
@@ -157,4 +137,17 @@
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+}
+
+.loadMoreButton {
+  display: block;
+  margin: 1.5rem auto 0;
+  background: none;
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-md, 0.5rem);
+  padding: 0.6rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--color-text-body, #111827);
 }
