@@ -66,8 +66,26 @@ const EvidenceUploader = ({
       validFiles.push(file);
     });
 
-    if (validFiles.length > 0) {
-      onUpload(validFiles);
+    // The disabled button only ever stops the *next* click — it can't
+    // stop a single multi-select from blowing straight past the limit,
+    // since the file input allows selecting several files at once
+    // regardless of how many are already attached. Capping here instead,
+    // so the total genuinely never exceeds maxFiles no matter how many
+    // valid files get selected in one go.
+    const remainingSlots = Math.max(0, maxFiles - evidence.length);
+    const filesToAdd = validFiles.slice(0, remainingSlots);
+    const droppedCount = validFiles.length - filesToAdd.length;
+
+    if (droppedCount > 0) {
+      showToast(
+        "Some photos weren't added",
+        `You can attach up to ${maxFiles} images. ${droppedCount} photo${droppedCount === 1 ? " was" : "s were"} not added.`,
+        "error",
+      );
+    }
+
+    if (filesToAdd.length > 0) {
+      onUpload(filesToAdd);
     }
 
     event.target.value = "";

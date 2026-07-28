@@ -1,7 +1,9 @@
+import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/use-auth";
-import LandingPage from "../pages/LandingPage";
-import LandingLayout from "../layouts/LandingLayout";
+
+const LandingPage = lazy(() => import("../pages/LandingPage"));
+const LandingLayout = lazy(() => import("../layouts/LandingLayout"));
 
 // LandingRedirect
 

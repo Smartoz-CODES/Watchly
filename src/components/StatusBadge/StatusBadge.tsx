@@ -7,12 +7,23 @@ interface StatusBadgeProps {
   size?: "sm" | "md";
 }
 
-const config: Record<IncidentStatus, { label: string; icon: typeof Plus; className: string }> = {
+const config: Record<
+  IncidentStatus,
+  { label: string; icon: typeof Plus; className: string }
+> = {
   Reported: { label: "Reported", icon: Plus, className: "reported" },
-  "Under Review": { label: "Under review", icon: Clock, className: "underReview" },
+  "Under Review": {
+    label: "Under review",
+    icon: Clock,
+    className: "underReview",
+  },
   Verified: { label: "Verified", icon: ThumbsUp, className: "verified" },
   Resolved: { label: "Resolved", icon: CheckCheck, className: "resolved" },
-  "Not Verified": { label: "Not verified", icon: ThumbsDown, className: "notVerified" },
+  "Not Verified": {
+    label: "Not verified",
+    icon: ThumbsDown,
+    className: "notVerified",
+  },
 };
 
 const StatusBadge = ({ status, size = "sm" }: StatusBadgeProps) => {
@@ -24,7 +35,11 @@ const StatusBadge = ({ status, size = "sm" }: StatusBadgeProps) => {
         size === "md" ? styles.md : styles.sm
       }`}
     >
-      <Icon size={size === "md" ? 16 : 14} className={styles.icon} aria-hidden="true" />
+      <Icon
+        size={size === "md" ? 16 : 14}
+        className={styles.icon}
+        aria-hidden="true"
+      />
       {label}
     </span>
   );

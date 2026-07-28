@@ -22,8 +22,8 @@
 }
 
 .reported {
-  background: #D4D4D8;
-  color: #3F3F46;
+  background: #d4d4d8;
+  color: #3f3f46;
 }
 
 .underReview {
@@ -42,8 +42,8 @@
 }
 
 .notVerified {
-  background: #FED6D6;
-  color: #CF2A2A;
+  background: #fed6d6;
+  color: #cf2a2a;
 }
 
 .notVerified .icon {

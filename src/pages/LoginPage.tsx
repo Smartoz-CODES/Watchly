@@ -1,6 +1,6 @@
 ﻿import { useState } from "react";
 import type { FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../hooks/use-auth";
 import { useToast } from "../hooks/use-toast";
@@ -10,6 +10,7 @@ import styles from "./LoginPage.module.css";
 const LoginPage = () => {
   const { signIn } = useAuth();
   const { showToast } = useToast();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -21,9 +22,17 @@ const LoginPage = () => {
     try {
       setIsLoading(true);
       await signIn(email, password);
-      // ProtectedRoute handles redirect to /home
+      // The old comment here claimed ProtectedRoute handles this redirect —
+      // it doesn't. ProtectedRoute only pushes logged-out users away from
+      // protected pages; nothing was pulling a freshly-logged-in user off
+      // /login. Navigating explicitly instead.
+      navigate("/home");
     } catch {
-      showToast(AUTH_TOASTS.signInFailed.title, AUTH_TOASTS.signInFailed.description, "error");
+      showToast(
+        AUTH_TOASTS.signInFailed.title,
+        AUTH_TOASTS.signInFailed.description,
+        "error",
+      );
     } finally {
       setIsLoading(false);
     }

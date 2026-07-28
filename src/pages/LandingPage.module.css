@@ -1,0 +1,852 @@
+.page {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.accentText {
+  color: var(--color-primary, #0f766e);
+}
+
+.accentTextLight {
+  color: var(--color-warning, #e2992f);
+}
+
+/* Nav */
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--color-border-default, #e5e7eb);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logoMark {
+  height: 1.75rem;
+  width: auto;
+  object-fit: contain;
+}
+
+.navLinksDesktop,
+.navActionsDesktop {
+  display: none;
+}
+
+.hamburgerButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-body, #111827);
+}
+
+.drawerOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.45);
+  z-index: 60;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 80%;
+  max-width: 320px;
+  background-color: #fff;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-body, #111827);
+}
+
+.drawerLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: auto;
+}
+
+.drawerLink {
+  text-align: left;
+  background: none;
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text-body, #111827);
+  cursor: pointer;
+}
+
+.getStartedButtonFull {
+  width: 100%;
+  background-color: var(--color-primary, #0f766e);
+  color: #fff;
+  border: none;
+  border-radius: var(--btn-radius-md, 0.65rem);
+  padding: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 1.5rem;
+}
+
+.loginLinkCentered {
+  width: 100%;
+  text-align: center;
+  background: none;
+  border: none;
+  color: var(--color-primary, #0f766e);
+  font-weight: 600;
+  padding: 0.9rem 0;
+  cursor: pointer;
+}
+
+/* Hero */
+
+.hero {
+  padding: 2.5rem 1.25rem;
+  text-align: center;
+}
+
+.trustBar {
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+  margin-bottom: 1rem;
+}
+
+.heroTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 1rem;
+}
+
+.heroSubtitle {
+  font-size: 0.95rem;
+  color: var(--color-text-caption, #6b7280);
+  line-height: 1.6;
+  max-width: 34rem;
+  margin: 0 auto 1.5rem;
+}
+
+.heroButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 22rem;
+  margin: 0 auto 2rem;
+}
+
+.primaryButton,
+.finalCtaPrimary {
+  background-color: var(--color-primary-darker, #0d5c56);
+  color: #fff;
+  border: none;
+  border-radius: var(--btn-radius-md, 0.65rem);
+  padding: 0.9rem 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.secondaryButton {
+  background: none;
+  border: 1px solid var(--color-border-default, #d1d5db);
+  border-radius: var(--btn-radius-md, 0.65rem);
+  padding: 0.9rem 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--color-text-body, #111827);
+}
+
+.heroImage {
+  width: 100%;
+  border-radius: var(--btn-radius-lg, 1rem);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Features */
+
+.featuresSection {
+  padding: 3rem 1.25rem;
+}
+
+.featuresHeader {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+
+.sectionTitleCentered {
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.6rem;
+}
+
+.sectionSubtitleCentered {
+  font-size: 0.9rem;
+  color: var(--color-text-caption, #6b7280);
+  text-align: center;
+  max-width: 34rem;
+  margin: 0 auto 2rem;
+  line-height: 1.5;
+}
+
+.featuresIntro {
+  font-size: 0.95rem;
+  color: var(--color-text-caption, #6b7280);
+  line-height: 1.6;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.featureCard {
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-md, 0.75rem);
+  padding: 1.5rem;
+}
+
+.featureIconWrap {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background-color: var(--color-primary-subtle, #e0f2f1);
+  color: var(--color-primary, #0f766e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.featureTitle {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+}
+
+.featureDescription {
+  font-size: 0.85rem;
+  color: var(--color-text-caption, #6b7280);
+  line-height: 1.5;
+}
+
+/* Why Watchly */
+
+.whySection {
+  padding: 3rem 1.25rem;
+  background-color: var(--color-surface-default, #f0fdfa);
+}
+
+.comparisonGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 60rem;
+  margin: 0 auto;
+}
+
+.comparisonPanel {
+  border-radius: var(--btn-radius-lg, 1rem);
+  padding: 1.5rem;
+  background-color: #fff;
+}
+
+.comparisonLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+}
+
+.comparisonScenario {
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+  margin-bottom: 1rem;
+}
+
+.dotAmber,
+.dotGreen,
+.dotGray,
+.dotTeal,
+.dotDark {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dotAmber {
+  background-color: var(--color-warning, #d97706);
+}
+.dotGreen {
+  background-color: var(--color-success, #15803d);
+}
+.dotGray {
+  background-color: #9ca3af;
+}
+.dotTeal {
+  background-color: var(--color-primary, #0f766e);
+}
+.dotDark {
+  background-color: #374151;
+}
+
+
+.dotStatusReported {
+  background-color: #9ca3af;
+}
+.dotStatusUnderReview {
+  background-color: var(--color-warning, #e2992f);
+}
+.dotStatusVerified {
+  background-color: var(--color-badge-verified-text, #0d9a6c);
+}
+.dotStatusResolved {
+  background-color: var(--color-badge-resolved-text, #3f3f46);
+}
+
+.chatBubbleLeft {
+  background-color: var(--color-surface-default, #f3f4f6);
+  border-radius: var(--btn-radius-md, 0.75rem);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.6rem;
+  max-width: 90%;
+}
+
+.mockIncidentCard {
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-md, 0.75rem);
+  padding: 1.1rem;
+}
+
+.mockIncidentHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.mockIncidentReporter {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.mockIncidentMeta {
+  font-size: 0.75rem;
+  color: var(--color-text-caption, #6b7280);
+}
+
+.mockCategoryTag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background-color: var(--color-surface-default, #f3f4f6);
+  border-radius: var(--btn-radius-sm, 0.35rem);
+  padding: 0.2rem 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.mockIncidentTitle {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.mockStatusHistory {
+  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+}
+
+.mockStatusHistoryTitle {
+  font-weight: 700;
+  font-size: 0.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.mockStatusHistoryItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--color-primary, #0f766e);
+  line-height: 1.6;
+}
+
+/* How it Works */
+
+.howItWorksSection {
+  padding: 3rem 1.25rem;
+}
+
+.howItWorksGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.howItWorksImage {
+  width: 100%;
+  border-radius: var(--btn-radius-lg, 1rem);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.stepsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.stepBadge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-primary, #0f766e);
+  background-color: var(--color-primary-subtle, #e0f2f1);
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  margin-bottom: 0.5rem;
+}
+
+.stepTitle {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 0.3rem;
+}
+
+.stepDescription {
+  font-size: 0.85rem;
+  color: var(--color-text-caption, #6b7280);
+  line-height: 1.5;
+}
+
+/* Status */
+
+.statusSection {
+  padding: 3rem 1.25rem;
+  background-color: var(--color-surface-default, #f0fdfa);
+}
+
+.statusGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  max-width: 60rem;
+  margin: 0 auto;
+}
+
+.statusCard {
+  background-color: #fff;
+  border-radius: var(--btn-radius-md, 0.75rem);
+  padding: 1.25rem;
+}
+
+.statusCardLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+}
+
+.statusCardDescription {
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+  line-height: 1.5;
+}
+
+/* Testimonials */
+
+.testimonialsSection {
+  padding: 3rem 1.25rem;
+}
+
+.testimonialCard {
+  position: relative;
+  background-color: var(--color-primary-darkest, #0e2e32);
+  color: #fff;
+  border-radius: var(--btn-radius-lg, 1.25rem);
+  padding: 2rem 1.5rem;
+  max-width: 60rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.testimonialPhoto {
+  width: 100%;
+  max-width: 16rem;
+  border-radius: var(--btn-radius-md, 0.75rem);
+  object-fit: cover;
+  margin: 0 auto;
+}
+
+.testimonialQuote {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 1.5rem;
+}
+
+.testimonialName {
+  font-weight: 700;
+}
+
+.testimonialRole {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.testimonialArrows {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+}
+
+.arrowButton {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* FAQ */
+
+.faqSection {
+  padding: 3rem 1.25rem;
+}
+
+.faqList {
+  max-width: 40rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.faqItem {
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-md, 0.75rem);
+  padding: 1.1rem 1.25rem;
+}
+
+.faqQuestion {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: none;
+  border: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  color: var(--color-text-body, #111827);
+}
+
+.faqChevron,
+.faqChevronOpen {
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.faqChevronOpen {
+  transform: rotate(180deg);
+}
+
+.faqAnswer {
+  font-size: 0.85rem;
+  color: var(--color-text-caption, #6b7280);
+  line-height: 1.6;
+  margin-top: 0.75rem;
+}
+
+/* Final CTA */
+
+.finalCta {
+  background-color: var(--color-primary-darkest, #0e2e32);
+  color: #fff;
+  padding: 3rem 1.25rem;
+  text-align: center;
+}
+
+.finalCtaTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.finalCtaPrimary {
+  background-color: #fff;
+  color: var(--color-primary-darker, #0d5c56);
+}
+
+.finalCtaSecondary {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--btn-radius-md, 0.65rem);
+  padding: 0.9rem 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* Footer */
+
+.footer {
+  background-color: var(--color-primary-darkest, #0e2e32);
+  color: #d1d5db;
+  padding: 2.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.footerBrand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footerLogo {
+  height: 1.5rem;
+  width: auto;
+  object-fit: contain;
+}
+
+.footerTagline {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.footerColumnTitle {
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.footerLink {
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.footerCopyright {
+  font-size: 0.75rem;
+  color: #6b7280;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1.5rem;
+}
+
+/* Desktop */
+
+@media (min-width: 768px) {
+  .nav {
+    padding: 1.25rem 3rem;
+  }
+
+  .hamburgerButton {
+    display: none;
+  }
+
+  .navLinksDesktop {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .navLink {
+    background: none;
+    border: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-text-body, #111827);
+    cursor: pointer;
+  }
+
+  .navActionsDesktop {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .loginLink {
+    background: none;
+    border: none;
+    font-weight: 600;
+    color: var(--color-text-body, #111827);
+    cursor: pointer;
+  }
+
+  .getStartedButton {
+    background-color: var(--color-primary-darker, #0d5c56);
+    color: #fff;
+    border: none;
+    border-radius: var(--btn-radius-md, 0.65rem);
+    padding: 0.7rem 1.4rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .hero {
+    padding: 4rem 3rem;
+  }
+
+  .heroTitle {
+    font-size: 3rem;
+    max-width: 44rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .heroButtons {
+    flex-direction: row;
+    justify-content: center;
+    max-width: none;
+  }
+
+  .heroImage {
+    max-width: 60rem;
+    margin: 0 auto;
+  }
+
+  .featuresSection,
+  .whySection,
+  .howItWorksSection,
+  .statusSection,
+  .testimonialsSection,
+  .faqSection {
+    padding: 4rem 3rem;
+  }
+
+  .featuresHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    max-width: 70rem;
+    margin: 0 auto 2.5rem;
+  }
+
+  .featuresIntro {
+    max-width: 24rem;
+  }
+
+  .featuresGrid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 70rem;
+    margin: 0 auto;
+  }
+
+  .comparisonGrid {
+    flex-direction: row;
+  }
+
+  .comparisonPanel {
+    flex: 1;
+  }
+
+  .howItWorksGrid {
+    flex-direction: row;
+    align-items: center;
+    max-width: 70rem;
+    margin: 0 auto;
+  }
+
+  .howItWorksImage {
+    flex: 0 0 50%;
+  }
+
+  .stepsList {
+    flex: 1;
+  }
+
+  .statusGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .testimonialCard {
+    flex-direction: row;
+    align-items: center;
+    padding: 3rem;
+  }
+
+  .testimonialPhoto {
+    flex: 0 0 16rem;
+    margin: 0;
+  }
+
+  .testimonialContent {
+    flex: 1;
+  }
+
+  .testimonialArrows {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+  }
+
+  .finalCta {
+    padding: 4rem 3rem;
+  }
+
+  .footer {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 3rem;
+  }
+
+  .footerBrand {
+    flex: 1 1 100%;
+  }
+
+  .footerColumn {
+    flex: 1;
+    min-width: 8rem;
+  }
+
+  .footerCopyright {
+    flex: 1 1 100%;
+  }
+}

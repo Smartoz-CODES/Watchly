@@ -1,10 +1,20 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useCallback, useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Check, ChevronLeft, Eye, EyeOff, Lock } from "lucide-react";
+import {
+  Bell,
+  Check,
+  ChevronLeft,
+  Eye,
+  EyeOff,
+  Handshake,
+  Radio,
+} from "lucide-react";
 
 import OTPInput from "../components/OTPInput/OTPInput";
 import { useAuth } from "../hooks/use-auth";
+import { useCommunities } from "../hooks/use-communities";
+import { useCommunity } from "../hooks/use-community";
 import { useToast } from "../hooks/use-toast";
 import { supabase } from "../lib/supabase";
 import { normalizePhoneE164 } from "../lib/phone";
@@ -18,13 +28,25 @@ const maskPhone = (e164: string): string => {
   return `+234 *** *** ${last4}`;
 };
 
+
+const prettifySlugAsName = (slug: string): string =>
+  slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
 const SignupPage = () => {
   const { signUp, verifyOtp } = useAuth();
+  const { joinCommunity } = useCommunities();
+  const { refreshCommunities } = useCommunity();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
   const [step, setStep] = useState<1 | 2>(1);
   const [verified, setVerified] = useState(false);
+  const [joinedCommunityName, setJoinedCommunityName] = useState<string | null>(
+    null,
+  );
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -41,12 +63,36 @@ const SignupPage = () => {
   const [resending, setResending] = useState(false);
   const [countdown, setCountdown] = useState(60);
 
-  const goToNextStep = () => {
+  
+  const handlePostVerification = useCallback(async () => {
     const slug = new URLSearchParams(window.location.search).get("community");
-    // TODO Day 2: call useCommunities().joinCommunity(slug) here before navigating
-    // TODO Day 2: call useCommunity().refreshCommunities() after joining
-    navigate(slug ? "/home" : "/communities");
-  };
+
+    if (!slug) {
+      navigate("/communities");
+      return;
+    }
+
+    try {
+      // TODO: joinCommunity expects a community_id, not a slug — there's
+      // no slug-to-id lookup wired up anywhere yet. Passing the slug
+      // through as-is for now; this needs a real resolution step (or the
+      // join Edge Function needs to accept a slug directly) before this
+      // can ever actually succeed.
+      await joinCommunity(slug);
+      // refreshCommunities is always correct to call here regardless of
+      // the slug issue above — it just re-fetches the real, current
+      // list. Deliberately NOT calling switchCommunity here though:
+      // that needs a real community_id, and all that exists at this
+      // point is the slug — passing it through would silently leave
+      // activeCommunity null rather than actually switching to anything.
+      // Add switchCommunity(realId) here once the slug-to-id gap above
+      // is resolved.
+      await refreshCommunities();
+      setJoinedCommunityName(prettifySlugAsName(slug));
+    } catch {
+      navigate("/communities");
+    }
+  }, [navigate, joinCommunity, refreshCommunities]);
 
   useEffect(() => {
     if (step !== 2 || countdown === 0) return;
@@ -54,40 +100,57 @@ const SignupPage = () => {
     return () => clearTimeout(timer);
   }, [countdown, step]);
 
-  // Mobile: auto-dismiss the verified screen and continue on. Desktop keeps the Continue button.
+  
   useEffect(() => {
     if (!verified) return;
-    const isMobile = window.matchMedia("(max-width: 767px)").matches;
-    if (!isMobile) return;
 
     const timer = setTimeout(() => {
-      goToNextStep();
-    }, 3000);
+      handlePostVerification();
+    }, 2000);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [verified]);
+  }, [verified, handlePostVerification]);
 
   const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!name || !email || !phone || !password) {
-      showToast(VALIDATION_TOASTS.missingFields.title, VALIDATION_TOASTS.missingFields.description, "error");
+      showToast(
+        VALIDATION_TOASTS.missingFields.title,
+        VALIDATION_TOASTS.missingFields.description,
+        "error",
+      );
       return;
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
-      showToast(VALIDATION_TOASTS.invalidEmail.title, VALIDATION_TOASTS.invalidEmail.description, "error");
+      showToast(
+        VALIDATION_TOASTS.invalidEmail.title,
+        VALIDATION_TOASTS.invalidEmail.description,
+        "error",
+      );
       return;
     }
     if (!/^(0|\+234)\d{10}$/.test(phone)) {
-      showToast(VALIDATION_TOASTS.invalidPhone.title, VALIDATION_TOASTS.invalidPhone.description, "error");
+      showToast(
+        VALIDATION_TOASTS.invalidPhone.title,
+        VALIDATION_TOASTS.invalidPhone.description,
+        "error",
+      );
       return;
     }
     if (password.length < 8) {
-      showToast(VALIDATION_TOASTS.passwordTooShort.title, VALIDATION_TOASTS.passwordTooShort.description, "error");
+      showToast(
+        VALIDATION_TOASTS.passwordTooShort.title,
+        VALIDATION_TOASTS.passwordTooShort.description,
+        "error",
+      );
       return;
     }
     if (!agreePolicy) {
-      showToast(VALIDATION_TOASTS.privacyPolicyRequired.title, VALIDATION_TOASTS.privacyPolicyRequired.description, "error");
+      showToast(
+        VALIDATION_TOASTS.privacyPolicyRequired.title,
+        VALIDATION_TOASTS.privacyPolicyRequired.description,
+        "error",
+      );
       return;
     }
 
@@ -134,7 +197,19 @@ const SignupPage = () => {
       });
 
       if (error) {
-        showToast(VALIDATION_TOASTS.resendFailed.title, VALIDATION_TOASTS.resendFailed.description, "error");
+        if (error.status === 429) {
+          showToast(
+            AUTH_TOASTS.tooManyOtpRequests.title,
+            AUTH_TOASTS.tooManyOtpRequests.description,
+            "error",
+          );
+        } else {
+          showToast(
+            VALIDATION_TOASTS.resendFailed.title,
+            VALIDATION_TOASTS.resendFailed.description,
+            "error",
+          );
+        }
         return;
       }
 
@@ -142,7 +217,11 @@ const SignupPage = () => {
       const codeSentMessage = AUTH_TOASTS.codeSent(maskPhone(normalizedPhone));
       showToast(codeSentMessage.title, codeSentMessage.description, "info");
     } catch {
-      showToast(VALIDATION_TOASTS.resendFailed.title, VALIDATION_TOASTS.resendFailed.description, "error");
+      showToast(
+        VALIDATION_TOASTS.resendFailed.title,
+        VALIDATION_TOASTS.resendFailed.description,
+        "error",
+      );
     } finally {
       setResending(false);
     }
@@ -155,8 +234,8 @@ const SignupPage = () => {
           <div className={styles.header}>
             <h1 className={styles.title}>Let's get started</h1>
             <p className={styles.subtitle}>
-              Create your account to start reporting, corroborating, and
-              staying informed.
+              Create your account to start reporting, corroborating, and staying
+              informed.
             </p>
           </div>
 
@@ -223,9 +302,9 @@ const SignupPage = () => {
               </button>
             </div>
             <p className={styles.helperText}>
-              Your password should be at least 8 characters, mix of
-              uppercase letters, lowercase letters, numbers, and special
-              characters (e.g., @, #, $, %).
+              Your password should be at least 8 characters, mix of uppercase
+              letters, lowercase letters, numbers, and special characters (e.g.,
+              @, #, $, %).
             </p>
           </div>
 
@@ -257,97 +336,142 @@ const SignupPage = () => {
 
       {step === 2 && (
         <div className={styles.form}>
-          <button
-            type="button"
-            className={styles.backLink}
-            onClick={() => setStep(1)}
-          >
-            <ChevronLeft size={18} /> Back
-          </button>
+          {!verified && (
+            <>
+              <button
+                type="button"
+                className={styles.backLink}
+                onClick={() => setStep(1)}
+              >
+                <ChevronLeft size={18} /> Back
+              </button>
 
-          <div className={styles.header}>
-            <h1 className={styles.title}>Verification code</h1>
-            <p className={styles.subtitle}>
-              Check your SMS messages for a 6-digit verification code
-            </p>
-          </div>
-
-          <OTPInput
-            length={6}
-            value={otp}
-            onChange={(code) => {
-              setOtp(code);
-              setOtpError(null);
-            }}
-            error={otpError}
-          />
-
-          <div className={styles.resendContainer}>
-            <span>Didn't receive code?</span>
-            <button
-              type="button"
-              className={styles.resendButton}
-              disabled={countdown > 0 || resending}
-              onClick={handleResendCode}
-            >
-              Resend Code
-            </button>
-          </div>
-
-          <button
-            type="button"
-            className={styles.primaryButton}
-            onClick={handleVerifyOtp}
-            disabled={loading}
-          >
-            {loading ? "Verifying..." : "Verify"}
-          </button>
-
-          {verified && (
-            <div className={styles.overlay}>
-              <div className={styles.modalCard}>
-                <div className={styles.verifiedIconWrap}>
-                  <div className={styles.verifiedIcon}>
-                    <Check size={20} color="#fff" />
-                  </div>
-                </div>
-
-                <h2 className={styles.verifiedTitle}>Phone Verified</h2>
-                <p className={styles.verifiedBody}>
-                  Your phone number has been successfully verified. You can
-                  now report incidents and confirm reports in your
-                  community.
-                </p>
-
-                <div className={styles.numberCard}>
-                  <div className={styles.numberIconWrap}>
-                    <Lock size={18} />
-                  </div>
-                  <div className={styles.numberText}>
-                    <span className={styles.numberLabel}>
-                      Verified Number
-                    </span>
-                    <span className={styles.numberValue}>
-                      {maskPhone(normalizePhoneE164(phone))}
-                    </span>
-                  </div>
-                  <span className={styles.confirmedPill}>
-                    <Check size={14} /> Confirmed
-                  </span>
-                </div>
-
-                <button
-                  type="button"
-                  className={styles.primaryButton}
-                  onClick={goToNextStep}
-                >
-                  Continue
-                </button>
-
-                <p className={styles.privacyNote}>
-                  Your number is private and never shared publicly
+              <div className={styles.header}>
+                <h1 className={styles.title}>Verification code</h1>
+                <p className={styles.subtitle}>
+                  Check your SMS messages for a 6-digit verification code
                 </p>
               </div>
+
+              <OTPInput
+                length={6}
+                value={otp}
+                onChange={(code) => {
+                  setOtp(code);
+                  setOtpError(null);
+                }}
+                error={otpError}
+              />
+
+              <div className={styles.resendContainer}>
+                <span>Didn't receive code?</span>
+                <button
+                  type="button"
+                  className={styles.resendButton}
+                  disabled={countdown > 0 || resending}
+                  onClick={handleResendCode}
+                >
+                  Resend Code
+                </button>
+              </div>
+
+              <button
+                type="button"
+                className={styles.primaryButton}
+                onClick={handleVerifyOtp}
+                disabled={loading}
+              >
+                {loading ? "Verifying..." : "Verify"}
+              </button>
+            </>
+          )}
+
+          {verified && !joinedCommunityName && (
+            <div className={styles.fullPageStep}>
+              <div className={styles.verifiedIconWrap}>
+                <div className={styles.verifiedIcon}>
+                  <Check size={20} color="#fff" />
+                </div>
+              </div>
+
+              <h2 className={styles.verifiedTitle}>Phone verified</h2>
+              <p className={styles.verifiedBody}>
+                Your number {maskPhone(normalizePhoneE164(phone))} is confirmed.
+                SMS alerts are now active.
+              </p>
+            </div>
+          )}
+
+          {joinedCommunityName && (
+            <div className={styles.fullPageStep}>
+              <div className={styles.verifiedIconWrap}>
+                <div className={styles.verifiedIcon}>
+                  <Check size={20} color="#fff" />
+                </div>
+              </div>
+
+              <h2 className={styles.verifiedTitle}>
+                You have joined {joinedCommunityName}!
+              </h2>
+              <p className={styles.verifiedBody}>
+                You reviewed the community details and chose to join. Welcome to{" "}
+                {joinedCommunityName}.
+              </p>
+
+              <div className={styles.featureList}>
+                <div className={styles.featureRow}>
+                  <span className={styles.featureIconWrap}>
+                    <Bell size={18} />
+                  </span>
+                  <div>
+                    <p className={styles.featureTitle}>
+                      You will receive SMS alerts
+                    </p>
+                    <p className={styles.featureBody}>
+                      When an incident in {joinedCommunityName} is verified by
+                      your Admin, you get an SMS even if the app is closed.
+                    </p>
+                  </div>
+                </div>
+
+                <div className={styles.featureRow}>
+                  <span className={styles.featureIconWrap}>
+                    <Radio size={18} />
+                  </span>
+                  <div>
+                    <p className={styles.featureTitle}>
+                      Browse the incident feed
+                    </p>
+                    <p className={styles.featureBody}>
+                      See what has been reported, corroborated, and verified in
+                      your community.
+                    </p>
+                  </div>
+                </div>
+
+                <div className={styles.featureRow}>
+                  <span className={styles.featureIconWrap}>
+                    <Handshake size={18} />
+                  </span>
+                  <div>
+                    <p className={styles.featureTitle}>
+                      Corroborate incidents you know about
+                    </p>
+                    <p className={styles.featureBody}>
+                      If you witness something, confirm it on Watchly. Your
+                      input helps your Admin verify faster.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className={styles.primaryButton}
+                onClick={() => navigate("/home")}
+              >
+                Go to my community feed
+              </button>
             </div>
           )}
         </div>

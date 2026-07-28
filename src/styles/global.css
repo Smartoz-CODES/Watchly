@@ -75,9 +75,7 @@ a {
   text-decoration: none;
 }
 
-/* ─── Color tokens ─────────────────────────────────────────────────────────────
-   Source: Figma Color_Tokens.png and Colors.png
-──────────────────────────────────────────────────────────────────────────────── */
+
 :root {
   /* Font families */
   --font-heading: "Playfair Display", Georgia, serif;

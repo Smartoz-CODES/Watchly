@@ -1,0 +1,149 @@
+.card {
+  background-color: #fff;
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-md, 0.75rem);
+  padding: 1.25rem;
+}
+
+.header {
+  margin-bottom: 0.6rem;
+}
+
+.name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+  margin-top: 0.2rem;
+}
+
+.description {
+  font-size: 0.85rem;
+  color: var(--color-text-body, #374151);
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+}
+
+.actionsRow {
+  display: flex;
+  gap: 0.75rem;
+  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  padding-top: 1rem;
+}
+
+.approveButton {
+  flex: 1;
+  background-color: var(--color-primary, #0f766e);
+  color: #fff;
+  border: none;
+  border-radius: var(--btn-radius-sm, 0.5rem);
+  padding: 0.65rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.declineButton {
+  flex: 1;
+  background: none;
+  border: 1px solid var(--color-error, #cf2a2a);
+  color: var(--color-error, #cf2a2a);
+  border-radius: var(--btn-radius-sm, 0.5rem);
+  padding: 0.65rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.expandedPanel {
+  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  padding-top: 1rem;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 5rem;
+  border: none;
+  border-radius: var(--btn-radius-sm, 0.5rem);
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  background-color: var(--color-surface-default, #f3f4f6);
+  resize: vertical;
+  margin-bottom: 1rem;
+}
+
+.expandedActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.cancelLink {
+  background: none;
+  border: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-text-caption, #6b7280);
+  cursor: pointer;
+}
+
+.confirmButton,
+.confirmButtonDestructive {
+  border: none;
+  border-radius: var(--btn-radius-sm, 0.5rem);
+  padding: 0.55rem 1.2rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #fff;
+}
+
+.confirmButton {
+  background-color: var(--color-primary, #0f766e);
+}
+
+.confirmButtonDestructive {
+  background-color: var(--color-error, #cf2a2a);
+}
+
+.confirmButtonDestructive:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

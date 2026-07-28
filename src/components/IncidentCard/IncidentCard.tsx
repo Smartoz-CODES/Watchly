@@ -53,9 +53,13 @@ const IncidentCard = ({
     >
       <div className={styles.header}>
         <div className={styles.identity}>
-          <div className={styles.avatar}>{getInitials(incident.reporter_name)}</div>
+          <div className={styles.avatar}>
+            {getInitials(incident.reporter_name)}
+          </div>
           <div className={styles.identityText}>
-            <span className={styles.reporterName}>{incident.reporter_name}</span>
+            <span className={styles.reporterName}>
+              {incident.reporter_name}
+            </span>
             <span className={styles.metaLine}>
               {incident.location} · {getRelativeTime(incident.created_at)}
               {showCommunityName && ` · ${incident.community_name}`}
@@ -76,7 +80,9 @@ const IncidentCard = ({
       <p className={styles.description}>{incident.description}</p>
 
       {isReportedStatus && (
-        <span className={styles.unverifiedLabel}>Unverified — not yet reviewed</span>
+        <span className={styles.unverifiedLabel}>
+          Unverified — not yet reviewed
+        </span>
       )}
 
       <div className={styles.footer}>

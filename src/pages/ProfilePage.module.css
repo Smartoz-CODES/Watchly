@@ -1,0 +1,440 @@
+.container {
+  padding: 1.6rem;
+  max-width: 50rem;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Header card */
+
+.headerCard {
+  background-color: #fff;
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-md, 0.75rem);
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.avatarWrapper {
+  flex-shrink: 0;
+}
+
+.avatar,
+.avatarFallback {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarFallback {
+  background-color: var(--color-primary, #0f766e);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.headerName {
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.verifiedPill {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-primary, #0f766e);
+  background-color: var(--color-primary-subtle, #e0f2f1);
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+}
+
+.headerContact {
+  font-size: 0.85rem;
+  color: var(--color-text-caption, #6b7280);
+}
+
+.memberSincePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-sm, 0.4rem);
+  padding: 0.25rem 0.6rem;
+  margin-top: 0.5rem;
+}
+
+/* Shared card */
+
+.card {
+  background-color: #fff;
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-md, 0.75rem);
+  padding: 1.5rem;
+}
+
+.cardHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.cardTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.editLink {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: none;
+  border: none;
+  color: var(--color-primary, #0f766e);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* Personal info rows */
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--color-border-default, #e5e7eb);
+}
+
+.infoRow:first-of-type {
+  border-top: none;
+}
+
+.infoLabel {
+  font-size: 0.85rem;
+  color: var(--color-text-caption, #6b7280);
+}
+
+.infoValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.smallVerifiedPill {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-primary, #0f766e);
+  background-color: var(--color-primary-subtle, #e0f2f1);
+  border-radius: 999px;
+  padding: 0.1rem 0.4rem;
+}
+
+/* Security */
+
+.securityRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--color-border-default, #e5e7eb);
+}
+
+.securityRow:first-of-type {
+  border-top: none;
+}
+
+.securityIconLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.securityIcon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background-color: var(--color-surface-default, #f3f4f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.securityLabel {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.securityDescription {
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+}
+
+.securityAction {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--color-primary, #0f766e);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* My Communities */
+
+.communityRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--color-border-default, #e5e7eb);
+}
+
+.communityRow:first-of-type {
+  border-top: none;
+}
+
+.communityName {
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.activePill {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-primary, #0f766e);
+  background-color: var(--color-primary-subtle, #e0f2f1);
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+}
+
+.communityMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+  margin-top: 0.2rem;
+}
+
+.viewButton {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--color-primary, #0f766e);
+  color: var(--color-primary, #0f766e);
+  border-radius: var(--btn-radius-sm, 0.4rem);
+  padding: 0.4rem 1rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* Activity summary */
+
+.activityGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.activityTile {
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-sm, 0.5rem);
+  padding: 0.9rem;
+}
+
+.activityIconTeal,
+.activityIconUnderReview,
+.activityIconGreen,
+.activityIconRed {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.activityIconTeal {
+  background-color: var(--color-primary-subtle, #e0f2f1);
+  color: var(--color-primary, #0f766e);
+}
+
+.activityIconUnderReview {
+  background-color: var(--color-warning-subtle, #f9ebd5);
+  color: var(--color-warning, #e2992f);
+}
+
+.activityIconGreen {
+  background-color: var(--color-badge-verified-bg, #cff1e6);
+  color: var(--color-badge-verified-text, #0d9a6c);
+}
+
+.activityIconRed {
+  background-color: var(--color-error-subtle, #fee2e2);
+  color: var(--color-error, #cf2a2a);
+}
+
+.activityValue {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.activityLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-caption, #6b7280);
+}
+
+/* Account shortcuts */
+
+.shortcutRow,
+.shortcutRowDestructive {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.shortcutRow:first-of-type,
+.shortcutRowDestructive:first-of-type {
+  border-top: none;
+}
+
+.shortcutRow {
+  color: var(--color-text-body, #111827);
+}
+
+.shortcutRowDestructive {
+  color: var(--color-error, #cf2a2a);
+}
+
+.shortcutRowDestructive:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.shortcutIconLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Change password modal */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 60;
+}
+
+.modal {
+  background-color: #fff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 24rem;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.modalTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--color-text-caption, #6b7280);
+  cursor: pointer;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.fieldInput {
+  width: 100%;
+  border: none;
+  border-radius: var(--btn-radius-sm, 0.5rem);
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  background-color: var(--color-surface-default, #f3f4f6);
+}
+
+.fieldInput:focus {
+  outline: 2px solid var(--color-primary, #0f766e);
+  outline-offset: 1px;
+}
+
+.fieldError {
+  font-size: 0.8rem;
+  color: var(--color-error, #cf2a2a);
+  margin-top: 0.5rem;
+}
+
+.submitButton {
+  width: 100%;
+  background-color: var(--color-primary-darker, #0d5c56);
+  color: #fff;
+  border: none;
+  border-radius: var(--btn-radius-md, 0.65rem);
+  padding: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 1.25rem;
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

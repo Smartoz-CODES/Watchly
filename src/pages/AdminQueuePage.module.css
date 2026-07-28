@@ -1,0 +1,327 @@
+.container {
+  padding: 1.6rem;
+  max-width: 70rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.pageTitle {
+  font-size: var(--text-h5, 1.5rem);
+  font-weight: 700;
+}
+
+.pageSubtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-caption, #6b7280);
+  margin-top: 0.3rem;
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-md, 0.75rem);
+  padding: 1.5rem;
+}
+
+.cardTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.cardSubtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-caption, #6b7280);
+  margin-top: 0.2rem;
+  margin-bottom: 1.25rem;
+}
+
+.filterRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-md, 0.65rem);
+  padding: 0.7rem 1rem;
+}
+
+.searchWrapper input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.searchIcon {
+  color: var(--color-text-caption, #6b7280);
+}
+
+.statusDropdownWrapper {
+  position: relative;
+}
+
+.statusButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-md, 0.65rem);
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  background: none;
+  cursor: pointer;
+}
+
+.statusPanel {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  left: 0;
+  background: #fff;
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  border-radius: var(--btn-radius-md, 0.65rem);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  z-index: 40;
+  overflow: hidden;
+}
+
+.statusOption {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.7rem 1rem;
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.statusOption:hover {
+  background-color: var(--color-surface-default, #f3f4f6);
+}
+
+.categoryTabs {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--color-border-default, #e5e7eb);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.categoryTab,
+.categoryTabActive {
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid transparent;
+}
+
+.categoryTab {
+  color: var(--color-text-caption, #6b7280);
+}
+
+.categoryTabActive {
+  color: var(--color-text-body, #111827);
+  border-bottom-color: var(--color-text-body, #111827);
+}
+
+.reportCountHeading {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.incidentList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.incidentRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid var(--color-primary-subtle, #e0f2f1);
+  background-color: var(--color-surface-default, #f0fdfa);
+  border-radius: var(--btn-radius-md, 0.65rem);
+  padding: 1rem 1.25rem;
+  flex-wrap: wrap;
+}
+
+.incidentMain {
+  flex: 1;
+  min-width: 16rem;
+}
+
+.incidentTitle {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.incidentCode {
+  color: var(--color-primary, #0f766e);
+}
+
+.incidentMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.3rem;
+}
+
+.pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  white-space: nowrap;
+}
+
+.pillPending {
+  background-color: var(--color-error-subtle, #f9dcdc);
+  color: var(--color-error, #df5252);
+}
+
+.pillUnderReview {
+  background-color: var(--color-warning-subtle, #f9ebd5);
+  color: var(--color-warning, #e2992f);
+}
+
+.pillVerified {
+  background-color: var(--color-badge-verified-bg, #cff1e6);
+  color: var(--color-badge-verified-text, #0d9a6c);
+}
+
+.pillResolved {
+  background-color: var(--color-badge-resolved-bg, #d4d4d8);
+  color: var(--color-badge-resolved-text, #3f3f46);
+}
+
+.pillNotVerified {
+  background-color: var(--color-badge-not-verified-bg, #f9dcdc);
+  color: var(--color-badge-not-verified-text, #953737);
+}
+
+.metaText {
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+}
+
+.reporterText {
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+}
+
+.actionButtonFilled,
+.actionButtonOutlined {
+  flex-shrink: 0;
+  border-radius: var(--btn-radius-md, 0.5rem);
+  padding: 0.6rem 1.25rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.actionButtonFilled {
+  background-color: var(--color-primary, #0f766e);
+  color: #fff;
+  border: none;
+}
+
+.actionButtonOutlined {
+  background: none;
+  border: 1px solid var(--color-primary, #0f766e);
+  color: var(--color-primary, #0f766e);
+}
+
+.paginationRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.paginationText {
+  font-size: 0.8rem;
+  color: var(--color-text-caption, #6b7280);
+}
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pageArrow,
+.pageNumber,
+.pageNumberActive {
+  border: none;
+  background: none;
+  border-radius: var(--btn-radius-sm, 0.4rem);
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.pageArrow {
+  color: var(--color-text-caption, #6b7280);
+}
+
+.pageArrow:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pageNumberActive {
+  background-color: var(--color-primary, #0f766e);
+  color: #fff;
+  font-weight: 700;
+}
+
+.pageEllipsis {
+  color: var(--color-text-caption, #6b7280);
+  font-size: 0.85rem;
+}
+
+@media (min-width: 768px) {
+  .filterRow {
+    flex-direction: row;
+  }
+
+  .searchWrapper {
+    flex: 1;
+  }
+
+  .statusDropdownWrapper {
+    flex-shrink: 0;
+    width: 16rem;
+  }
+
+  .paginationRow {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
