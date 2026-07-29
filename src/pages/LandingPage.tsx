@@ -9,11 +9,9 @@ import {
   UserPlus,
   Bell,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Check,
+  ArrowLeft,
+  ArrowRight,
 } from "lucide-react";
-import StatusBadge from "../components/StatusBadge/StatusBadge";
 import styles from "./LandingPage.module.css";
 
 const NAV_LINKS = [
@@ -93,24 +91,34 @@ const HOW_IT_WORKS_STEPS = [
 const STATUS_LEGEND: {
   status: "Reported" | "Under Review" | "Verified" | "Resolved";
   description: string;
+  cardClass: keyof typeof styles;
+  dotClass: keyof typeof styles;
 }[] = [
   {
     status: "Reported",
     description: "A resident has submitted a report. Awaiting admin review.",
+    cardClass: "statusCardReported",
+    dotClass: "dotStatusReported",
   },
   {
     status: "Under Review",
     description: "Your Community Admin is actively reviewing the evidence.",
+    cardClass: "statusCardUnderReview",
+    dotClass: "dotStatusUnderReview",
   },
   {
     status: "Verified",
     description:
       "Confirmed by your Admin. SMS alert sent to all community members.",
+    cardClass: "statusCardVerified",
+    dotClass: "dotStatusVerified",
   },
   {
     status: "Resolved",
     description:
       "The incident has been closed. Full history preserved for accountability.",
+    cardClass: "statusCardResolved",
+    dotClass: "dotStatusResolved",
   },
 ];
 
@@ -235,6 +243,7 @@ const LandingPage = () => {
           >
             Login
           </button>
+
           <button
             type="button"
             className={styles.getStartedButton}
@@ -266,6 +275,7 @@ const LandingPage = () => {
                 alt="Watchly"
                 className={styles.logoMark}
               />
+
               <button
                 type="button"
                 className={styles.iconButton}
@@ -296,6 +306,7 @@ const LandingPage = () => {
             >
               Get started
             </button>
+
             <button
               type="button"
               className={styles.loginLinkCentered}
@@ -307,20 +318,31 @@ const LandingPage = () => {
         </div>
       )}
 
-      {/* ---------- Hero ---------- */}
+      {/* Hero */}
       <section className={styles.hero} id="about">
-        <p className={styles.trustBar}>
-          12 communities · 4,800+ residents · 3,300+ verified reports
-        </p>
+        <div className={styles.trustBarWrapper}>
+          <img
+            src="/assets/images/community-testimonial.png"
+            alt=""
+            className={styles.avatarCluster}
+          />
+
+          <p className={styles.trustBar}>
+            12 communities · 4,800+ residents · 3,300+ verified reports
+          </p>
+        </div>
+
         <h1 className={styles.heroTitle}>
           Your Community, Guarded by{" "}
-          <span className={styles.accentText}>Collective Vigilance.</span>
+          <span className={styles.accentTextHero}>Collective Vigilance.</span>
         </h1>
+
         <p className={styles.heroSubtitle}>
           Real-time incident tracking, verified resident corroboration, and
           instant emergency broadcasts. Empowering neighborhoods with the data
           they need to stay safe.
         </p>
+
         <div className={styles.heroButtons}>
           <button
             type="button"
@@ -329,6 +351,7 @@ const LandingPage = () => {
           >
             Join your community
           </button>
+
           <button
             type="button"
             className={styles.secondaryButton}
@@ -337,6 +360,7 @@ const LandingPage = () => {
             See how it works
           </button>
         </div>
+
         <img
           src="/assets/images/dashboard.png"
           alt="Watchly dashboard"
@@ -344,13 +368,14 @@ const LandingPage = () => {
         />
       </section>
 
-      {/* ---------- Features ---------- */}
+      {/* Features */}
       <section className={styles.featuresSection} id="features">
         <div className={styles.featuresHeader}>
           <h2 className={styles.sectionTitle}>
             Designed for{" "}
             <span className={styles.accentText}>Maximum Awareness</span>
           </h2>
+
           <p className={styles.featuresIntro}>
             Watchly is built for residents who want to stay informed, protected,
             and in control of their community's safety.
@@ -361,114 +386,62 @@ const LandingPage = () => {
           {FEATURES.map(({ icon: Icon, title, description }) => (
             <div key={title} className={styles.featureCard}>
               <span className={styles.featureIconWrap}>
-                <Icon size={20} />
+                <Icon className={styles.featureIcon} />
               </span>
+
               <p className={styles.featureTitle}>{title}</p>
+
               <p className={styles.featureDescription}>{description}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ---------- Why Watchly ---------- */}
+      {/* Why Watchly */}
       <section className={styles.whySection}>
         <h2 className={styles.sectionTitleCentered}>
           Why <span className={styles.accentText}>Watchly</span>
         </h2>
+
         <p className={styles.sectionSubtitleCentered}>
           See how the same security event plays out when your community relies
           on group chats versus when it uses Watchly.
         </p>
 
-        <div className={styles.comparisonGrid}>
-          <div className={styles.comparisonPanel}>
-            <p className={styles.comparisonLabel}>
-              <span className={styles.dotAmber} />
-              Without Watchly
-            </p>
-            <p className={styles.comparisonScenario}>
-              Scenario: Armed robbery reported nearby
-            </p>
-
-            <div className={styles.chatBubbleLeft}>
-              URGENT!!! Has anyone seen strange men near Gate 4?? 😨
-            </div>
-            <div className={styles.chatBubbleLeft}>
-              My cousin said it happened 3 days ago not today
-            </div>
-            <div className={styles.chatBubbleLeft}>
-              Is it still happening right now? Should we panic from another
-              estate
-            </div>
-          </div>
-
-          <div className={styles.comparisonPanel}>
-            <p className={styles.comparisonLabel}>
-              <span className={styles.dotGreen} />
-              With Watchly
-            </p>
-            <p className={styles.comparisonScenario}>
-              Scenario: Armed robbery reported nearby
-            </p>
-
-            <div className={styles.mockIncidentCard}>
-              <div className={styles.mockIncidentHeader}>
-                <div>
-                  <p className={styles.mockIncidentReporter}>
-                    Anonymous Resident
-                  </p>
-                  <p className={styles.mockIncidentMeta}>
-                    Gate 4 · 4 hours ago
-                  </p>
-                </div>
-                <StatusBadge status="Verified" size="sm" />
-              </div>
-              <span className={styles.mockCategoryTag}>
-                Suspicious Activity
-              </span>
-              <p className={styles.mockIncidentTitle}>
-                Suspicious vehicle parked near Close 6
-              </p>
-              <p className={styles.mockIncidentMeta}>5 corroborations</p>
-              <div className={styles.mockStatusHistory}>
-                <p className={styles.mockStatusHistoryTitle}>Status history</p>
-                <p className={styles.mockStatusHistoryItem}>
-                  <Check size={14} /> Reported
-                </p>
-                <p className={styles.mockStatusHistoryItem}>
-                  <Check size={14} /> Moved to Under review
-                </p>
-                <p className={styles.mockStatusHistoryItem}>
-                  <Check size={14} /> Verified
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <img
+          src="/assets/images/why-watchly-comparison.png"
+          alt="Comparison of an incident report without Watchly versus with Watchly"
+          className={styles.whyComparisonImage}
+        />
       </section>
 
-      {/* ---------- How it Works ---------- */}
+      {/* How it Works */}
       <section className={styles.howItWorksSection} id="how-it-works">
         <h2 className={styles.sectionTitleCentered}>
-          How it <span className={styles.accentText}>Works</span>
+          How it <span className={styles.accentTextWorks}>Works</span>
         </h2>
+
         <p className={styles.sectionSubtitleCentered}>
           See how the same security event plays out when your community relies
           on Watchly.
         </p>
 
         <div className={styles.howItWorksGrid}>
-          <img
-            src="/assets/images/dashboard-reuse.png"
-            alt="Watchly dashboard"
-            className={styles.howItWorksImage}
-          />
+          <div className={styles.howItWorksImageFrame}>
+            <img
+              src="/assets/images/how-it-works.png"
+              alt="Watchly dashboard"
+              className={styles.howItWorksImage}
+            />
+          </div>
 
           <div className={styles.stepsList}>
             {HOW_IT_WORKS_STEPS.map(({ step, title, description }) => (
               <div key={step} className={styles.stepRow}>
                 <span className={styles.stepBadge}>Step {step}</span>
+
                 <p className={styles.stepTitle}>{title}</p>
+
                 <p className={styles.stepDescription}>{description}</p>
               </div>
             ))}
@@ -476,7 +449,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ---------- Status legend ---------- */}
+      {/* Status */}
       <section className={styles.statusSection}>
         <h2 className={styles.sectionTitleCentered}>
           Every incident has a clear,{" "}
@@ -484,51 +457,55 @@ const LandingPage = () => {
         </h2>
 
         <div className={styles.statusGrid}>
-          {STATUS_LEGEND.map(({ status, description }) => (
-            <div key={status} className={styles.statusCard}>
-              <p className={styles.statusCardLabel}>
-                <span
-                  className={
-                    status === "Reported"
-                      ? styles.dotStatusReported
-                      : status === "Under Review"
-                        ? styles.dotStatusUnderReview
-                        : status === "Verified"
-                          ? styles.dotStatusVerified
-                          : styles.dotStatusResolved
-                  }
-                />
-                {status}
-              </p>
+          {STATUS_LEGEND.map(({ status, description, cardClass, dotClass }) => (
+            <div
+              key={status}
+              className={`${styles.statusCard} ${styles[cardClass]}`}
+            >
+              <span className={styles[dotClass]} />
+
+              <p className={styles.statusCardLabel}>{status}</p>
+
               <p className={styles.statusCardDescription}>{description}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ---------- Testimonials ---------- */}
+      {/* Testimonials */}
       <section className={styles.testimonialsSection} id="testimonials">
         <h2 className={styles.sectionTitleCentered}>
           Trusted by <span className={styles.accentText}>Communities</span>
         </h2>
+
         <p className={styles.sectionSubtitleCentered}>
           Real residents and admins, reporting real incidents, in real
           neighbourhoods across Lagos.
         </p>
 
         <div className={styles.testimonialCard}>
-          <img
-            src={activeTestimonial.photo}
-            alt={activeTestimonial.name}
-            className={styles.testimonialPhoto}
-          />
+          <div className={styles.testimonialPhotoArea}>
+            <div className={styles.testimonialPhotoPanel}>
+              <img
+                src={activeTestimonial.photo}
+                alt={activeTestimonial.name}
+                className={styles.testimonialPhoto}
+              />
+            </div>
+          </div>
+
           <div className={styles.testimonialContent}>
             <p className={styles.testimonialQuote}>
               &ldquo;{activeTestimonial.quote}&rdquo;
             </p>
-            <p className={styles.testimonialName}>{activeTestimonial.name}</p>
-            <p className={styles.testimonialRole}>{activeTestimonial.role}</p>
+
+            <div className={styles.testimonialNameBlock}>
+              <p className={styles.testimonialName}>{activeTestimonial.name}</p>
+
+              <p className={styles.testimonialRole}>{activeTestimonial.role}</p>
+            </div>
           </div>
+
           <div className={styles.testimonialArrows}>
             <button
               type="button"
@@ -536,25 +513,27 @@ const LandingPage = () => {
               aria-label="Previous testimonial"
               onClick={goToPrevTestimonial}
             >
-              <ChevronLeft size={18} />
+              <ArrowLeft size={24} strokeWidth={1.8} />
             </button>
+
             <button
               type="button"
               className={styles.arrowButton}
               aria-label="Next testimonial"
               onClick={goToNextTestimonial}
             >
-              <ChevronRight size={18} />
+              <ArrowRight size={24} strokeWidth={1.8} />
             </button>
           </div>
         </div>
       </section>
 
-      {/* ---------- FAQ ---------- */}
+      {/* FAQ */}
       <section className={styles.faqSection} id="faqs">
         <h2 className={styles.sectionTitleCentered}>
           Frequently <span className={styles.accentText}>Asked Questions</span>
         </h2>
+
         <p className={styles.sectionSubtitleCentered}>
           Everything you need to know about Watchly. Can't find an answer? Reach
           out to us.
@@ -569,8 +548,8 @@ const LandingPage = () => {
                 onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
               >
                 {faq.question}
+
                 <ChevronDown
-                  size={18}
                   className={
                     openFaqIndex === i
                       ? styles.faqChevronOpen
@@ -578,6 +557,7 @@ const LandingPage = () => {
                   }
                 />
               </button>
+
               {openFaqIndex === i && (
                 <p className={styles.faqAnswer}>{faq.answer}</p>
               )}
@@ -586,12 +566,13 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ---------- Final CTA ---------- */}
+      {/* Final CTA */}
       <section className={styles.finalCta}>
         <h2 className={styles.finalCtaTitle}>
           Ready to bring trusted safety intelligence{" "}
           <span className={styles.accentTextLight}>to your community?</span>
         </h2>
+
         <div className={styles.heroButtons}>
           <button
             type="button"
@@ -600,6 +581,7 @@ const LandingPage = () => {
           >
             Join your community
           </button>
+
           <button
             type="button"
             className={styles.finalCtaSecondary}
@@ -608,55 +590,121 @@ const LandingPage = () => {
             See how it works
           </button>
         </div>
+
+        <p className={styles.finalCtaDisclaimer}>
+          Free to join. No credit card required. Available across Nigeria.
+        </p>
       </section>
 
-      {/* ---------- Footer ---------- */}
+      {/* Footer */}
       <footer className={styles.footer}>
-        <div className={styles.footerBrand}>
-          <img
-            src="/assets/logo/watchly-logo-white.png"
-            alt="Watchly"
-            className={styles.footerLogo}
-          />
-          <p className={styles.footerTagline}>
-            Trusted community safety intelligence.
+        <div className={styles.footerLinksRow}>
+          <div className={styles.footerBrand}>
+            <img
+              src="/assets/logo/watchly-logo-white.png"
+              alt="Watchly"
+              className={styles.footerLogo}
+            />
+
+            <p className={styles.footerTagline}>
+              Trusted community safety intelligence.
+            </p>
+          </div>
+
+          <div className={styles.footerColumn}>
+            <p className={styles.footerColumnTitle}>Company</p>
+            <p className={styles.footerLink}>About</p>
+            <p className={styles.footerLink}>Our Mission</p>
+            <p className={styles.footerLink}>Research</p>
+            <p className={styles.footerLink}>Contact</p>
+          </div>
+
+          <div className={styles.footerColumn}>
+            <p className={styles.footerColumnTitle}>Product</p>
+            <p className={styles.footerLink}>How it Works</p>
+            <p className={styles.footerLink}>Features</p>
+            <p className={styles.footerLink}>For Admins</p>
+            <p className={styles.footerLink}>Status Lifecycle</p>
+          </div>
+
+          <div className={styles.footerColumn}>
+            <p className={styles.footerColumnTitle}>Community</p>
+            <p className={styles.footerLink}>Find a Community</p>
+            <p className={styles.footerLink}>Request a Community</p>
+            <p className={styles.footerLink}>Join as Admin</p>
+            <p className={styles.footerLink}>Safety Tips</p>
+          </div>
+
+          <div className={styles.footerColumn}>
+            <p className={styles.footerColumnTitle}>Legal</p>
+            <p className={styles.footerLink}>Privacy</p>
+            <p className={styles.footerLink}>Security</p>
+            <p className={styles.footerLink}>Terms &amp; Conditions</p>
+            <p className={styles.footerLink}>NDPA Compliance</p>
+          </div>
+        </div>
+
+        <div className={styles.footerBottom}>
+          <p className={styles.footerCopyright}>
+            © 2026 Watchly. All rights reserved.
           </p>
-        </div>
 
-        <div className={styles.footerColumn}>
-          <p className={styles.footerColumnTitle}>Company</p>
-          <p className={styles.footerLink}>About</p>
-          <p className={styles.footerLink}>Our Mission</p>
-          <p className={styles.footerLink}>Research</p>
-          <p className={styles.footerLink}>Contact</p>
-        </div>
+          <div className={styles.footerSocials}>
+            <a href="#" aria-label="Facebook" className={styles.socialIcon}>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H16.7V3.7c-.28-.04-1.25-.12-2.37-.12-2.35 0-3.96 1.43-3.96 4.06v2.26H7.6V13h2.77v8h3.13z" />
+              </svg>
+            </a>
 
-        <div className={styles.footerColumn}>
-          <p className={styles.footerColumnTitle}>Product</p>
-          <p className={styles.footerLink}>How it Works</p>
-          <p className={styles.footerLink}>Features</p>
-          <p className={styles.footerLink}>Pricing</p>
-          <p className={styles.footerLink}>Status Tips</p>
-        </div>
+            <a href="#" aria-label="Instagram" className={styles.socialIcon}>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle
+                  cx="17.2"
+                  cy="6.8"
+                  r="1.1"
+                  fill="currentColor"
+                  stroke="none"
+                />
+              </svg>
+            </a>
 
-        <div className={styles.footerColumn}>
-          <p className={styles.footerColumnTitle}>Community</p>
-          <p className={styles.footerLink}>Find a Community</p>
-          <p className={styles.footerLink}>Request a Community</p>
-          <p className={styles.footerLink}>Join as Admin</p>
-        </div>
+            <a href="#" aria-label="X (Twitter)" className={styles.socialIcon}>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M18.9 3H22l-7.6 8.7L23 21h-6.6l-5.2-6.4L5.2 21H2l8.1-9.3L1.6 3h6.8l4.7 5.9L18.9 3zm-1.2 16h1.7L7.1 4.9H5.3L17.7 19z" />
+              </svg>
+            </a>
 
-        <div className={styles.footerColumn}>
-          <p className={styles.footerColumnTitle}>Legal</p>
-          <p className={styles.footerLink}>Privacy</p>
-          <p className={styles.footerLink}>Security</p>
-          <p className={styles.footerLink}>Terms &amp; Conditions</p>
-          <p className={styles.footerLink}>NDPA Compliance</p>
+            <a href="#" aria-label="LinkedIn" className={styles.socialIcon}>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M6.94 8.5H3.56V21h3.38V8.5zM5.25 3a2 2 0 100 4 2 2 0 000-4zM21 21v-7.15c0-3.4-1.82-4.98-4.24-4.98-1.96 0-2.83 1.08-3.32 1.83V9.06H10.06c.05 1.02 0 12 0 12h3.38v-6.7c0-.36.03-.72.13-.98.29-.72.96-1.47 2.07-1.47 1.46 0 2.05 1.11 2.05 2.75V21H21z" />
+              </svg>
+            </a>
+          </div>
         </div>
-
-        <p className={styles.footerCopyright}>
-          © 2026 Watchly. All rights reserved.
-        </p>
       </footer>
     </div>
   );

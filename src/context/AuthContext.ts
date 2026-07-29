@@ -17,6 +17,10 @@ export interface AuthContextValue {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   deleteAccount: () => Promise<void>;
+  updateProfile: (fields: {
+    name?: string;
+    profile_image_url?: string;
+  }) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

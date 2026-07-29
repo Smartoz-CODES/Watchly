@@ -75,7 +75,6 @@ a {
   text-decoration: none;
 }
 
-
 :root {
   /* Font families */
   --font-heading: "Playfair Display", Georgia, serif;
@@ -88,27 +87,32 @@ a {
   --color-primary: #3ac0d0;
   --color-primary-dark: #2f99a7;
   --color-primary-darker: #23737d;
+  --color-primary-900: #174d53;
   --color-primary-darkest: #0e2e32;
 
   /* Grey Scale */
+  --color-surface-page: #f6fdfe;
   --color-surface-subtle: #fcfcfc;
   --color-surface-default: #fdfdfe;
   --color-surface-disabled: #d4d4d8;
   --color-border-default: #a1a1aa;
   --color-border-disabled: #d4d4d8;
   --color-border-darker: #71717a;
+  --color-border-hairline: rgba(178, 174, 185, 0.32);
   --color-text-title: #050506;
   --color-text-body: #18181b;
   --color-text-subtitle: #3f3f46;
   --color-text-caption: #52525b;
   --color-text-negative: #fcfcfc;
   --color-text-disabled: #a1a1aa;
+  --color-grey-700: #27272a;
 
   /* Green (Success) */
   --color-success-subtle: #cff1e6;
   --color-success-light: #60d0ab;
   --color-success: #10b981;
   --color-success-dark: #0d9a6c;
+  --color-success-700: #0b7b56;
   --color-success-darker: #053e2b;
 
   /* Amber (Warning) */
@@ -116,6 +120,8 @@ a {
   --color-warning-light: #ecbb74;
   --color-warning: #e2992f;
   --color-warning-dark: #bc8027;
+  --color-warning-700: #97661f;
+  --color-warning-cta-light: #e7aa52;
   --color-warning-darker: #2d1f09;
 
   /* Red (Error) */
@@ -132,6 +138,7 @@ a {
   --btn-h-padding-sm: 1.6rem;
   --btn-h-padding-md: 2rem;
   --btn-h-padding-lg: 2.4rem;
+  --btn-h-padding-xl: 3.6rem;
   --btn-v-padding-sm: 0.8rem;
   --btn-v-padding-md: 1.2rem;
   --btn-v-padding-lg: 1.6rem;
@@ -150,14 +157,14 @@ a {
   --text-body-5: 1.2rem;
 
   /* Status badge colors */
-  --color-badge-reported-bg: #f9ebd5;
-  --color-badge-reported-text: #bc8027;
-  --color-badge-under-review-bg: #dafafe;
-  --color-badge-under-review-text: #23737d;
+  --color-badge-reported-bg: #d4d4d8;
+  --color-badge-reported-text: #3f3f46;
+  --color-badge-under-review-bg: #f9ebd5;
+  --color-badge-under-review-text: #97661f;
   --color-badge-verified-bg: #cff1e6;
   --color-badge-verified-text: #0d9a6c;
   --color-badge-resolved-bg: #d4d4d8;
   --color-badge-resolved-text: #3f3f46;
-  --color-badge-not-verified-bg: #f9dcdc;
-  --color-badge-not-verified-text: #953737;
+  --color-badge-not-verified-bg: #fed6d6;
+  --color-badge-not-verified-text: #cf2a2a;
 }
