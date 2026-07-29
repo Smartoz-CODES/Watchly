@@ -117,6 +117,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [showToast]);
 
+  const updateProfile = useCallback(
+    async (fields: { name?: string; profile_image_url?: string }) => {
+      if (!user) throw new Error("No authenticated user");
+
+      const { error } = await supabase
+        .from("users")
+        .update(fields)
+        .eq("user_id", user.user_id);
+
+      if (error) {
+        showToast("Failed to update profile", error.message, "error");
+        throw error;
+      }
+
+      const updated = await fetchUserRecord(user.user_id);
+      if (updated) setUser(updated);
+    },
+    [user, showToast],
+  );
+
   // deleteAccount
   const deleteAccount = useCallback(async () => {
     const { error } = await supabase.functions.invoke("delete-account");
@@ -138,6 +158,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     signIn,
     signOut,
     deleteAccount,
+    updateProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

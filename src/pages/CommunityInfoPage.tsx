@@ -8,7 +8,7 @@ import styles from "./CommunityInfoPage.module.css";
 
 // ---------------------------------------------------------------------
 // MOCK DATA FOR NOW, still needs real wiring to backend to define
-// where each of these actually lives. 
+// where each of these actually lives.
 // ---------------------------------------------------------------------
 
 const MOCK_ABOUT =
@@ -18,7 +18,7 @@ const MOCK_GUIDELINES = [
   "All incident reports must be accurate and verifiable. False or misleading reports are subject to account suspension and will be escalated to platform administrators.",
   "Do not include personally identifiable information of individuals without consent. Protect privacy while reporting suspicious activity.",
   "Emergency situations (ongoing threats, fire, medical) must be reported to appropriate authorities (112, Lagos State Emergency) first, then logged on the platform.",
-  "Members are encouraged to confirm or dispute reports within their area of knowledge. Three independent confirmations trigger the \"Verified\" status.",
+  'Members are encouraged to confirm or dispute reports within their area of knowledge. Three independent confirmations trigger the "Verified" status.',
   "Respectful engagement only. Discriminatory language, harassment, or politically motivated content will result in immediate removal from the community.",
 ];
 
@@ -44,7 +44,10 @@ const MOCK_SAFETY_BY_CATEGORY = [
   { label: "Power Outage", count: 2 },
 ];
 
-const MOCK_SAFETY_BY_STATUS: { status: Incident["current_status"]; count: number }[] = [
+const MOCK_SAFETY_BY_STATUS: {
+  status: Incident["current_status"];
+  count: number;
+}[] = [
   { status: "Reported", count: 12 },
   { status: "Under Review", count: 6 },
   { status: "Verified", count: 16 },
@@ -55,7 +58,11 @@ const MOCK_TOTAL_INCIDENT_COUNT = 81;
 
 const MOCK_RECENT_INCIDENTS: Pick<
   Incident,
-  "incident_id" | "category" | "location" | "current_status" | "corroboration_count"
+  | "incident_id"
+  | "category"
+  | "location"
+  | "current_status"
+  | "corroboration_count"
 >[] = [
   {
     incident_id: "INC-1048",
@@ -123,16 +130,21 @@ const CommunityInfoPage = () => {
   const shareText = `Join ${activeCommunity.name} on Watchly: ${inviteLink}`;
 
   const handleShareViaMessaging = () => {
-    window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
+    window.open(
+      `https://wa.me/?text=${encodeURIComponent(shareText)}`,
+      "_blank",
+    );
   };
 
   const handleShareViaEmail = () => {
     window.location.href = `mailto:?subject=${encodeURIComponent(
-      `Join ${activeCommunity.name} on Watchly`
+      `Join ${activeCommunity.name} on Watchly`,
     )}&body=${encodeURIComponent(shareText)}`;
   };
 
-  const maxCategoryCount = Math.max(...MOCK_SAFETY_BY_CATEGORY.map((c) => c.count));
+  const maxCategoryCount = Math.max(
+    ...MOCK_SAFETY_BY_CATEGORY.map((c) => c.count),
+  );
 
   const statusDotClass: Record<Incident["current_status"], string> = {
     Reported: styles.dotReported,
@@ -212,7 +224,8 @@ const CommunityInfoPage = () => {
                 <li key={incident.incident_id} className={styles.incidentRow}>
                   <div>
                     <p className={styles.incidentTitle}>
-                      {incident.incident_id} | {incident.category} . {incident.location}
+                      {incident.incident_id} | {incident.category} .{" "}
+                      {incident.location}
                     </p>
                     <p className={styles.incidentMeta}>
                       {incident.corroboration_count} corroboration
@@ -235,7 +248,9 @@ const CommunityInfoPage = () => {
                   <div className={styles.barTrack}>
                     <div
                       className={styles.barFill}
-                      style={{ width: `${(c.count / maxCategoryCount) * 100}%` }}
+                      style={{
+                        width: `${(c.count / maxCategoryCount) * 100}%`,
+                      }}
                     />
                   </div>
                   <span className={styles.barCount}>{c.count}</span>
@@ -268,7 +283,9 @@ const CommunityInfoPage = () => {
                   {MOCK_ADMIN.name}
                   <span className={styles.adminBadge}>Community Admin</span>
                 </p>
-                <p className={styles.adminSince}>Admin since {MOCK_ADMIN.adminSince}</p>
+                <p className={styles.adminSince}>
+                  Admin since {MOCK_ADMIN.adminSince}
+                </p>
               </div>
             </div>
             <div className={styles.adminStatsRow}>
@@ -277,7 +294,9 @@ const CommunityInfoPage = () => {
                 <p className={styles.adminStatLabel}>Reviews</p>
               </div>
               <div>
-                <p className={styles.adminStatValue}>{MOCK_ADMIN.avgResponse}</p>
+                <p className={styles.adminStatValue}>
+                  {MOCK_ADMIN.avgResponse}
+                </p>
                 <p className={styles.adminStatLabel}>Avg. Response</p>
               </div>
               <div>
@@ -286,15 +305,16 @@ const CommunityInfoPage = () => {
               </div>
             </div>
             <p className={styles.adminDisclaimer}>
-              All admin decisions are recorded with timestamp and are traceable for
-              accountability
+              All admin decisions are recorded with timestamp and are traceable
+              for accountability
             </p>
           </section>
 
           <section className={styles.ctaCard}>
             <h2 className={styles.ctaTitle}>See something suspicious?</h2>
             <p className={styles.ctaDescription}>
-              Submit a structured report and help keep your community informed and safe
+              Submit a structured report and help keep your community informed
+              and safe
             </p>
             <button
               type="button"
@@ -310,8 +330,8 @@ const CommunityInfoPage = () => {
               <h2 className={styles.cardTitle}>Invite Neighbours</h2>
             </div>
             <p className={styles.inviteDescription}>
-              Know someone who lives in {activeCommunity.name}? Share the invite link and
-              help grow a safer, better-informed community
+              Know someone who lives in {activeCommunity.name}? Share the invite
+              link and help grow a safer, better-informed community
             </p>
 
             <div className={styles.inviteLinkRow}>
@@ -341,7 +361,9 @@ const CommunityInfoPage = () => {
                 <MessageCircle size={18} />
               </span>
               <span>
-                <span className={styles.shareRowLabel}>Send Via Messaging App</span>
+                <span className={styles.shareRowLabel}>
+                  Send Via Messaging App
+                </span>
                 <span className={styles.shareRowDescription}>
                   Share directly in a chat group
                 </span>
@@ -364,9 +386,8 @@ const CommunityInfoPage = () => {
             </button>
 
             <p className={styles.inviteNote}>
-              Invited residents will need to create a Watchly account and request to join{" "}
-              {activeCommunity.name}. All memberships require approval per community
-              settings.
+              Invited residents will need to create a Watchly account.
+              Membership is granted immediately — no approval required.
             </p>
           </section>
         </div>
