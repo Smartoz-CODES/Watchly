@@ -1,8 +1,8 @@
-import { ToastProvider } from "./context/ToastProvider";
-import { AuthProvider } from "./context/AuthProvider";
-import { CommunityProvider } from "./context/CommunityProvider";
-import AppRouter from "./routes/AppRouter";
-import Toast from "./components/Toast/Toast";
+// import { ToastProvider } from "./context/ToastProvider";
+// import { AuthProvider } from "./context/AuthProvider";
+// import { CommunityProvider } from "./context/CommunityProvider";
+// import AppRouter from "./routes/AppRouter";
+// import Toast from "./components/Toast/Toast";
 
 // ─── Provider order matters ────────────────────────────────────────────────────
 //
@@ -37,6 +37,22 @@ import Toast from "./components/Toast/Toast";
 //       CommunityContext.Provider
 //         AppRouter
 //       Toast   ← alongside AppRouter, inside all three providers
+
+// const App = () => {
+//   return (
+//     <ToastProvider>
+//     <AppRouter />
+//     <Toast />
+//   </ToastProvider>
+//   );
+// };
+
+// export default App;
+import { ToastProvider } from "./context/ToastProvider";
+import { AuthProvider } from "./context/AuthProvider";
+import { CommunityProvider } from "./context/CommunityProvider";
+import AppRouter from "./routes/AppRouter";
+import Toast from "./components/Toast/Toast";
 
 const App = () => {
   return (
