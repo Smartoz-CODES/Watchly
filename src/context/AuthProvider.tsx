@@ -1,160 +1,219 @@
-﻿import { useState, useEffect, useCallback, type ReactNode } from "react";
-import type { Session, AuthChangeEvent } from "@supabase/supabase-js";
-import { supabase } from "../lib/supabase";
-import { AuthContext, type AuthContextValue } from "./AuthContext";
+import { useState, useCallback, type ReactNode } from "react";
+import {
+  AuthContext,
+  type AuthContextValue,
+  type AuthSession,
+  type PendingVerification,
+} from "./AuthContext";
 import type { User } from "../types/user";
+import {
+  authApi,
+  isApiError,
+  mapApiUser,
+  storeTokens,
+  storeUser,
+  getStoredUser,
+  getAccessToken,
+  getRefreshToken,
+  clearSession,
+} from "../lib/api";
 import { useToast } from "../hooks/use-toast";
 import { AUTH_TOASTS } from "../lib/toast-messages";
 
-// Helper that fetch full user record from the users table
-async function fetchUserRecord(authUserId: string): Promise<User | null> {
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("user_id", authUserId)
-    .single();
-  if (error || !data) {
-    return null;
+// Restores a persisted session synchronously on first render. The auth
+// API has no "current user" endpoint, so the stored user is the source
+// of truth until a protected request forces a token refresh.
+function restoreSession(): { user: User | null; session: AuthSession | null } {
+  const accessToken = getAccessToken();
+  const refreshToken = getRefreshToken();
+  const user = getStoredUser();
+  if (accessToken && refreshToken && user) {
+    return { user, session: { accessToken, refreshToken } };
   }
-  return data as User;
+  clearSession();
+  return { user: null, session: null };
 }
 
-// Provider
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const initial = restoreSession();
+  const [user, setUser] = useState<User | null>(initial.user);
+  const [session, setSession] = useState<AuthSession | null>(initial.session);
+  const [pendingVerification, setPendingVerification] =
+    useState<PendingVerification | null>(null);
+  // Session restore is synchronous (localStorage), so nothing is ever
+  // "still loading" — but the flag stays in the contract because
+  // ProtectedRoute and LandingRedirect key off it.
+  const [loading] = useState(false);
   const { showToast } = useToast();
 
   const isPlatformAdmin = user?.is_platform_admin ?? false;
 
-  // Session listener
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(
-      async (_event: AuthChangeEvent, currentSession: Session | null) => {
-        setSession(currentSession);
-        if (currentSession?.user) {
-          const userRecord = await fetchUserRecord(currentSession.user.id);
-          setUser(userRecord);
-        } else {
-          // Logged out or no session, clear user state
-          setUser(null);
-        }
-        setLoading(false);
-      },
-    );
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  const establishSession = useCallback(
+    (apiUser: Parameters<typeof mapApiUser>[0], tokens: AuthSession) => {
+      const mapped = mapApiUser(apiUser, getStoredUser());
+      storeTokens(tokens);
+      storeUser(mapped);
+      setUser(mapped);
+      setSession(tokens);
+      setPendingVerification(null);
+    },
+    [],
+  );
 
-  // signUp
+  // signUp — creates an unverified account and stages OTP verification.
   const signUp = useCallback(
     async (name: string, email: string, phone: string, password: string) => {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        phone,
-        options: {
-          data: { name },
-        },
-      });
-      if (error) {
-        showToast("Sign up failed", error.message, "error");
-        throw error;
+      try {
+        const data = await authApi.signup({
+          name,
+          email,
+          phoneNumber: phone,
+          password,
+        });
+        setPendingVerification({
+          userId: data.user.id,
+          phone: data.user.phoneNumber,
+          demoOtp: data.otp.demoOtp ?? null,
+        });
+      } catch (err) {
+        if (isApiError(err) && err.code === "ACCOUNT_ALREADY_EXISTS") {
+          showToast(
+            AUTH_TOASTS.accountAlreadyExists.title,
+            AUTH_TOASTS.accountAlreadyExists.description,
+            "error",
+          );
+        } else if (isApiError(err)) {
+          showToast("Sign up failed", err.message, "error");
+        } else {
+          showToast("Sign up failed", "Please try again.", "error");
+        }
+        throw err;
       }
     },
     [showToast],
   );
 
-  // verifyOtp
+  // verifyOtp — keeps the historical (phone, token) signature; the
+  // backend verifies by userId, which lives in pendingVerification.
   const verifyOtp = useCallback(
-    async (phone: string, token: string) => {
-      const { error } = await supabase.auth.verifyOtp({
-        phone,
-        token,
-        type: "sms",
-      });
-      if (error) {
-        showToast("Verification failed", error.message, "error");
-        throw error;
-      }
-    },
-    [showToast],
-  );
-
-  // signIn
-  const signIn = useCallback(
-    async (email: string, password: string) => {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) {
+    async (_phone: string, token: string) => {
+      if (!pendingVerification) {
         showToast(
-          AUTH_TOASTS.signInFailed.title,
-          AUTH_TOASTS.signInFailed.description,
+          "Verification failed",
+          "Start again from the sign up form.",
           "error",
         );
-        throw error;
+        throw new Error("No pending verification");
+      }
+      try {
+        const data = await authApi.verifyPhone(
+          pendingVerification.userId,
+          token,
+        );
+        establishSession(data.user, data.tokens);
+      } catch (err) {
+        if (isApiError(err) && err.code === "PHONE_ALREADY_VERIFIED") {
+          showToast(
+            "Already verified",
+            "Your phone is already verified — please log in.",
+            "info",
+          );
+        }
+        throw err;
       }
     },
-    [showToast],
+    [pendingVerification, establishSession, showToast],
   );
 
-  // signOut
-  const signOut = useCallback(async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      showToast("Sign out failed", error.message, "error");
-      throw error;
+  // resendOtp — issues a fresh code for the staged account.
+  const resendOtp = useCallback(async () => {
+    if (!pendingVerification) {
+      throw new Error("No pending verification");
     }
-  }, [showToast]);
+    const data = await authApi.resendOtp(pendingVerification.userId);
+    setPendingVerification({
+      ...pendingVerification,
+      demoOtp: data.otp.demoOtp ?? null,
+    });
+  }, [pendingVerification]);
 
+  // signIn — authenticates and creates a device session. A correct
+  // password on an unverified account routes back into OTP verification
+  // (guide: 403 PHONE_NOT_VERIFIED with error.details.userId).
+  const signIn = useCallback(
+    async (email: string, password: string) => {
+      try {
+        const data = await authApi.login(email, password);
+        establishSession(data.user, data.tokens);
+      } catch (err) {
+        if (isApiError(err) && err.code === "PHONE_NOT_VERIFIED") {
+          const userId =
+            typeof err.details?.userId === "string" ? err.details.userId : "";
+          setPendingVerification({ userId, phone: "", demoOtp: null });
+        }
+        throw err;
+      }
+    },
+    [establishSession],
+  );
+
+  // signOut — revokes the server session (best effort) and always
+  // clears local state, per the guide's recommended flow.
+  const signOut = useCallback(async () => {
+    try {
+      await authApi.logout();
+    } catch {
+      // Session may already be expired/revoked — local cleanup still runs.
+    } finally {
+      clearSession();
+      setUser(null);
+      setSession(null);
+      setPendingVerification(null);
+    }
+  }, []);
+
+  // updateProfile — the deployed backend is auth-only; no profile
+  // endpoint exists yet. Updates apply locally (and persist across
+  // refreshes) so the UI stays functional until the data API ships.
   const updateProfile = useCallback(
     async (fields: { name?: string; profile_image_url?: string }) => {
       if (!user) throw new Error("No authenticated user");
-
-      const { error } = await supabase
-        .from("users")
-        .update(fields)
-        .eq("user_id", user.user_id);
-
-      if (error) {
-        showToast("Failed to update profile", error.message, "error");
-        throw error;
-      }
-
-      const updated = await fetchUserRecord(user.user_id);
-      if (updated) setUser(updated);
+      const updated: User = {
+        ...user,
+        ...(fields.name !== undefined ? { name: fields.name } : {}),
+        ...(fields.profile_image_url !== undefined
+          ? { profile_image_url: fields.profile_image_url }
+          : {}),
+      };
+      storeUser(updated);
+      setUser(updated);
     },
-    [user, showToast],
+    [user],
   );
 
-  // deleteAccount
+  // deleteAccount — no backend endpoint yet; keep the UI honest.
   const deleteAccount = useCallback(async () => {
-    const { error } = await supabase.functions.invoke("delete-account");
-    if (error) {
-      showToast("Failed to delete account", "Please try again.", "error");
-      throw error;
-    }
-    await supabase.auth.signOut();
+    showToast(
+      "Not available yet",
+      "Account deletion ships with the data API. Contact a platform admin to remove your account.",
+      "info",
+    );
+    throw new Error("Account deletion not available");
   }, [showToast]);
 
-  // Context value
   const value: AuthContextValue = {
     user,
     session,
     loading,
     isPlatformAdmin,
+    pendingVerification,
     signUp,
     verifyOtp,
+    resendOtp,
     signIn,
     signOut,
     deleteAccount,

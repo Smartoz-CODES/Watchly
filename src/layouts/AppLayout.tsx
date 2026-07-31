@@ -24,6 +24,7 @@ import styles from "./AppLayout.module.css";
 const MENU_ITEMS = [
   { to: "/home", label: "Incident Feed", icon: Home },
   { to: "/my-report", label: "My Report", icon: FileText },
+  { to: "/alerts", label: "Alert", icon: Bell },
   { to: "/community-info", label: "Community Info", icon: Info },
 ];
 
@@ -187,7 +188,7 @@ const AppLayout = () => {
                     : styles.menuItem;
                 }}
               >
-                <Icon size={18} />
+                <Icon size={24} />
                 {label}
               </NavLink>
             ))}
@@ -199,7 +200,7 @@ const AppLayout = () => {
                   : styles.menuItem
               }
             >
-              <Settings size={18} />
+              <Settings size={24} />
               Settings
             </NavLink>
           </nav>
@@ -421,11 +422,11 @@ const CommunitySwitcher = ({
     return (
       <div className={styles.switcher}>
         <NavLink to="/communities" className={styles.switcherTrigger}>
-          <MapPin size={18} />
+          <MapPin size={24} />
           <span className={styles.switcherLabel}>
             <span className={styles.switcherName}>No communities joined</span>
           </span>
-          <Plus size={18} />
+          <Plus size={24} />
         </NavLink>
       </div>
     );
@@ -438,14 +439,14 @@ const CommunitySwitcher = ({
         className={styles.switcherTrigger}
         onClick={onToggle}
       >
-        <MapPin size={18} />
+        <MapPin size={24} />
         <span className={styles.switcherLabel}>
           <span className={styles.switcherName}>{activeCommunity.name}</span>
           <span className={styles.switcherLocation}>
             {activeCommunity.lga}, {activeCommunity.state}
           </span>
         </span>
-        {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+        {isOpen ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
       </button>
 
       {isOpen && (

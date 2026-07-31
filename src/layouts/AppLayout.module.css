@@ -2,7 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--color-surface-default);
+  background-color: var(--color-surface-page);
 }
 
 /* Top bar */
@@ -10,10 +10,14 @@
 .topBar {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--color-border-default);
+  gap: 1.6rem;
+  min-height: 7.2rem;
+  padding: 1.2rem 2.6rem;
+  border-bottom: 0.5px solid var(--color-border-default);
   background-color: var(--color-surface-elevated, #fff);
+  position: sticky;
+  top: 0;
+  z-index: 35;
 }
 
 .hamburgerButton {
@@ -32,7 +36,7 @@
 }
 
 .logoMark {
-  height: 1.75rem;
+  height: 3.8rem;
   width: auto;
   object-fit: contain;
 }
@@ -45,7 +49,7 @@
 .iconButton {
   background: none;
   border: none;
-  padding: 0.35rem;
+  padding: 0.6rem;
   cursor: pointer;
   color: var(--color-text-body);
   position: relative;
@@ -73,7 +77,7 @@
 }
 
 .profile {
-  margin-left: auto;
+  margin-left: 0.8rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -81,8 +85,8 @@
 
 .avatar,
 .avatarFallback {
-  width: 2rem;
-  height: 2rem;
+  width: 4.4rem;
+  height: 4.4rem;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -112,7 +116,7 @@
 .content {
   flex: 1;
   min-width: 0;
-  padding: 1rem;
+  padding: 0;
 }
 
 /* Desktop sidebar */
@@ -168,7 +172,7 @@
 
 .switcher {
   margin-bottom: 1rem;
-  border: 1px solid var(--color-border-default);
+  border: 0.5px solid var(--color-border-default);
   border-radius: var(--btn-radius-md, 0.5rem);
 }
 
@@ -201,7 +205,7 @@
 }
 
 .switcherPanel {
-  border-top: 1px solid var(--color-border-default);
+  border-top: 0.5px solid var(--color-border-default);
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -290,7 +294,7 @@
 
 .staySafeCard,
 .disclaimerCard {
-  border: 1px solid var(--color-border-default);
+  border: 0.5px solid var(--color-border-default);
   border-radius: var(--btn-radius-md, 0.5rem);
   padding: 0.85rem;
   margin-top: 1rem;
@@ -317,7 +321,7 @@
 /* Stats card */
 
 .statsCard {
-  border: 1px solid var(--color-border-default);
+  border: 0.5px solid var(--color-border-default);
   border-radius: var(--btn-radius-md, 0.5rem);
   padding: 0.85rem;
   margin-bottom: 1rem;
@@ -339,7 +343,7 @@
   justify-content: space-between;
   font-size: 0.85rem;
   padding: 0.3rem 0;
-  border-top: 1px solid var(--color-border-default);
+  border-top: 0.5px solid var(--color-border-default);
 }
 
 /* Report FAB */
@@ -366,7 +370,7 @@
 
 @media (min-width: 768px) {
   .topBar {
-    padding: 0.75rem 1.5rem;
+    padding: 1.2rem 2.6rem;
   }
 
   .hamburgerButton {
@@ -376,13 +380,15 @@
   .searchDesktop {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    flex: 1;
-    max-width: 420px;
-    border: 1px solid var(--color-border-default);
+    gap: 1.2rem;
+    flex: 0 1 44rem;
+    width: 44rem;
+    max-width: 44rem;
+    border: 0.5px solid var(--color-border-default);
     border-radius: var(--btn-radius-md, 0.5rem);
-    padding: 0.5rem 0.85rem;
-    margin-left: 1.5rem;
+    min-height: 4.6rem;
+    padding: 1rem 1.4rem;
+    margin-left: clamp(3rem, 10vw, 16rem);
   }
 
   .searchIcon {
@@ -393,7 +399,7 @@
     border: none;
     outline: none;
     flex: 1;
-    font-size: 0.9rem;
+    font-size: 1.5rem;
   }
 
   .searchMobileButton {
@@ -403,31 +409,35 @@
   .reportButtonDesktop {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 1.2rem;
     background-color: var(--color-primary);
     color: #fff;
     border: none;
-    border-radius: var(--btn-radius-md, 0.5rem);
-    padding: 0.6rem 1rem;
+    border-radius: 1.2rem;
+    min-width: 14rem;
+    min-height: 4.6rem;
+    justify-content: center;
+    padding: 1rem 1.8rem;
+    font-size: 1.5rem;
     font-weight: 600;
     cursor: pointer;
     margin-left: auto;
   }
 
   .profile {
-    margin-left: 0.5rem;
+    margin-left: 0.8rem;
   }
 
   .profileName {
-    display: inline;
+    display: none;
     font-weight: 600;
     color: var(--color-primary);
     font-size: 0.9rem;
   }
 
   .body {
-    padding: 1.5rem;
-    gap: 1.5rem;
+    padding: 0;
+    gap: 0;
   }
 
   .content {
@@ -437,14 +447,84 @@
   .sidebarDesktop {
     display: flex;
     flex-direction: column;
-    width: 260px;
+    width: 28rem;
+    height: calc(100vh - 7.2rem);
+    position: sticky;
+    top: 7.2rem;
+    align-self: flex-start;
     flex-shrink: 0;
+    padding: 2.4rem 2rem;
+    border-right: 0.5px solid var(--color-border-default);
+    background-color: #fff;
+    overflow: hidden;
+  }
+
+  .switcher {
+    margin-bottom: 2rem;
+    border-radius: 1.2rem;
+  }
+
+  .switcherTrigger {
+    gap: 1.2rem;
+    min-height: 5.6rem;
+    padding: 1rem 1.2rem;
+  }
+
+  .switcherName {
+    font-size: 1.3rem;
+    line-height: 1.8rem;
+  }
+
+  .switcherLocation {
+    font-size: 1.1rem;
+    line-height: 1.6rem;
+  }
+
+  .menuLabel {
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+    color: var(--color-text-title);
+    letter-spacing: 0;
+    margin: 0 0 1.4rem;
+  }
+
+  .menuList {
+    gap: 0.4rem;
+  }
+
+  .menuItem {
+    gap: 1.2rem;
+    min-height: 4.4rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    font-size: 1.3rem;
+    line-height: 1.8rem;
+  }
+
+  .switcherJoinLink,
+  .logoutButton {
+    font-size: 1.3rem;
+    line-height: 1.8rem;
+  }
+
+  .logoutButton {
+    margin-top: auto;
+    padding-top: 2.4rem;
+    border-top: 0.5px solid var(--color-border-default);
+  }
+
+  .staySafeTitle {
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+  }
+
+  .staySafeBody {
+    font-size: 1.1rem;
+    line-height: 1.6rem;
   }
 
   .rightPanel {
-    display: block;
-    width: 260px;
-    flex-shrink: 0;
+    display: none;
   }
 
   .drawerOverlay,

@@ -1,11 +1,10 @@
-﻿import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, Eye, EyeOff, Info, Mail, X } from "lucide-react";
 
 import { useToast } from "../hooks/use-toast";
-import { supabase } from "../lib/supabase";
-import { AUTH_TOASTS, VALIDATION_TOASTS } from "../lib/toast-messages";
+import { VALIDATION_TOASTS } from "../lib/toast-messages";
 
 import styles from "./PasswordRecoveryPage.module.css";
 
@@ -13,7 +12,11 @@ const PasswordRecoveryPage = () => {
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  const [mode, setMode] = useState<"request" | "reset">("request");
+  // No backend endpoint yet marks a "reset" landing (Supabase used to
+  // flip this via its PASSWORD_RECOVERY auth event on email-link
+  // arrival). Stays "request" until that mechanism has a replacement;
+  // see the Send Reset Link / Set New Password handlers below.
+  const [mode] = useState<"request" | "reset">("request");
   const [bannerVisible, setBannerVisible] = useState(false);
 
   const [email, setEmail] = useState("");
@@ -27,16 +30,6 @@ const PasswordRecoveryPage = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState<
     string | null
   >(null);
-
-  // Supabase fires PASSWORD_RECOVERY when the user lands here via the email link
-  useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
-        setMode("reset");
-      }
-    });
-    return () => listener.subscription.unsubscribe();
-  }, []);
 
   const handleSendResetLink = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,20 +45,13 @@ const PasswordRecoveryPage = () => {
 
     try {
       setLoading(true);
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/forgot-password`,
-      });
-
-      if (error) {
-        showToast(
-          VALIDATION_TOASTS.sendLinkFailed.title,
-          VALIDATION_TOASTS.sendLinkFailed.description,
-          "error",
-        );
-        return;
-      }
-
-      setBannerVisible(true);
+      // The auth backend doesn't expose password-reset endpoints yet.
+      // Surface that honestly instead of pretending an email was sent.
+      showToast(
+        "Not available yet",
+        "Password reset ships with the next backend update. Contact your community admin if you are locked out.",
+        "info",
+      );
     } catch {
       showToast(
         VALIDATION_TOASTS.sendLinkFailed.title,
@@ -101,23 +87,10 @@ const PasswordRecoveryPage = () => {
 
     try {
       setLoading(true);
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword,
-      });
-
-      if (error) {
-        showToast(
-          VALIDATION_TOASTS.updateFailed.title,
-          VALIDATION_TOASTS.updateFailed.description,
-          "error",
-        );
-        return;
-      }
-
       showToast(
-        AUTH_TOASTS.passwordReset.title,
-        AUTH_TOASTS.passwordReset.description,
-        "success",
+        "Not available yet",
+        "Password reset ships with the next backend update.",
+        "info",
       );
       navigate("/login");
     } catch {

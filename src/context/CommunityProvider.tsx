@@ -5,13 +5,11 @@ import {
   useRef,
   type ReactNode,
 } from "react";
-import { supabase } from "../lib/supabase";
 import {
   CommunityContext,
   type CommunityContextValue,
 } from "./CommunityContext";
 import { useAuth } from "../hooks/use-auth";
-import { useToast } from "../hooks/use-toast";
 import type { Community, CommunityMembership } from "../types/community";
 
 const ACTIVE_COMMUNITY_STORAGE_KEY = "watchly:active_community_id";
@@ -47,8 +45,10 @@ interface CommunityProviderProps {
 
 export function CommunityProvider({ children }: CommunityProviderProps) {
   const { user } = useAuth();
-  const { showToast } = useToast();
 
+  // Reintroduce useToast() here once refreshCommunities talks to a real
+  // endpoint again and needs to surface fetch errors (see the stub note
+  // in refreshCommunities below).
   const [state, setState] = useState<CommunityProviderState>({
     userCommunities: [],
     memberships: [],
@@ -75,59 +75,18 @@ export function CommunityProvider({ children }: CommunityProviderProps) {
       return;
     }
 
-    const { data, error } = await supabase
-      .from("community_memberships")
-      .select("*, communities(*)")
-      .eq("user_id", user.user_id);
-
-    // A newer request has since started — drop this stale response
-    // rather than let it clobber fresher data.
-    if (latestUserIdRef.current !== requestUserId) return;
-
-    if (error) {
-      showToast("Failed to load your communities", error.message, "error");
-      setState((prev) => ({ ...prev, loading: false }));
-      return;
-    }
-
+    // The deployed backend is auth-only — community endpoints don't
+    // exist yet. Resolve to an empty membership list (the UI's empty
+    // states handle this) instead of querying the retired Supabase
+    // project and toasting an error on every load.
+    //
+    // The row -> Community/CommunityMembership mapping that used to
+    // live here (community_id, name, state, lga, admin_name/active_since
+    // fallback chain, membership_role, sms_alerts_enabled, etc.) is
+    // preserved in git history — restore it once a real
+    // community-memberships endpoint exists.
     const communities: Community[] = [];
     const membershipList: CommunityMembership[] = [];
-
-    for (const row of data ?? []) {
-      const communityRow = row.communities;
-      if (!communityRow) continue;
-
-      communities.push({
-        community_id: communityRow.community_id,
-        name: communityRow.name,
-        state: communityRow.state,
-        lga: communityRow.lga,
-        description: communityRow.description,
-        slug: communityRow.slug,
-        status: communityRow.status,
-        member_count: 0, // see flagged gap above
-        // Same situation as member_count — neither admin_name nor
-        // active_since exists in the TRD's communities table schema
-        // (§9.2). Falling back through reviewed_at/date_created for
-        // active_since as a reasonable guess at intended semantics
-        // (when the community actually went Active), but this needs
-        // backend to confirm the real column names before trusting it.
-        admin_name: communityRow.admin_name ?? null,
-        active_since:
-          communityRow.active_since ??
-          communityRow.reviewed_at ??
-          communityRow.date_created ??
-          new Date().toISOString(),
-      });
-
-      membershipList.push({
-        membership_id: row.membership_id,
-        community_id: row.community_id,
-        membership_role: row.membership_role,
-        sms_alerts_enabled: row.sms_alerts_enabled,
-        joined_at: row.joined_at,
-      });
-    }
 
     if (latestUserIdRef.current !== requestUserId) return;
 
@@ -159,7 +118,9 @@ export function CommunityProvider({ children }: CommunityProviderProps) {
         loading: false,
       };
     });
-  }, [user, showToast]);
+    // showToast intentionally omitted — the only call site that used it
+    // (the Supabase fetch-error branch) was removed with the stub above.
+  }, [user]);
 
   // Ref-based indirection, not a suppression: the mount effect below
   // only ever calls refreshCommunitiesRef.current() — a ref's contents

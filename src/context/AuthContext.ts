@@ -1,12 +1,29 @@
 import { createContext } from "react";
-import type { Session } from "@supabase/supabase-js";
 import type { User } from "../types/user";
+
+/** Access/refresh token pair issued by the Watchly auth API. */
+export interface AuthSession {
+  accessToken: string;
+  refreshToken: string;
+}
+
+/**
+ * Tracks an account that has signed up (or attempted login) but not yet
+ * completed phone verification. `demoOtp` is only present while the
+ * backend runs in DEMO_MODE and is rendered on the verification screen.
+ */
+export interface PendingVerification {
+  userId: string;
+  phone: string;
+  demoOtp: string | null;
+}
 
 export interface AuthContextValue {
   user: User | null;
-  session: Session | null;
+  session: AuthSession | null;
   loading: boolean;
   isPlatformAdmin: boolean;
+  pendingVerification: PendingVerification | null;
   signUp: (
     name: string,
     email: string,
@@ -14,6 +31,7 @@ export interface AuthContextValue {
     password: string,
   ) => Promise<void>;
   verifyOtp: (phone: string, token: string) => Promise<void>;
+  resendOtp: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   deleteAccount: () => Promise<void>;

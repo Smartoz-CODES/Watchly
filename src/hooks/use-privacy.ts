@@ -1,6 +1,4 @@
 import { useState, useCallback } from "react";
-import { supabase } from "../lib/supabase";
-import { useAuth } from "./use-auth";
 
 interface DataExportRequest {
   request_id: string;
@@ -9,11 +7,40 @@ interface DataExportRequest {
   download_url: string | null;
 }
 
+// Shell — the deployed backend is auth-only; no data-export endpoint
+// exists yet. Returns safe no-op values so anything that imports this
+// compiles and renders without crashing. Real implementation drafted
+// below, commented out, ready to uncomment once the data API ships.
+
+export function usePrivacy() {
+  const [latestRequest] = useState<DataExportRequest | null>(null);
+  const [loading] = useState(false);
+  const [error] = useState<string | null>(null);
+
+  const fetchLatestRequest = useCallback(async () => {
+    // No-op until the privacy/export data API exists.
+  }, []);
+
+  const requestDataExport = useCallback(async () => {
+    throw new Error("Data export is not available yet.");
+  }, []);
+
+  return {
+    latestRequest,
+    loading,
+    error,
+    fetchLatestRequest,
+    requestDataExport,
+  };
+}
+
+/*
+import { authedRequest } from "../lib/api";
+import { useAuth } from "./use-auth";
+
 export function usePrivacy() {
   const { user } = useAuth();
-  const [latestRequest, setLatestRequest] = useState<DataExportRequest | null>(
-    null,
-  );
+  const [latestRequest, setLatestRequest] = useState<DataExportRequest | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,20 +48,13 @@ export function usePrivacy() {
     if (!user) return;
     setLoading(true);
     try {
-      const { data, error: fetchError } = await supabase
-        .from("data_export_requests")
-        .select("*")
-        .eq("user_id", user.user_id)
-        .order("requested_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (fetchError) throw fetchError;
+      const data = await authedRequest<DataExportRequest | null>(
+        `/api/v1/privacy/export-requests/latest`,
+        { method: "GET" },
+      );
       setLatestRequest(data);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to load request status",
-      );
+      setError(err instanceof Error ? err.message : "Failed to load request status");
     } finally {
       setLoading(false);
     }
@@ -45,17 +65,11 @@ export function usePrivacy() {
     setLoading(true);
     setError(null);
     try {
-      const { data, error: insertError } = await supabase
-        .from("data_export_requests")
-        .insert({ user_id: user.user_id })
-        .select()
-        .single();
-
-      if (insertError) throw insertError;
+      const data = await authedRequest<DataExportRequest>(
+        `/api/v1/privacy/export-requests`,
+        { method: "POST" },
+      );
       setLatestRequest(data);
-      // TODO: real export generation happens in an Edge Function,
-      // triggered here or via a DB webhook — not built yet. Status
-      // stays "Pending" until that exists.
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to submit request");
       throw err;
@@ -64,11 +78,6 @@ export function usePrivacy() {
     }
   }, [user]);
 
-  return {
-    latestRequest,
-    loading,
-    error,
-    fetchLatestRequest,
-    requestDataExport,
-  };
+  return { latestRequest, loading, error, fetchLatestRequest, requestDataExport };
 }
+*/

@@ -1,10 +1,11 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../hooks/use-auth";
 import { useToast } from "../hooks/use-toast";
 import { AUTH_TOASTS } from "../lib/toast-messages";
+import { isApiError } from "../lib/api";
 import styles from "./LoginPage.module.css";
 
 const LoginPage = () => {
@@ -27,7 +28,18 @@ const LoginPage = () => {
       // protected pages; nothing was pulling a freshly-logged-in user off
       // /login. Navigating explicitly instead.
       navigate("/home");
-    } catch {
+    } catch (err) {
+      // Correct credentials on an unverified account: the provider has
+      // already staged the verification — route into the OTP step.
+      if (isApiError(err) && err.code === "PHONE_NOT_VERIFIED") {
+        showToast(
+          "Verify your phone",
+          "Enter the code sent to your phone to finish setting up.",
+          "info",
+        );
+        navigate("/signup");
+        return;
+      }
       showToast(
         AUTH_TOASTS.signInFailed.title,
         AUTH_TOASTS.signInFailed.description,

@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   Users,
   ChevronRight,
+  Clock,
 } from "lucide-react";
 import StatusBadge from "../components/StatusBadge/StatusBadge";
 import type { IncidentCategory, IncidentStatus } from "../types/incident";
@@ -229,7 +230,7 @@ const MyReportPage = () => {
               <div className={styles.statTileHeader}>
                 <span>{tile.label}</span>
                 <span className={styles[ACCENT_CLASS[tile.accent]]}>
-                  <Icon size={16} />
+                  <Icon size={24} />
                 </span>
               </div>
               <p className={styles.statValue}>{tile.value}</p>
@@ -240,7 +241,7 @@ const MyReportPage = () => {
                     : styles.trendDown
                 }
               >
-                <TrendIcon size={12} />
+                <TrendIcon size={20} />
                 {tile.trendLabel}
               </p>
             </div>
@@ -279,27 +280,34 @@ const MyReportPage = () => {
                     ? `Other — ${report.other_description}`
                     : report.category}
                 </span>
-                <StatusBadge status={report.current_status} size="sm" />
+                <StatusBadge
+                  status={report.current_status}
+                  size="xs"
+                  showIcon={false}
+                />
               </div>
-              <span className={styles.reportTime}>{report.relative_time}</span>
+              <span className={styles.reportTime}>
+                <Clock size={16} />
+                {report.relative_time}
+              </span>
             </div>
 
             <p className={styles.reportTitle}>{report.title}</p>
 
             <div className={styles.reportMetaRow}>
               <span className={styles.reportLocation}>
-                <MapPin size={14} />
+                <MapPin size={18} />
                 {report.location}
               </span>
               <span className={styles.communityBadge}>
-                <ShieldCheck size={14} />
+                <ShieldCheck size={18} />
                 {report.community_name}
               </span>
             </div>
 
             <div className={styles.reportFooter}>
               <span className={styles.corroborationCount}>
-                <Users size={14} />
+                <Users size={18} />
                 {report.corroboration_count} corroboration
               </span>
               <button
@@ -308,7 +316,7 @@ const MyReportPage = () => {
                 onClick={() => navigate(`/incidents/${report.incident_id}`)}
               >
                 View details
-                <ChevronRight size={14} />
+                <ChevronRight size={18} />
               </button>
             </div>
           </div>

@@ -37,12 +37,12 @@
   gap: 0.4rem;
   width: 100%;
   background: none;
-  border: 1px dashed var(--color-border-default, #d1d5db);
+  border: 0.5px dashed var(--color-border-default, #d1d5db);
   border-radius: var(--btn-radius-md, 0.65rem);
   padding: 0.9rem;
   margin-top: 1.25rem;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   color: var(--color-primary, #0f766e);
   cursor: pointer;
 }
