@@ -13,7 +13,7 @@
   border: none;
   color: var(--color-primary, #0f766e);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1.3rem;
   cursor: pointer;
   margin-bottom: 1rem;
 }
@@ -33,7 +33,7 @@
 
 .card {
   background-color: #fff;
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
   border-radius: var(--btn-radius-md, 0.75rem);
   padding: 1.5rem;
 }
@@ -64,23 +64,23 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   flex-shrink: 0;
 }
 
 .reporterName {
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.3rem;
 }
 
 .metaLine {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
 .categoryTag {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--color-text-body, #374151);
   background-color: var(--color-surface-default, #f3f4f6);
@@ -90,13 +90,13 @@
 }
 
 .title {
-  font-size: 1.15rem;
+  font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .description {
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   color: var(--color-text-body, #374151);
   line-height: 1.6;
   margin-bottom: 1.25rem;
@@ -149,13 +149,13 @@
 }
 
 .corroborationTitle {
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .corroborationExplainer {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   color: var(--color-text-body, #374151);
   line-height: 1.5;
   margin-bottom: 1rem;
@@ -181,7 +181,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #fff;
 }
@@ -204,19 +204,19 @@
 }
 
 .avatarRowText {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   font-weight: 600;
 }
 
 /* Status history */
 
 .cardTitle {
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 
 .cardSubtitle {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   margin-top: 0.3rem;
   margin-bottom: 1rem;
@@ -225,14 +225,14 @@
 /* Admin verification note */
 
 .adminNoteBody {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   color: var(--color-text-body, #374151);
   line-height: 1.5;
   margin-bottom: 0.6rem;
 }
 
 .adminNoteAttribution {
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
@@ -303,13 +303,13 @@
 }
 
 .successTitle {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.6rem;
 }
 
 .successMessage {
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   line-height: 1.5;
   margin-bottom: 1.5rem;

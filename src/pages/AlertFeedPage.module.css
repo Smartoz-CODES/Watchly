@@ -18,7 +18,7 @@
   padding: 0.6rem 1.2rem;
   border-radius: var(--btn-radius-md, 0.65rem);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -50,7 +50,7 @@
   font: inherit;
   cursor: pointer;
   background-color: #fff;
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
   border-radius: var(--btn-radius-md, 0.75rem);
   padding: 1.25rem;
 }
@@ -116,18 +116,18 @@
 
 .alertTitle {
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
 .alertTitleUnread {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.3rem;
   color: var(--color-text-body, #111827);
 }
 
 .pill {
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   font-weight: 700;
   border-radius: 999px;
   padding: 0.25rem 0.75rem;
@@ -155,7 +155,7 @@
 }
 
 .alertDescription {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   color: var(--color-text-body, #374151);
   line-height: 1.5;
   margin-bottom: 0.75rem;
@@ -171,6 +171,6 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }

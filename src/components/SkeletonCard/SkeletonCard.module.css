@@ -1,5 +1,5 @@
 ﻿.card {
-  border: 1px solid var(--color-border-default);
+  border: 0.5px solid var(--color-border-default);
   border-radius: var(--btn-radius-lg);
   padding: 1.6rem;
   background-color: var(--color-surface-default);
@@ -64,7 +64,7 @@
 
 .footer {
   padding-top: 0.8rem;
-  border-top: 1px solid var(--color-border-disabled);
+  border-top: 0.5px solid var(--color-border-disabled);
 }
 
 @keyframes pulse {

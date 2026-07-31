@@ -38,7 +38,7 @@
 }
 
 .verifiedPill {
-  font-size: 0.7rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--color-primary, #0f766e);
   background-color: var(--color-primary-subtle, #e0f2f1);
@@ -47,7 +47,7 @@
 }
 
 .bannerLocation {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
@@ -59,7 +59,7 @@
   gap: 1.5rem;
   padding: 1.25rem 0;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--color-border-default, #e5e7eb);
+  border-bottom: 0.5px solid var(--color-border-default, #e5e7eb);
 }
 
 .statItem {
@@ -73,7 +73,7 @@
 }
 
 .statLabel {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
@@ -94,13 +94,13 @@
 
 .card {
   background-color: #fff;
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
   border-radius: var(--btn-radius-md, 0.75rem);
   padding: 1.5rem;
 }
 
 .cardTitle {
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 
@@ -114,7 +114,7 @@
 /* About */
 
 .aboutText {
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   color: var(--color-text-body, #374151);
   line-height: 1.6;
   margin-top: 0.75rem;
@@ -145,12 +145,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 
 .guidelineItem p {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   color: var(--color-text-body, #374151);
   line-height: 1.5;
 }
@@ -162,7 +162,7 @@
   border: none;
   color: var(--color-primary, #0f766e);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   cursor: pointer;
 }
 
@@ -177,7 +177,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.9rem 0;
-  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  border-top: 0.5px solid var(--color-border-default, #e5e7eb);
 }
 
 .incidentRow:first-child {
@@ -186,12 +186,12 @@
 }
 
 .incidentTitle {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   font-weight: 600;
 }
 
 .incidentMeta {
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   margin-top: 0.15rem;
 }
@@ -199,7 +199,7 @@
 /* Safety overview */
 
 .safetySubheading {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--color-warning, #b45309);
   margin: 1.25rem 0 0.75rem;
@@ -219,7 +219,7 @@
 }
 
 .barLabel {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
 }
 
 .barTrack {
@@ -236,7 +236,7 @@
 }
 
 .barCount {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   font-weight: 600;
   text-align: right;
 }
@@ -249,13 +249,13 @@
 }
 
 .statusBox {
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
   border-radius: var(--btn-radius-sm, 0.5rem);
   padding: 0.75rem;
 }
 
 .statusCount {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -263,7 +263,7 @@
 }
 
 .statusLabel {
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
@@ -322,14 +322,14 @@
 
 .adminName {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .adminBadge {
-  font-size: 0.65rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--color-primary, #0f766e);
   background-color: var(--color-primary-subtle, #e0f2f1);
@@ -338,33 +338,33 @@
 }
 
 .adminSince {
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
 .adminStatsRow {
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid var(--color-border-default, #e5e7eb);
-  border-bottom: 1px solid var(--color-border-default, #e5e7eb);
+  border-top: 0.5px solid var(--color-border-default, #e5e7eb);
+  border-bottom: 0.5px solid var(--color-border-default, #e5e7eb);
   padding: 1rem 0;
   margin: 1rem 0;
 }
 
 .adminStatValue {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.3rem;
   text-align: center;
 }
 
 .adminStatLabel {
-  font-size: 0.7rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   text-align: center;
 }
 
 .adminDisclaimer {
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   line-height: 1.5;
 }
@@ -379,12 +379,12 @@
 
 .ctaTitle {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.3rem;
   margin-bottom: 0.4rem;
 }
 
 .ctaDescription {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   color: var(--color-text-body, #374151);
   margin-bottom: 1rem;
 }
@@ -403,7 +403,7 @@
 /* Invite card */
 
 .inviteDescription {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   color: var(--color-text-body, #374151);
   margin-bottom: 1rem;
 }
@@ -419,7 +419,7 @@
 
 .inviteLinkText {
   flex: 1;
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -436,7 +436,7 @@
   border: none;
   border-radius: var(--btn-radius-sm, 0.4rem);
   padding: 0.4rem 0.75rem;
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   font-weight: 600;
   cursor: pointer;
 }
@@ -445,13 +445,13 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-primary, #0f766e);
   margin-top: 0.5rem;
 }
 
 .shareViaLabel {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   font-weight: 700;
   margin: 1.25rem 0 0.5rem;
 }
@@ -462,7 +462,7 @@
   align-items: center;
   gap: 0.75rem;
   background: none;
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
   border-radius: var(--btn-radius-sm, 0.5rem);
   padding: 0.75rem;
   margin-bottom: 0.6rem;
@@ -493,17 +493,17 @@
 .shareRowLabel {
   display: block;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
 }
 
 .shareRowDescription {
   display: block;
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
 .inviteNote {
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   line-height: 1.5;
   margin-top: 0.75rem;

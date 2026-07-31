@@ -32,7 +32,7 @@
 
 .card {
   background-color: #fff;
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
   border-radius: var(--btn-radius-md, 0.75rem);
   padding: 1.5rem;
 }
@@ -61,23 +61,23 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   flex-shrink: 0;
 }
 
 .reporterName {
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.3rem;
 }
 
 .metaLine {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
 .categoryTag {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   font-weight: 600;
   background-color: var(--color-surface-default, #f3f4f6);
   border-radius: var(--btn-radius-sm, 0.35rem);
@@ -86,13 +86,13 @@
 }
 
 .title {
-  font-size: 1.15rem;
+  font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .description {
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   color: var(--color-text-body, #374151);
   line-height: 1.6;
 }
@@ -101,18 +101,18 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 1rem;
 }
 
 .cardTitle {
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 
 .cardSubtitle {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   margin-top: 0.3rem;
   margin-bottom: 1rem;
@@ -151,7 +151,7 @@
 }
 
 .evidenceCounter {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   font-weight: 600;
 }
 
@@ -160,7 +160,7 @@
   border: none;
   color: var(--color-primary, #0f766e);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   cursor: pointer;
 }
 
@@ -168,7 +168,7 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
@@ -177,7 +177,7 @@
 .signalLabel {
   color: #d97706;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   text-align: right;
   margin-bottom: 0.4rem;
 }
@@ -206,7 +206,7 @@
   align-items: center;
   gap: 0.85rem;
   padding: 0.9rem 0;
-  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  border-top: 0.5px solid var(--color-border-default, #e5e7eb);
 }
 
 .corroboratorRow:first-child {
@@ -233,16 +233,16 @@
 
 .corroboratorName {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
 }
 
 .corroboratorDate {
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
 .corroboratorTime {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   white-space: nowrap;
 }
@@ -257,7 +257,7 @@
   border: none;
   color: var(--color-primary, #0f766e);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   cursor: pointer;
   padding: 1rem 0 0.5rem;
 }
@@ -273,20 +273,20 @@
 }
 
 .infoNote p {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   line-height: 1.5;
 }
 
 /* Decision panel */
 
 .decisionTitle {
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .decisionBody {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   margin-bottom: 1.25rem;
 }
@@ -309,7 +309,7 @@
 
 .optionCard,
 .optionCardSelected {
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
 }
 
 .optionCardSelected {
@@ -319,7 +319,7 @@
 
 .optionCardNegative,
 .optionCardSelectedNegative {
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
 }
 
 .optionCardSelectedNegative {
@@ -341,18 +341,18 @@
 
 .optionTitle {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
 }
 
 .optionBody {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   margin-top: 0.15rem;
 }
 
 .fieldLabel {
   display: block;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
@@ -374,7 +374,7 @@
   border: none;
   border-radius: var(--btn-radius-sm, 0.5rem);
   padding: 0.85rem;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   background-color: var(--color-surface-default, #f3f4f6);
   resize: vertical;
   margin-bottom: 1rem;
@@ -389,14 +389,14 @@
 }
 
 .smsPreviewLabel {
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #92400e;
   margin-bottom: 0.3rem;
 }
 
 .smsPreviewBody {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: #78350f;
   line-height: 1.5;
 }

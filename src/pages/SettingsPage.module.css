@@ -21,27 +21,27 @@
 .card,
 .dangerCard {
   background-color: #fff;
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
   border-radius: var(--btn-radius-md, 0.75rem);
   padding: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
 .cardTitle {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 1.25rem;
 }
 
 .sectionHint {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   margin-top: -0.9rem;
   margin-bottom: 1.25rem;
 }
 
 .communityGroup {
-  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  border-top: 0.5px solid var(--color-border-default, #e5e7eb);
   padding-top: 1rem;
   margin-top: 1rem;
 }
@@ -54,13 +54,13 @@
 
 .communityGroupTitle {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   color: var(--color-primary, #0f766e);
   margin-bottom: 0.5rem;
 }
 
 .emptyCommunitiesNote {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
@@ -104,7 +104,7 @@
   height: 1.6rem;
   border-radius: 50%;
   background-color: #fff;
-  border: 1px solid var(--color-border-default);
+  border: 0.5px solid var(--color-border-default);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -117,17 +117,17 @@
 
 .photoLabel {
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1.3rem;
 }
 
 .photoHint {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
 .fieldLabel {
   display: block;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 0.4rem;
   margin-top: 1rem;
@@ -139,7 +139,7 @@
   border: none;
   border-radius: var(--btn-radius-sm, 0.5rem);
   padding: 0.75rem 1rem;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   background-color: var(--color-surface-default, #f3f4f6);
 }
 
@@ -163,7 +163,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 0;
-  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  border-top: 0.5px solid var(--color-border-default, #e5e7eb);
 }
 
 .toggleRow:first-of-type {
@@ -173,11 +173,11 @@
 
 .toggleLabel {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
 }
 
 .toggleDescription {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   margin-top: 0.2rem;
 }
@@ -217,7 +217,7 @@
 }
 
 .dangerTitle {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--color-error, #cf2a2a);
   margin-bottom: 1.25rem;
@@ -229,7 +229,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 0;
-  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  border-top: 0.5px solid var(--color-border-default, #e5e7eb);
 }
 
 .dangerRow:first-of-type {
@@ -239,11 +239,11 @@
 
 .dangerLabel {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
 }
 
 .dangerDescription {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   margin-top: 0.2rem;
 }
@@ -256,7 +256,7 @@
   border-radius: var(--btn-radius-sm, 0.5rem);
   padding: 0.6rem 1.2rem;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   cursor: pointer;
 }
 
@@ -273,6 +273,132 @@
   border-radius: var(--btn-radius-sm, 0.5rem);
   padding: 0.6rem 1.2rem;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: none;
+    margin: 0;
+    padding: 2.4rem;
+  }
+
+  .pageSubtitle {
+    margin-top: 0.4rem;
+    margin-bottom: 2.2rem;
+  }
+
+  .card,
+  .dangerCard {
+    border-radius: 1.2rem;
+    padding: 0;
+    margin-bottom: 2.2rem;
+    overflow: hidden;
+  }
+
+  .cardTitle,
+  .dangerTitle {
+    display: flex;
+    align-items: center;
+    min-height: 7.4rem;
+    margin: 0;
+    padding: 2rem 2.2rem;
+    border-bottom: 0.5px solid var(--color-border-default);
+    font-size: 1.6rem;
+  }
+
+  .container > .card:first-of-type {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .container > .card:first-of-type .cardTitle {
+    grid-column: 1 / -1;
+  }
+
+  .photoRow {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    min-height: 10rem;
+    margin: 0;
+  }
+
+  .photoWrapper {
+    grid-column: 2;
+    grid-row: 1;
+    width: 6.5rem;
+    height: 6.5rem;
+    margin-left: 0.4rem;
+  }
+
+  .photoRow > div:last-child {
+    grid-column: 1;
+    grid-row: 1;
+    padding-left: 2rem;
+  }
+
+  .fieldLabel {
+    grid-column: 1;
+    align-self: center;
+    margin: 0;
+    padding: 0 2rem;
+  }
+
+  .fieldInput,
+  .fieldInputDisabled {
+    grid-column: 2;
+    width: auto;
+    min-height: 4.8rem;
+    margin: 0.8rem 2rem 0.8rem 0.6rem;
+    padding: 1rem 1.2rem;
+    background-color: #f0f1f8;
+  }
+
+  .notificationCard .toggleRow {
+    min-height: 7.6rem;
+    padding: 1.6rem 2.2rem;
+  }
+
+  .notificationCard .cardTitle + .toggleRow {
+    border-top: none;
+  }
+
+  .switchOn,
+  .switchOff {
+    width: 5.6rem;
+    height: 2.6rem;
+    padding: 0.1rem;
+  }
+
+  .switchThumb {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  .dangerCard {
+    border-color: var(--color-border-default);
+  }
+
+  .dangerRow {
+    min-height: 7.6rem;
+    padding: 1.2rem 2.2rem;
+  }
+
+  .dangerTitle {
+    color: var(--color-error, #cf2a2a);
+  }
+
+  .dangerTitle + .dangerRow {
+    border-top: none;
+  }
+
+  .leaveButton,
+  .deleteButton {
+    min-width: 17.5rem;
+    min-height: 5.3rem;
+    padding: 1.2rem 2rem;
+  }
 }

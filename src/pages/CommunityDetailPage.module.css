@@ -24,7 +24,7 @@
   align-items: center;
   gap: 0.5rem;
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   margin-bottom: 2rem;
 }
 
@@ -35,7 +35,7 @@
 }
 
 .card {
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
   border-radius: var(--btn-radius-md, 0.75rem);
   padding: 1.25rem;
   margin-bottom: 1.5rem;
@@ -57,7 +57,7 @@
 
 .communityName {
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -68,7 +68,7 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.7rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--color-primary, #0f766e);
   background-color: var(--color-primary-subtle, #e0f2f1);
@@ -81,7 +81,7 @@
   flex-wrap: wrap;
   gap: 1rem;
   margin-top: 0.4rem;
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
@@ -92,14 +92,14 @@
 }
 
 .title {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
   line-height: 1.3;
   margin-bottom: 0.75rem;
 }
 
 .description {
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   line-height: 1.5;
   margin-bottom: 0.9rem;
@@ -113,7 +113,7 @@
   border-radius: var(--btn-radius-md, 0.65rem);
   padding: 0.9rem;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.3rem;
   cursor: pointer;
   margin-top: 0.5rem;
 }
@@ -125,7 +125,7 @@
 
 .loginPrompt {
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   margin-top: 1rem;
 }
@@ -137,14 +137,14 @@
   font-weight: 700;
   cursor: pointer;
   padding: 0;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
 }
 
 .memberIndicator {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--color-primary, #0f766e);
   margin-bottom: 0.5rem;
@@ -157,11 +157,11 @@
   gap: 0.5rem;
   width: 100%;
   background: none;
-  border: 1px solid var(--color-border-default, #d1d5db);
+  border: 0.5px solid var(--color-border-default, #d1d5db);
   border-radius: var(--btn-radius-md, 0.65rem);
   padding: 0.85rem;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   color: var(--color-text-body, #111827);
   cursor: pointer;
   margin-top: 1.5rem;

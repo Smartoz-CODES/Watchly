@@ -44,11 +44,11 @@
 
 .timelineLabel {
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
 }
 
 .timelineTimestamp {
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   margin-top: 0.1rem;
 }

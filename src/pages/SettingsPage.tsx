@@ -82,9 +82,6 @@ const SettingsPage = () => {
   const { user, deleteAccount, updateProfile } = useAuth();
   const {
     activeCommunity,
-    userCommunities,
-    memberships,
-    loading: communityLoading,
   } = useCommunity();
   const { showToast } = useToast();
 
@@ -103,7 +100,6 @@ const SettingsPage = () => {
   // starts from the real value per community rather than a fake default.
   // Still only overrides locally on toggle, since there's no real update
   // call wired up yet either — but at least it starts honest.
-  const [smsOverrides, setSmsOverrides] = useState<Record<string, boolean>>({});
 
   const [isLeaveDialogOpen, setLeaveDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -123,14 +119,6 @@ const SettingsPage = () => {
       const current = prev[communityId] ?? DEFAULT_COMMUNITY_PREFS;
       return { ...prev, [communityId]: { ...current, [key]: !current[key] } };
     });
-  };
-
-  const handleToggleSms = (communityId: string, currentValue: boolean) => {
-    // TODO Day 2: this needs a real update call against
-    // community_memberships once one exists — currently only flips the
-    // local override, same limitation as everywhere else waiting on a
-    // backend write endpoint.
-    setSmsOverrides((prev) => ({ ...prev, [communityId]: !currentValue }));
   };
 
   const handleNameBlur = async () => {
@@ -275,11 +263,34 @@ const SettingsPage = () => {
         />
       </section>
 
-      <section className={styles.card}>
-        <h2 className={styles.cardTitle}>Delivery Method</h2>
-        <p className={styles.sectionHint}>
-          How you're reached — applies the same way across every community.
-        </p>
+      <section className={`${styles.card} ${styles.notificationCard}`}>
+        <h2 className={styles.cardTitle}>Notification</h2>
+
+        {COMMUNITY_NOTIFICATION_ROWS.map(({ key, label, description }) => {
+          const communityId = activeCommunity?.community_id ?? "default";
+          const prefs =
+            communityPrefs[communityId] ?? DEFAULT_COMMUNITY_PREFS;
+          const displayLabel = label("").replace(/ in $/, "");
+
+          return (
+            <div key={key} className={styles.toggleRow}>
+              <div>
+                <p className={styles.toggleLabel}>{displayLabel}</p>
+                <p className={styles.toggleDescription}>{description}</p>
+              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={prefs[key]}
+                aria-label={displayLabel}
+                className={prefs[key] ? styles.switchOn : styles.switchOff}
+                onClick={() => handleToggleCommunityPref(communityId, key)}
+              >
+                <span className={styles.switchThumb} />
+              </button>
+            </div>
+          );
+        })}
 
         {ACCOUNT_NOTIFICATION_ROWS.map(({ key, label, description }) => (
           <div key={key} className={styles.toggleRow}>
@@ -299,95 +310,6 @@ const SettingsPage = () => {
             </button>
           </div>
         ))}
-      </section>
-
-      <section className={styles.card}>
-        <h2 className={styles.cardTitle}>Notifications by Community</h2>
-        <p className={styles.sectionHint}>
-          What you're notified about — set separately for each community you've
-          joined.
-        </p>
-
-        {communityLoading && (
-          <p className={styles.emptyCommunitiesNote}>
-            Loading your communities…
-          </p>
-        )}
-
-        {!communityLoading && userCommunities.length === 0 && (
-          <p className={styles.emptyCommunitiesNote}>
-            Join a community to set its notification preferences.
-          </p>
-        )}
-
-        {userCommunities.map((community) => {
-          const prefs =
-            communityPrefs[community.community_id] ?? DEFAULT_COMMUNITY_PREFS;
-          const membership = memberships.find(
-            (m) => m.community_id === community.community_id,
-          );
-          const smsEnabled =
-            smsOverrides[community.community_id] ??
-            membership?.sms_alerts_enabled ??
-            true;
-
-          return (
-            <div key={community.community_id} className={styles.communityGroup}>
-              <p className={styles.communityGroupTitle}>{community.name}</p>
-
-              <div className={styles.toggleRow}>
-                <div>
-                  <p className={styles.toggleLabel}>
-                    SMS Alerts for {community.name}
-                  </p>
-                  <p className={styles.toggleDescription}>
-                    Receive a text message outside the app when an incident in
-                    this community is verified.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={smsEnabled}
-                  aria-label={`SMS Alerts for ${community.name}`}
-                  className={smsEnabled ? styles.switchOn : styles.switchOff}
-                  onClick={() =>
-                    handleToggleSms(community.community_id, smsEnabled)
-                  }
-                >
-                  <span className={styles.switchThumb} />
-                </button>
-              </div>
-
-              {COMMUNITY_NOTIFICATION_ROWS.map(
-                ({ key, label, description }) => (
-                  <div key={key} className={styles.toggleRow}>
-                    <div>
-                      <p className={styles.toggleLabel}>
-                        {label(community.name)}
-                      </p>
-                      <p className={styles.toggleDescription}>{description}</p>
-                    </div>
-                    <button
-                      type="button"
-                      role="switch"
-                      aria-checked={prefs[key]}
-                      aria-label={label(community.name)}
-                      className={
-                        prefs[key] ? styles.switchOn : styles.switchOff
-                      }
-                      onClick={() =>
-                        handleToggleCommunityPref(community.community_id, key)
-                      }
-                    >
-                      <span className={styles.switchThumb} />
-                    </button>
-                  </div>
-                ),
-              )}
-            </div>
-          );
-        })}
       </section>
 
       <section className={styles.dangerCard}>

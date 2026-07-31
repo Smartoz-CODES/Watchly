@@ -26,8 +26,7 @@
   justify-content: space-between;
   padding: 0.8rem 1.6rem;
   background-color: var(--color-surface-subtle, #fefefe);
-  border-bottom: 1px solid
-    var(--color-border-hairline, rgba(178, 174, 185, 0.32));
+  border-bottom: 0.5px solid var(--color-border-default, #d4d4d8);
 }
 
 .logo {
@@ -99,7 +98,7 @@
   background: none;
   border: none;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.3rem;
   color: var(--color-text-body, #111827);
   cursor: pointer;
 }
@@ -217,7 +216,7 @@
 
 .sectionTitle {
   font-family: var(--font-heading);
-  font-size: 3.6rem;
+  font-size: 2.5rem;
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 0.75rem;
@@ -225,7 +224,7 @@
 
 .sectionTitleCentered {
   font-family: var(--font-heading);
-  font-size: 3.6rem;
+  font-size: 2.5rem;
   font-weight: 700;
   text-align: center;
   margin-bottom: 0.6rem;
@@ -385,7 +384,7 @@
 
 .stepBadge {
   display: inline-block;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 400;
   color: var(--color-text-body, #18181b);
   background-color: #cad2ff;
@@ -396,13 +395,13 @@
 
 .stepTitle {
   font-weight: 600;
-  font-size: 2.4rem;
+  font-size: 1.6rem;
   color: var(--color-text-body, #18181b);
   margin-bottom: 0.4rem;
 }
 
 .stepDescription {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   color: var(--color-text-caption, #52525b);
   line-height: 2.4rem;
 }
@@ -451,7 +450,7 @@
 }
 
 .statusCardDescription {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   color: var(--color-text-caption, #52525b);
   line-height: 2.2rem;
 }
@@ -516,7 +515,7 @@
 .testimonialQuote {
   margin: 0;
   max-width: 100%;
-  font-size: 2.4rem;
+  font-size: 1.6rem;
   font-weight: 500;
   line-height: 1.45;
   letter-spacing: -0.02em;
@@ -532,7 +531,7 @@
 .testimonialName {
   margin: 0;
   font-weight: 500;
-  font-size: 2rem;
+  font-size: 1.6rem;
   line-height: 1.35;
 }
 
@@ -596,7 +595,7 @@
 }
 
 .faqItem {
-  border: 1px solid var(--color-border-darker, #71717a);
+  border: 0.5px solid var(--color-border-default, #d4d4d8);
   border-radius: var(--btn-radius-sm, 0.8rem);
   padding: 1.1rem 1.25rem;
 }
@@ -610,7 +609,7 @@
   background: none;
   border: none;
   font-weight: 600;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   text-align: left;
   cursor: pointer;
   color: var(--color-text-body, #18181b);
@@ -629,7 +628,7 @@
 }
 
 .faqAnswer {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   color: var(--color-text-caption, #52525b);
   line-height: 2.4rem;
   margin-top: 0.75rem;
@@ -646,7 +645,7 @@
 
 .finalCtaTitle {
   font-family: var(--font-heading);
-  font-size: 2.4rem;
+  font-size: 1.6rem;
   font-weight: 700;
   line-height: 1.3;
   margin-bottom: 1.5rem;
@@ -671,7 +670,7 @@
 }
 
 .finalCtaDisclaimer {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   line-height: 1.8rem;
   color: #fff;
   margin-top: 1.6rem;
@@ -706,7 +705,7 @@
 }
 
 .footerTagline {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   color: var(--color-surface-disabled, #d4d4d8);
 }
 
@@ -718,7 +717,7 @@
 }
 
 .footerLink {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   margin-bottom: 0.8rem;
   color: var(--color-surface-disabled, #d4d4d8);
 }
@@ -733,7 +732,7 @@
 }
 
 .footerCopyright {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   color: #6b7280;
 }
 
@@ -815,7 +814,7 @@
     background: none;
     border: none;
     font-weight: 500;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     padding: 0.8rem 1.6rem;
     color: var(--color-grey-700, #27272a);
     cursor: pointer;
@@ -831,7 +830,7 @@
     background: none;
     border: none;
     font-weight: 600;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     color: var(--color-primary-darker, #23737d);
     cursor: pointer;
   }
@@ -915,7 +914,7 @@
 
   .featuresIntro,
   .sectionSubtitleCentered {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 400;
     line-height: 2.8rem;
   }
@@ -970,7 +969,7 @@
   }
 
   .featureDescription {
-    font-size: 2.4rem;
+    font-size: 1.6rem;
     line-height: 3.2rem;
   }
 
@@ -994,7 +993,7 @@
   }
 
   .stepDescription {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     line-height: 2.6rem;
   }
 
@@ -1086,7 +1085,7 @@
   .testimonialQuote {
     max-width: 61rem;
     margin: 0;
-    font-size: 3.8rem;
+    font-size: 2.5rem;
     line-height: 5.4rem;
     font-weight: 500;
     letter-spacing: -0.025em;
@@ -1099,13 +1098,13 @@
   }
 
   .testimonialName {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
     line-height: 3.6rem;
     font-weight: 500;
   }
 
   .testimonialRole {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     line-height: 1.5;
     color: #d4d4d8;
   }
@@ -1146,7 +1145,7 @@
   }
 
   .faqAnswer {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     line-height: 3.2rem;
     margin-top: 2.4rem;
   }
@@ -1214,7 +1213,7 @@
   }
 
   .testimonialQuote {
-    font-size: 3.8rem; /* FIX: was 3.2rem */
+    font-size: 2.5rem; /* FIX: was 3.2rem */
     line-height: 5.4rem; /* FIX: was 1.42 */
   }
 }
@@ -1245,12 +1244,12 @@
   }
 
   .testimonialQuote {
-    font-size: 2.6rem;
+    font-size: 2.5rem;
     line-height: 1.4;
   }
 
   .testimonialName {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
 
   .testimonialArrows {

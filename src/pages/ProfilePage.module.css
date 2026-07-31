@@ -12,7 +12,7 @@
 
 .headerCard {
   background-color: #fff;
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
   border-radius: var(--btn-radius-md, 0.75rem);
   padding: 1.5rem;
   display: flex;
@@ -38,13 +38,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 
 .headerName {
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -54,7 +54,7 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.7rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--color-primary, #0f766e);
   background-color: var(--color-primary-subtle, #e0f2f1);
@@ -63,7 +63,7 @@
 }
 
 .headerContact {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
@@ -71,8 +71,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.75rem;
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  font-size: 1.3rem;
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
   border-radius: var(--btn-radius-sm, 0.4rem);
   padding: 0.25rem 0.6rem;
   margin-top: 0.5rem;
@@ -82,7 +82,7 @@
 
 .card {
   background-color: #fff;
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
   border-radius: var(--btn-radius-md, 0.75rem);
   padding: 1.5rem;
 }
@@ -95,7 +95,7 @@
 }
 
 .cardTitle {
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 
@@ -107,7 +107,7 @@
   border: none;
   color: var(--color-primary, #0f766e);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   cursor: pointer;
 }
 
@@ -119,7 +119,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.75rem 0;
-  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  border-top: 0.5px solid var(--color-border-default, #e5e7eb);
 }
 
 .infoRow:first-of-type {
@@ -127,12 +127,12 @@
 }
 
 .infoLabel {
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
 .infoValue {
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -143,7 +143,7 @@
   display: flex;
   align-items: center;
   gap: 0.2rem;
-  font-size: 0.65rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--color-primary, #0f766e);
   background-color: var(--color-primary-subtle, #e0f2f1);
@@ -159,7 +159,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.9rem 0;
-  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  border-top: 0.5px solid var(--color-border-default, #e5e7eb);
 }
 
 .securityRow:first-of-type {
@@ -185,11 +185,11 @@
 
 .securityLabel {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
 }
 
 .securityDescription {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
@@ -199,7 +199,7 @@
   border: none;
   color: var(--color-primary, #0f766e);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   cursor: pointer;
 }
 
@@ -211,7 +211,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.9rem 0;
-  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  border-top: 0.5px solid var(--color-border-default, #e5e7eb);
 }
 
 .communityRow:first-of-type {
@@ -220,14 +220,14 @@
 
 .communityName {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .activePill {
-  font-size: 0.65rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--color-primary, #0f766e);
   background-color: var(--color-primary-subtle, #e0f2f1);
@@ -239,7 +239,7 @@
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
   margin-top: 0.2rem;
 }
@@ -252,7 +252,7 @@
   border-radius: var(--btn-radius-sm, 0.4rem);
   padding: 0.4rem 1rem;
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   cursor: pointer;
 }
 
@@ -265,7 +265,7 @@
 }
 
 .activityTile {
-  border: 1px solid var(--color-border-default, #e5e7eb);
+  border: 0.5px solid var(--color-border-default, #e5e7eb);
   border-radius: var(--btn-radius-sm, 0.5rem);
   padding: 0.9rem;
 }
@@ -304,12 +304,12 @@
 }
 
 .activityValue {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 
 .activityLabel {
-  font-size: 0.75rem;
+  font-size: 1.3rem;
   color: var(--color-text-caption, #6b7280);
 }
 
@@ -324,9 +324,9 @@
   background: none;
   border: none;
   padding: 0.9rem 0;
-  border-top: 1px solid var(--color-border-default, #e5e7eb);
+  border-top: 0.5px solid var(--color-border-default, #e5e7eb);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   font-weight: 600;
 }
 
@@ -383,7 +383,7 @@
 }
 
 .modalTitle {
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 
@@ -396,7 +396,7 @@
 
 .fieldLabel {
   display: block;
-  font-size: 0.85rem;
+  font-size: 1.3rem;
   font-weight: 600;
   margin-top: 0.9rem;
   margin-bottom: 0.4rem;
@@ -407,7 +407,7 @@
   border: none;
   border-radius: var(--btn-radius-sm, 0.5rem);
   padding: 0.75rem 1rem;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   background-color: var(--color-surface-default, #f3f4f6);
 }
 
@@ -417,7 +417,7 @@
 }
 
 .fieldError {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--color-error, #cf2a2a);
   margin-top: 0.5rem;
 }

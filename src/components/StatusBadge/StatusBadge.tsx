@@ -4,7 +4,8 @@ import styles from "./StatusBadge.module.css";
 
 interface StatusBadgeProps {
   status: IncidentStatus;
-  size?: "sm" | "md";
+  size?: "xs" | "sm" | "md";
+  showIcon?: boolean;
 }
 
 const config: Record<
@@ -26,20 +27,26 @@ const config: Record<
   },
 };
 
-const StatusBadge = ({ status, size = "sm" }: StatusBadgeProps) => {
+const StatusBadge = ({
+  status,
+  size = "sm",
+  showIcon = true,
+}: StatusBadgeProps) => {
   const { label, icon: Icon, className } = config[status];
 
   return (
     <span
       className={`${styles.badge} ${styles[className]} ${
-        size === "md" ? styles.md : styles.sm
+        size === "md" ? styles.md : size === "xs" ? styles.xs : styles.sm
       }`}
     >
-      <Icon
-        size={size === "md" ? 16 : 14}
-        className={styles.icon}
-        aria-hidden="true"
-      />
+      {showIcon && (
+        <Icon
+          size={size === "md" ? 16 : size === "xs" ? 12 : 14}
+          className={styles.icon}
+          aria-hidden="true"
+        />
+      )}
       {label}
     </span>
   );
