@@ -1,8 +1,9 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, Eye, EyeOff, Info, Mail, X } from "lucide-react";
+import { ChevronLeft, Eye, EyeOff, Info, X } from "lucide-react";
 
+import AuthLogo from "../components/AuthLogo/AuthLogo";
 import { useToast } from "../hooks/use-toast";
 import { VALIDATION_TOASTS } from "../lib/toast-messages";
 
@@ -108,6 +109,8 @@ const PasswordRecoveryPage = () => {
     <>
       {mode === "request" && (
         <>
+          <AuthLogo />
+
           {bannerVisible && (
             <div className={styles.banner}>
               <Info size={20} className={styles.bannerIcon} />
@@ -138,8 +141,13 @@ const PasswordRecoveryPage = () => {
 
             <div className={styles.inputGroup}>
               <label htmlFor="email">Email</label>
+              {/*
+                FIX: removed the leading <Mail size={20} /> icon. Neither
+                Figma (node 2427:20330) nor your own screenshot shows an
+                icon inside this input — it was an addition that didn't
+                match either source.
+              */}
               <div className={styles.inputWrapper}>
-                <Mail size={20} className={styles.icon} />
                 <input
                   id="email"
                   type="email"
@@ -167,12 +175,20 @@ const PasswordRecoveryPage = () => {
 
       {mode === "reset" && (
         <div className={styles.form}>
+          {/*
+            No <AuthLogo /> here on purpose — this step has a Back button,
+            and every "Back button" screen in your screenshots (this one,
+            OTP entry) skips the logo. Screens without a Back button show
+            it (except the transient "Phone verified" step, which skips
+            both).
+          */}
           <button
             type="button"
             className={styles.backLink}
             onClick={() => navigate("/login")}
           >
-            <ChevronLeft size={18} /> Back
+            {/* FIX: was size={18} — Figma's CaretLeft (confirmed at node 2050:13817) is 24px */}
+            <ChevronLeft size={24} /> Back
           </button>
 
           <div className={styles.header}>
