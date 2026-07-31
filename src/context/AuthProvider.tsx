@@ -8,6 +8,7 @@ import {
 import type { User } from "../types/user";
 import {
   authApi,
+  usersApi,
   isApiError,
   mapApiUser,
   storeTokens,
@@ -176,34 +177,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, []);
 
-  // updateProfile — the deployed backend is auth-only; no profile
-  // endpoint exists yet. Updates apply locally (and persist across
-  // refreshes) so the UI stays functional until the data API ships.
   const updateProfile = useCallback(
     async (fields: { name?: string; profile_image_url?: string }) => {
       if (!user) throw new Error("No authenticated user");
-      const updated: User = {
-        ...user,
-        ...(fields.name !== undefined ? { name: fields.name } : {}),
-        ...(fields.profile_image_url !== undefined
-          ? { profile_image_url: fields.profile_image_url }
-          : {}),
-      };
+      const apiUser = await usersApi.update({
+        name: fields.name,
+        profileImageUrl: fields.profile_image_url,
+      });
+      const updated = mapApiUser(apiUser, user);
       storeUser(updated);
       setUser(updated);
     },
     [user],
   );
 
-  // deleteAccount — no backend endpoint yet; keep the UI honest.
   const deleteAccount = useCallback(async () => {
-    showToast(
-      "Not available yet",
-      "Account deletion ships with the data API. Contact a platform admin to remove your account.",
-      "info",
-    );
-    throw new Error("Account deletion not available");
-  }, [showToast]);
+    try {
+      await usersApi.remove();
+    } finally {
+      clearSession();
+      setUser(null);
+      setSession(null);
+      setPendingVerification(null);
+    }
+  }, []);
 
   const value: AuthContextValue = {
     user,

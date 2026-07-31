@@ -2,6 +2,7 @@
 import StatusBadge from "../StatusBadge/StatusBadge";
 import CorroborationButton from "../CorroborationButton/CorroborationButton";
 import type { Incident } from "../../types/incident";
+import { incidentTitleFrom } from "../../lib/incident-title";
 import styles from "./IncidentCard.module.css";
 
 interface IncidentCardProps {
@@ -43,6 +44,7 @@ const IncidentCard = ({
   corroborateLoading = false,
 }: IncidentCardProps) => {
   const isReportedStatus = incident.current_status === "Reported";
+  const title = incidentTitleFrom(incident.description);
 
   return (
     <div
@@ -75,7 +77,7 @@ const IncidentCard = ({
           : incident.category}
       </span>
 
-      <h3 className={styles.title}>{incident.description.split(".")[0]}</h3>
+      {title && <h3 className={styles.title}>{title}</h3>}
 
       <p className={styles.description}>{incident.description}</p>
 

@@ -11,6 +11,7 @@ import SkeletonCard from "../components/SkeletonCard/SkeletonCard";
 import EmptyState from "../components/EmptyState/EmptyState";
 import ErrorState from "../components/ErrorState/ErrorState";
 import CommunityRequestModal from "../components/CommunityRequestModal/CommunityRequestModal";
+import { isApiError } from "../lib/api";
 import styles from "./CommunitySearchPage.module.css";
 
 const SEARCH_DEBOUNCE_MS = 300;
@@ -60,12 +61,10 @@ const CommunitySearchPage = () => {
       switchCommunity(communityId);
       setRequestModalOpen(false);
       navigate("/home");
-    } catch {
-      // joinCommunity is currently a stub that always throws — see
-      // hooks/use-communities.ts.
+    } catch (err) {
       showToast(
-        "Join not available yet",
-        "This feature needs a backend endpoint that doesn't exist yet.",
+        "Failed to join",
+        isApiError(err) ? err.message : "Please try again.",
         "error",
       );
     }

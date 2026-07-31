@@ -13,8 +13,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../hooks/use-toast";
 import { useCommunity } from "../hooks/use-community";
+import { useIncidents } from "../hooks/use-incidents";
 import EvidenceUploader from "../components/EvidenceUploader/EvidenceUploader";
 import type { IncidentCategory } from "../types/incident";
+import { incidentsApi, isApiError } from "../lib/api";
 import styles from "./ReportIncidentPage.module.css";
 
 interface EvidenceFile {
@@ -47,6 +49,7 @@ const ReportIncidentPage = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const { activeCommunity, loading: communityLoading } = useCommunity();
+  const { createIncident } = useIncidents();
 
   useEffect(() => {
     if (!communityLoading && !activeCommunity) {
@@ -157,7 +160,7 @@ const ReportIncidentPage = () => {
     return days;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!category) {
       showToast(
         "Missing category",
@@ -213,28 +216,61 @@ const ReportIncidentPage = () => {
     const occurredAtDate = new Date(year, month - 1, day, hours, minutes);
     const occurredAtIso = occurredAtDate.toISOString();
 
+    if (!activeCommunity) return;
+
     const payload = {
-      community_id: activeCommunity?.community_id,
+      community_id: activeCommunity.community_id,
       category,
-      other_description: category === "Other" ? otherDescription.trim() : null,
+      other_description:
+        category === "Other" ? otherDescription.trim() : undefined,
       location: location.trim(),
       occurred_at: occurredAtIso,
       description: description.trim(),
     };
 
     setSubmitting(true);
-    // TODO Day 2: replace this mock with useIncidents().createIncident(payload)
-    // once the real Edge Function contract is confirmed. `payload` above
-    // is the actual, real shape — only the network call itself is mocked.
-    console.log("Incident report payload (not yet sent — mocked):", payload);
-    setTimeout(() => {
+    try {
+      const incidentId = await createIncident(payload);
+
+      if (evidence.length > 0) {
+        try {
+          await incidentsApi.uploadEvidence(
+            incidentId,
+            evidence.map((item) => item.file),
+          );
+        } catch (uploadErr) {
+          showToast(
+            "Report submitted, but evidence upload failed",
+            isApiError(uploadErr)
+              ? uploadErr.message
+              : "You can retry adding photos from the incident's detail page.",
+            "error",
+          );
+        }
+      }
+
       setSubmitting(false);
       setShowSuccessModal(true);
 
       setTimeout(() => {
         navigate("/home");
       }, 2000);
-    }, 1200);
+    } catch (err) {
+      setSubmitting(false);
+      if (err instanceof Error && err.message === "RATE_LIMITED") {
+        showToast(
+          "Too many reports",
+          "You've reached the limit of 5 reports per hour. Try again later.",
+          "error",
+        );
+        return;
+      }
+      showToast(
+        "Failed to submit report",
+        isApiError(err) ? err.message : "Please try again.",
+        "error",
+      );
+    }
   };
 
   const monthLabel = calendarMonth.toLocaleString("default", {

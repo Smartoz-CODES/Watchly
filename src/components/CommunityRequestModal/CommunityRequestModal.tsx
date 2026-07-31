@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X, Info, ShieldCheck, CheckCircle2, Users } from "lucide-react";
 import { useCommunities } from "../../hooks/use-communities";
 import { useToast } from "../../hooks/use-toast";
+import { isApiError } from "../../lib/api";
 import type { Community } from "../../types/community";
 import styles from "./CommunityRequestModal.module.css";
 
@@ -62,13 +63,10 @@ const CommunityRequestModal = ({
     try {
       const result = await requestCommunity({ name: name.trim(), state, lga });
       setStep(result === "duplicates" ? "duplicates" : "success");
-    } catch {
-      // requestCommunity is currently a stub that always throws — see
-      // hooks/use-communities.ts. Show an honest message rather than
-      // pretending this failed for a normal reason.
+    } catch (err) {
       showToast(
-        "Request not available yet",
-        "This feature needs a backend endpoint that doesn't exist yet.",
+        "Request failed",
+        isApiError(err) ? err.message : "Please try again.",
         "error"
       );
     } finally {

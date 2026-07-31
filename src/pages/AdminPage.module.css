@@ -1,0 +1,56 @@
+.container {
+  padding: 1.6rem;
+  max-width: 60rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.pageTitle {
+  font-size: var(--text-h5, 1.5rem);
+  font-weight: 700;
+}
+
+.pageSubtitle {
+  font-size: var(--text-body-4, 0.9rem);
+  color: var(--color-text-caption, #6b7280);
+  margin-top: 0.3rem;
+  margin-bottom: 1.5rem;
+}
+
+.tabsRow {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  background-color: #fff;
+  border-bottom: 0.5px solid #d4d4d8;
+  border-radius: 1rem 1rem 0 0;
+  margin-bottom: 1.7rem;
+}
+
+.tab,
+.tabActive {
+  background: none;
+  border: none;
+  flex: 1 0 auto;
+  padding: 1.5rem 1rem 0.9rem;
+  font-size: 1.2rem;
+  line-height: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+
+.tab {
+  color: var(--color-text-caption, #6b7280);
+}
+
+.tabActive {
+  color: var(--color-primary, #0f766e);
+  border-bottom-color: var(--color-primary, #0f766e);
+}
+
+.sectionContent {
+  display: flex;
+  flex-direction: column;
+}

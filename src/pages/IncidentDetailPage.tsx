@@ -1,89 +1,71 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft, X, Check } from "lucide-react";
 import { useAuth } from "../hooks/use-auth";
 import { useCorroboration } from "../hooks/use-corroboration";
+import { useIncidents } from "../hooks/use-incidents";
 import { useToast } from "../hooks/use-toast";
 import StatusBadge from "../components/StatusBadge/StatusBadge";
 import CorroborationButton from "../components/CorroborationButton/CorroborationButton";
 import StatusHistoryTimeline from "../components/StatusHistoryTimeline/StatusHistoryTimeline";
+import ErrorState from "../components/ErrorState/ErrorState";
 import type { Incident } from "../types/incident";
+import { isApiError } from "../lib/api";
+import { incidentTitleFrom } from "../lib/incident-title";
 import styles from "./IncidentDetailPage.module.css";
-
-// ---------------------------------------------------------------------
-// useIncidents.fetchIncidentDetail() is still a stub, so the :id route
-// param isn't actually used to fetch anything yet — this renders one
-// fixed mock incident regardless of which id is in the URL, same
-// approach HomeFeedPage takes with MOCK_INCIDENTS.
-//
-// reporter_id, reason, and changed_by below are pre-filtered in this mock
-// to simulate what the real API is supposed to send for a viewer who is
-// neither the reporter nor a Community Admin (reporter_id: null, reason:
-// null, changed_by: null) — per the confirmed decision to follow FR-12's
-// stricter visibility rule rather than the Figma, which showed the
-// reason to everyone regardless of role. The component itself does no
-// role-based hiding of its own; it renders exactly what it's given, same
-// principle the LLD states for the real API.
-// ---------------------------------------------------------------------
-
-const MOCK_INCIDENT: Incident = {
-  incident_id: "2",
-  reporter_id: null,
-  reporter_name: "Anonymous Resident",
-  community_id: "c1",
-  community_name: "Landmark Estate",
-  category: "Suspicious Person",
-  other_description: null,
-  description:
-    "Latest model silver SUV (possibly Toyota Rav4 or similar) seen circling the block for approximately 20 minutes. Driver appeared to be filming houses using a handheld device. No license plate visible due to temporary paper tag that was intentionally partially obscured by a dark frame.",
-  location: "Gate 4",
-  occurred_at: new Date(Date.now() - 3600000 * 5).toISOString(), // happened 5hrs ago
-  created_at: new Date(Date.now() - 7200000).toISOString(), // reported 2hrs ago — 3hrs after it happened
-  current_status: "Under Review",
-  corroboration_count: 10,
-  evidence: [
-    {
-      evidence_id: "e1",
-      file_url:
-        "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=600",
-      file_type: "JPEG",
-      created_at: new Date().toISOString(),
-    },
-    {
-      evidence_id: "e2",
-      file_url:
-        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600",
-      file_type: "JPEG",
-      created_at: new Date().toISOString(),
-    },
-  ],
-  status_history: [
-    {
-      status: "Reported",
-      changed_by: null,
-      reason: null,
-      timestamp: new Date(Date.now() - 3600000 * 6).toISOString(),
-    },
-    {
-      status: "Under Review",
-      changed_by: null, // real value would be "Community Admin" if this viewer were an admin; null here since Faith is neither
-      reason: null,
-      timestamp: new Date(Date.now() - 3600000 * 4).toISOString(),
-    },
-  ],
-  has_user_corroborated: false,
-};
 
 const IncidentDetailPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const { corroborate, loading: corroborateLoading } = useCorroboration();
+  const { fetchIncidentDetail } = useIncidents();
   const { showToast } = useToast();
 
-  const [incident, setIncident] = useState(MOCK_INCIDENT);
+  const [incident, setIncident] = useState<Incident | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+  const loadIncident = useCallback(async () => {
+    if (!id) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await fetchIncidentDetail(id);
+      setIncident(data);
+    } catch (err) {
+      setError(isApiError(err) ? err.message : "Failed to load incident");
+    } finally {
+      setLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  useEffect(() => {
+    // Fetch-on-mount/param-change: a genuine synchronization with the
+    // server, not a "derive state from props" antipattern.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadIncident();
+  }, [loadIncident]);
+
+  if (loading) {
+    return <div className={styles.container}>Loading…</div>;
+  }
+
+  if (error || !incident) {
+    return (
+      <div className={styles.container}>
+        <ErrorState
+          message={error ?? "Incident not found."}
+          onRetry={loadIncident}
+        />
+      </div>
+    );
+  }
+
+  const title = incidentTitleFrom(incident.description);
   const isReporter =
     !!incident.reporter_id && incident.reporter_id === user?.user_id;
   const isClosed =
@@ -99,18 +81,28 @@ const IncidentDetailPage = () => {
   const handleCorroborate = async () => {
     try {
       await corroborate(incident.incident_id);
-      setIncident((prev) => ({
-        ...prev,
-        has_user_corroborated: true,
-        corroboration_count: prev.corroboration_count + 1,
-      }));
+      setIncident((prev) =>
+        prev
+          ? {
+              ...prev,
+              has_user_corroborated: true,
+              corroboration_count: prev.corroboration_count + 1,
+            }
+          : prev,
+      );
       setShowSuccessModal(true);
-    } catch {
-      // corroborate() is currently a stub that always throws — see
-      // hooks/use-corroboration.ts.
+    } catch (err) {
+      if (isApiError(err) && err.code === "CANNOT_CORROBORATE_OWN_REPORT") {
+        showToast("Can't corroborate", "You can't corroborate your own report.", "error");
+        return;
+      }
+      if (isApiError(err) && err.code === "ALREADY_CORROBORATED") {
+        showToast("Already corroborated", "You've already corroborated this report.", "info");
+        return;
+      }
       showToast(
-        "Corroboration not available yet",
-        "This feature needs a backend endpoint that doesn't exist yet.",
+        "Corroboration failed",
+        isApiError(err) ? err.message : "Please try again.",
         "error",
       );
     }
@@ -158,9 +150,7 @@ const IncidentDetailPage = () => {
                 : incident.category}
             </span>
 
-            <h1 className={styles.title}>
-              {incidentTitleFrom(incident.description)}
-            </h1>
+            {title && <h1 className={styles.title}>{title}</h1>}
             <p className={styles.description}>{incident.description}</p>
 
             {incident.evidence.length > 0 && (
@@ -304,16 +294,6 @@ const CorroborationCountRow = ({ count }: CorroborationCountRowProps) => (
     </p>
   </div>
 );
-
-const incidentTitleFrom = (description: string) => {
-  // No separate "title" field exists on Incident (same gap flagged on
-  // MyReportPage) — using the first sentence of the description as a
-  // stand-in headline until/unless a real title field exists.
-  const firstSentence = description.split(".")[0];
-  return firstSentence.length > 60
-    ? firstSentence.slice(0, 60) + "…"
-    : firstSentence;
-};
 
 const formatRelativeTime = (isoDate: string) => {
   const diffMs = Date.now() - new Date(isoDate).getTime();

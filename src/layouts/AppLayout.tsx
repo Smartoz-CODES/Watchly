@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   Menu,
@@ -15,9 +15,11 @@ import {
   LogOut,
   MapPin,
   Pencil,
+  ShieldCheck,
 } from "lucide-react";
 import { useAuth } from "../hooks/use-auth";
 import { useCommunity } from "../hooks/use-community";
+import { useAlerts } from "../hooks/use-alerts";
 import type { Community } from "../types/community";
 import styles from "./AppLayout.module.css";
 
@@ -29,10 +31,15 @@ const MENU_ITEMS = [
 ];
 
 const ADMIN_MENU_ITEM = { to: "/admin/queue", label: "Review", icon: Pencil };
+const PLATFORM_ADMIN_MENU_ITEM = {
+  to: "/platform-admin",
+  label: "Admin",
+  icon: ShieldCheck,
+};
 
 const AppLayout = () => {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user, signOut, isPlatformAdmin } = useAuth();
   const { activeCommunity, userCommunities, switchCommunity, isAdmin } =
     useCommunity();
   const location = useLocation();
@@ -41,20 +48,25 @@ const AppLayout = () => {
   // `to` path — it has no way to know /admin/review/:id belongs to the
   // same section as /admin/queue, since they're separate paths under
   // /admin. Checking manually so "Review" stays highlighted on both.
+  // /platform-admin lives outside that prefix on purpose, so it doesn't
+  // fight this same check for a completely different (site-wide) role.
   const isReviewSectionActive = location.pathname.startsWith("/admin");
 
   // "Review" only shows for real Community Admins — matches the Figma's
   // admin-only sidebar, and matches AdminQueuePage's own access check, so
   // there's now an actual door into a page that already had working
-  // access control but no way to reach it.
-  const menuItems = isAdmin ? [...MENU_ITEMS, ADMIN_MENU_ITEM] : MENU_ITEMS;
+  // access control but no way to reach it. "Admin" is a separate,
+  // site-wide role (isPlatformAdmin) and shows independently of it.
+  let menuItems = MENU_ITEMS;
+  if (isAdmin) menuItems = [...menuItems, ADMIN_MENU_ITEM];
+  if (isPlatformAdmin) menuItems = [...menuItems, PLATFORM_ADMIN_MENU_ITEM];
 
-  // use-alerts.ts is still empty — nothing to import yet. Hardcode the
-  // badge to 0 for now, per the LLD's own fallback for this exact gap
-  // (§3.1: "Dev A hardcodes the badge count to zero or hides it entirely").
-  // Swap this for useAlerts().unreadCount once that hook ships.
-  const unreadCount = 0;
+  const { unreadCount, fetchAlerts } = useAlerts();
   const [isSigningOut, setIsSigningOut] = useState(false);
+
+  useEffect(() => {
+    if (user) fetchAlerts();
+  }, [user, fetchAlerts]);
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
