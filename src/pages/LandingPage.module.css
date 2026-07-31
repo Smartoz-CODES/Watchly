@@ -200,7 +200,7 @@
 
 .heroImage {
   width: 100%;
-  border-radius: var(--btn-radius-sm, 0.8rem);
+  /* border-radius: var(--btn-radius-sm, 0.8rem); */
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
@@ -251,7 +251,7 @@
 .featuresGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.25rem;
+  gap: 2rem;
 }
 
 .featureCard {
@@ -271,7 +271,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.6rem;
+  margin-bottom: 9rem;
 }
 
 .featureIcon {
@@ -347,7 +347,7 @@
 .howItWorksGrid {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 12rem;
 }
 
 .howItWorksImageFrame {
@@ -388,9 +388,9 @@
   font-size: 1.6rem;
   font-weight: 400;
   color: var(--color-text-body, #18181b);
-  background-color: #cad2ff;
+  background-color: #CAD2FF;
   border-radius: 999px;
-  padding: 0.8rem 1.6rem;
+  padding: 0.6rem 1.8rem;
   margin-bottom: 0.8rem;
 }
 
@@ -860,7 +860,7 @@
   }
 
   .hero {
-    padding: 4rem 3rem;
+    padding: 4rem 3rem 0 3rem;
   }
 
   .heroTitle {
@@ -886,9 +886,10 @@
   .heroImage {
     max-width: 102.2rem;
     margin: 0 auto;
-    border-radius: var(--btn-radius-lg, 1.6rem);
+    /* border-radius: var(--btn-radius-lg, 1.6rem); */
   }
 
+  
   .featuresSection,
   .whySection,
   .howItWorksSection,
@@ -901,7 +902,7 @@
   .featuresHeader {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 2rem;
     max-width: 131.2rem;
     margin: 0 auto 2.5rem;

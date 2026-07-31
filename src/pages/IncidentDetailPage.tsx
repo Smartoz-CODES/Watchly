@@ -85,7 +85,7 @@ const IncidentDetailPage = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const isReporter =
-    !!incident.reporter_id && incident.reporter_id === user?.user_id;
+    !!incident.reporter_id && incident.reporter_id === user?.id;
   const isClosed =
     incident.current_status === "Verified" ||
     incident.current_status === "Resolved" ||

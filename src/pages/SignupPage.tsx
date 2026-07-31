@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useState } from "react";
+﻿import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -11,12 +11,13 @@ import {
   Radio,
 } from "lucide-react";
 
+import AuthLogo from "../components/AuthLogo/AuthLogo";
 import OTPInput from "../components/OTPInput/OTPInput";
 import { useAuth } from "../hooks/use-auth";
 import { useCommunities } from "../hooks/use-communities";
 import { useCommunity } from "../hooks/use-community";
 import { useToast } from "../hooks/use-toast";
-import { supabase } from "../lib/supabase";
+import { ApiError } from "../lib/api";
 import { normalizePhoneE164 } from "../lib/phone";
 import { AUTH_TOASTS, VALIDATION_TOASTS } from "../lib/toast-messages";
 
@@ -28,7 +29,6 @@ const maskPhone = (e164: string): string => {
   return `+234 *** *** ${last4}`;
 };
 
-
 const prettifySlugAsName = (slug: string): string =>
   slug
     .split("-")
@@ -36,7 +36,7 @@ const prettifySlugAsName = (slug: string): string =>
     .join(" ");
 
 const SignupPage = () => {
-  const { signUp, verifyOtp } = useAuth();
+  const { signup, verifyPhone, resendOtp } = useAuth();
   const { joinCommunity } = useCommunities();
   const { refreshCommunities } = useCommunity();
   const { showToast } = useToast();
@@ -56,6 +56,9 @@ const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [agreePolicy, setAgreePolicy] = useState(false);
 
+  const [userId, setUserId] = useState<string | null>(null);
+  const [demoOtp, setDemoOtp] = useState<string | null>(null);
+
   const [otp, setOtp] = useState("");
   const [otpError, setOtpError] = useState<string | null>(null);
 
@@ -63,7 +66,32 @@ const SignupPage = () => {
   const [resending, setResending] = useState(false);
   const [countdown, setCountdown] = useState(60);
 
-  
+  // Handoff from LoginPage: a PHONE_NOT_VERIFIED login attempt routes
+  // here with ?step=verify&userId=... so the user can pick up phone
+  // verification directly instead of restarting signup from scratch.
+  //
+  // Ref-based indirection, not a suppression — same pattern already
+  // used in CommunityProvider.tsx and AuthProvider.tsx for this exact
+  // situation. The ref's initial value is only evaluated once, on the
+  // first render, and setUserId/setStep/setCountdown are React state
+  // setters — guaranteed stable across renders — so capturing them in
+  // this closure is safe.
+  const checkLoginHandoffRef = useRef(() => {
+    const params = new URLSearchParams(window.location.search);
+    const handoffUserId = params.get("userId");
+    const handoffStep = params.get("step");
+
+    if (handoffStep === "verify" && handoffUserId) {
+      setUserId(handoffUserId);
+      setStep(2);
+      setCountdown(60);
+    }
+  });
+
+  useEffect(() => {
+    checkLoginHandoffRef.current();
+  }, []);
+
   const handlePostVerification = useCallback(async () => {
     const slug = new URLSearchParams(window.location.search).get("community");
 
@@ -100,7 +128,6 @@ const SignupPage = () => {
     return () => clearTimeout(timer);
   }, [countdown, step]);
 
-  
   useEffect(() => {
     if (!verified) return;
 
@@ -157,17 +184,34 @@ const SignupPage = () => {
     try {
       setLoading(true);
       const normalizedPhone = normalizePhoneE164(phone);
-      await signUp(name, email, normalizedPhone, password);
+      const result = await signup(
+        name,
+        email,
+        normalizedPhone,
+        password,
+        agreePolicy,
+      );
+      setUserId(result.userId);
+      setDemoOtp(result.demoOtp);
       setStep(2);
       setCountdown(60);
     } catch {
-      // signUp already throws and shows toast
+      // signup already throws and shows its own toast
     } finally {
       setLoading(false);
     }
   };
 
   const handleVerifyOtp = async () => {
+    if (!userId) {
+      showToast(
+        "Something went wrong",
+        "We couldn't find your signup details. Please sign up again.",
+        "error",
+      );
+      return;
+    }
+
     if (otp.length !== 6) {
       setOtpError("Enter the 6-digit verification code.");
       return;
@@ -175,53 +219,42 @@ const SignupPage = () => {
 
     try {
       setLoading(true);
-      const normalizedPhone = normalizePhoneE164(phone);
-      await verifyOtp(normalizedPhone, otp);
+      await verifyPhone(userId, otp);
       setVerified(true);
-    } catch {
-      setOtpError(AUTH_TOASTS.incorrectCode.description);
+    } catch (err) {
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : AUTH_TOASTS.incorrectCode.description;
+      setOtpError(message);
     } finally {
       setLoading(false);
     }
   };
 
   const handleResendCode = async () => {
-    if (resending || countdown > 0) return;
+    if (resending || countdown > 0 || !userId) return;
 
     try {
       setResending(true);
-      const normalizedPhone = normalizePhoneE164(phone);
-      const { error } = await supabase.auth.resend({
-        type: "sms",
-        phone: normalizedPhone,
-      });
-
-      if (error) {
-        if (error.status === 429) {
-          showToast(
-            AUTH_TOASTS.tooManyOtpRequests.title,
-            AUTH_TOASTS.tooManyOtpRequests.description,
-            "error",
-          );
-        } else {
-          showToast(
-            VALIDATION_TOASTS.resendFailed.title,
-            VALIDATION_TOASTS.resendFailed.description,
-            "error",
-          );
-        }
-        return;
-      }
-
+      const result = await resendOtp(userId);
+      setDemoOtp(result.demoOtp);
       setCountdown(60);
-      const codeSentMessage = AUTH_TOASTS.codeSent(maskPhone(normalizedPhone));
-      showToast(codeSentMessage.title, codeSentMessage.description, "info");
-    } catch {
-      showToast(
-        VALIDATION_TOASTS.resendFailed.title,
-        VALIDATION_TOASTS.resendFailed.description,
-        "error",
+
+      const codeSentMessage = AUTH_TOASTS.codeSent(
+        maskPhone(normalizePhoneE164(phone)),
       );
+      showToast(codeSentMessage.title, codeSentMessage.description, "info");
+    } catch (err) {
+      if (err instanceof ApiError && err.code === "RATE_LIMIT_EXCEEDED") {
+        showToast(
+          AUTH_TOASTS.tooManyOtpRequests.title,
+          AUTH_TOASTS.tooManyOtpRequests.description,
+          "error",
+        );
+      }
+      // OTP_RESEND_COOLDOWN and other errors already show their own
+      // toast from resendOtp's own catch block in AuthProvider.
     } finally {
       setResending(false);
     }
@@ -231,6 +264,8 @@ const SignupPage = () => {
     <>
       {step === 1 && (
         <form className={styles.form} onSubmit={handleSignup}>
+          <AuthLogo />
+
           <div className={styles.header}>
             <h1 className={styles.title}>Let's get started</h1>
             <p className={styles.subtitle}>
@@ -343,7 +378,7 @@ const SignupPage = () => {
                 className={styles.backLink}
                 onClick={() => setStep(1)}
               >
-                <ChevronLeft size={18} /> Back
+                <ChevronLeft size={24} /> Back
               </button>
 
               <div className={styles.header}>
@@ -352,6 +387,13 @@ const SignupPage = () => {
                   Check your SMS messages for a 6-digit verification code
                 </p>
               </div>
+
+              {demoOtp && (
+                <div className={styles.demoOtpBanner}>
+                  <p className={styles.demoOtpLabel}>Demo mode — your code:</p>
+                  <p className={styles.demoOtpValue}>{demoOtp}</p>
+                </div>
+              )}
 
               <OTPInput
                 length={6}
@@ -390,7 +432,7 @@ const SignupPage = () => {
             <div className={styles.fullPageStep}>
               <div className={styles.verifiedIconWrap}>
                 <div className={styles.verifiedIcon}>
-                  <Check size={20} color="#fff" />
+                  <Check className={styles.verifiedIconGlyph} color="#fff" />
                 </div>
               </div>
 
@@ -404,9 +446,11 @@ const SignupPage = () => {
 
           {joinedCommunityName && (
             <div className={styles.fullPageStep}>
+              <AuthLogo />
+
               <div className={styles.verifiedIconWrap}>
                 <div className={styles.verifiedIcon}>
-                  <Check size={20} color="#fff" />
+                  <Check className={styles.verifiedIconGlyph} color="#fff" />
                 </div>
               </div>
 

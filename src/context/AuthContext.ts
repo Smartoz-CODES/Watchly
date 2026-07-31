@@ -1,26 +1,40 @@
 import { createContext } from "react";
-import type { Session } from "@supabase/supabase-js";
-import type { User } from "../types/user";
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  phoneVerified: boolean;
+  profileImageUrl: string | null;
+  isPlatformAdmin: boolean;
+}
+
+export interface SignupResult {
+  userId: string;
+  demoOtp: string | null;
+}
 
 export interface AuthContextValue {
-  user: User | null;
-  session: Session | null;
+  user: AuthUser | null;
   loading: boolean;
   isPlatformAdmin: boolean;
-  signUp: (
+
+  signup: (
     name: string,
     email: string,
-    phone: string,
+    phoneNumber: string,
     password: string,
-  ) => Promise<void>;
-  verifyOtp: (phone: string, token: string) => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
-  deleteAccount: () => Promise<void>;
-  updateProfile: (fields: {
-    name?: string;
-    profile_image_url?: string;
-  }) => Promise<void>;
+    acceptedTerms: boolean,
+  ) => Promise<SignupResult>;
+
+  verifyPhone: (userId: string, otp: string) => Promise<void>;
+
+  resendOtp: (userId: string) => Promise<{ demoOtp: string | null }>;
+
+  login: (email: string, password: string) => Promise<void>;
+
+  logout: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

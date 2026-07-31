@@ -84,7 +84,7 @@ a {
   --color-primary-subtle: #dafafe;
   --color-primary-lighter: #a3f3fd;
   --color-primary-light: #65eafb;
-  --color-primary: #3ac0d0;
+  --color-primary: #23737d;
   --color-primary-dark: #2f99a7;
   --color-primary-darker: #23737d;
   --color-primary-900: #174d53;
@@ -95,7 +95,7 @@ a {
   --color-surface-subtle: #fcfcfc;
   --color-surface-default: #fdfdfe;
   --color-surface-disabled: #d4d4d8;
-  --color-border-default: #a1a1aa;
+  --color-border-default: #d9dbe9;
   --color-border-disabled: #d4d4d8;
   --color-border-darker: #71717a;
   --color-border-hairline: rgba(178, 174, 185, 0.32);

@@ -31,7 +31,7 @@ const ADMIN_MENU_ITEM = { to: "/admin/queue", label: "Review", icon: Pencil };
 
 const AppLayout = () => {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user, logout } = useAuth();
   const { activeCommunity, userCommunities, switchCommunity, isAdmin } =
     useCommunity();
   const location = useLocation();
@@ -58,9 +58,9 @@ const AppLayout = () => {
   const handleSignOut = async () => {
     setIsSigningOut(true);
     try {
-      await signOut();
+      await logout();
     } catch {
-      // signOut() already fires its own error toast — nothing more to do
+      // logout() already fires its own error toast — nothing more to do
       // here besides not leaving an unhandled rejection.
     } finally {
       setIsSigningOut(false);
@@ -147,12 +147,8 @@ const AppLayout = () => {
         </button>
 
         <div className={styles.profile}>
-          {user?.profile_image_url ? (
-            <img
-              src={user.profile_image_url}
-              alt=""
-              className={styles.avatar}
-            />
+          {user?.profileImageUrl ? (
+            <img src={user.profileImageUrl} alt="" className={styles.avatar} />
           ) : (
             <div className={styles.avatarFallback}>
               {user?.name?.[0]?.toUpperCase() ?? "?"}

@@ -601,7 +601,7 @@ const LandingPage = () => {
         <div className={styles.footerLinksRow}>
           <div className={styles.footerBrand}>
             <img
-              src="/assets/logo/watchly-logo-white.png"
+              src="/assets/logo/watchly-logo-footer.png"
               alt="Watchly"
               className={styles.footerLogo}
             />

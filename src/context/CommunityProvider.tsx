@@ -62,7 +62,7 @@ export function CommunityProvider({ children }: CommunityProviderProps) {
   const latestUserIdRef = useRef<string | null>(null);
 
   const refreshCommunities = useCallback(async () => {
-    const requestUserId = user?.user_id ?? null;
+    const requestUserId = user?.id ?? null;
     latestUserIdRef.current = requestUserId;
 
     if (!user) {
@@ -78,7 +78,7 @@ export function CommunityProvider({ children }: CommunityProviderProps) {
     const { data, error } = await supabase
       .from("community_memberships")
       .select("*, communities(*)")
-      .eq("user_id", user.user_id);
+      .eq("user_id", user.id);
 
     // A newer request has since started — drop this stale response
     // rather than let it clobber fresher data.

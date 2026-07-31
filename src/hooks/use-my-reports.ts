@@ -17,13 +17,15 @@ export function useMyReports() {
       const { data, error: fetchError } = await supabase
         .from("incident_reports")
         .select("*")
-        .eq("reporter_id", user.user_id)
+        .eq("reporter_id", user.id)
         .order("created_at", { ascending: false });
 
       if (fetchError) throw fetchError;
       setReports(data ?? []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load your reports");
+      setError(
+        err instanceof Error ? err.message : "Failed to load your reports",
+      );
     } finally {
       setLoading(false);
     }

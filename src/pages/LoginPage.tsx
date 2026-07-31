@@ -2,13 +2,15 @@
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import AuthLogo from "../components/AuthLogo/AuthLogo";
 import { useAuth } from "../hooks/use-auth";
 import { useToast } from "../hooks/use-toast";
+import { ApiError } from "../lib/api";
 import { AUTH_TOASTS } from "../lib/toast-messages";
 import styles from "./LoginPage.module.css";
 
 const LoginPage = () => {
-  const { signIn } = useAuth();
+  const { login } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -21,13 +23,23 @@ const LoginPage = () => {
     if (isLoading) return;
     try {
       setIsLoading(true);
-      await signIn(email, password);
-      // The old comment here claimed ProtectedRoute handles this redirect —
-      // it doesn't. ProtectedRoute only pushes logged-out users away from
-      // protected pages; nothing was pulling a freshly-logged-in user off
-      // /login. Navigating explicitly instead.
+      await login(email, password);
       navigate("/home");
-    } catch {
+    } catch (err) {
+      // PHONE_NOT_VERIFIED means the credentials were correct but the
+      // account still needs OTP verification. AuthProvider re-throws
+      // this specific code without showing its own toast, so it can be
+      // handled here — routing straight to verification with the
+      // userId the backend returns in error.details, per the
+      // integration contract's Section 3 login endpoint notes.
+      if (err instanceof ApiError && err.code === "PHONE_NOT_VERIFIED") {
+        const userId = err.details?.userId as string | undefined;
+        if (userId) {
+          navigate(`/signup?step=verify&userId=${userId}`);
+          return;
+        }
+      }
+
       showToast(
         AUTH_TOASTS.signInFailed.title,
         AUTH_TOASTS.signInFailed.description,
@@ -40,6 +52,7 @@ const LoginPage = () => {
 
   return (
     <div className={styles.loginContent}>
+      <AuthLogo />
       <div className={styles.header}>
         <h1 className={styles.title}>Welcome back!</h1>
         <p className={styles.subtitle}>

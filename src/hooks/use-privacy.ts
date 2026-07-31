@@ -24,7 +24,7 @@ export function usePrivacy() {
       const { data, error: fetchError } = await supabase
         .from("data_export_requests")
         .select("*")
-        .eq("user_id", user.user_id)
+        .eq("user_id", user.id)
         .order("requested_at", { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -47,7 +47,7 @@ export function usePrivacy() {
     try {
       const { data, error: insertError } = await supabase
         .from("data_export_requests")
-        .insert({ user_id: user.user_id })
+        .insert({ user_id: user.id })
         .select()
         .single();
 
