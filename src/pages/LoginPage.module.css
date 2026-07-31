@@ -4,19 +4,21 @@
 
 .header {
   margin-bottom: 2.4rem;
-  text-align: center;
+  text-align: left; /* FIX: was center — Figma's "Welcome back!" title/subtitle are plain left-aligned block text, same issue as Signup/Password Recovery */
 }
 
 .title {
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: var(--text-h6);
+  font-size: 3.2rem; /* FIX: was var(--text-h6) (24px) — Figma node 2050:17861 "Welcome back!" is 32px, confirmed consistently across every auth screen title (OTP, Forgot password too). No existing token matches 32px, so set explicitly. */
   color: var(--color-text-title);
   margin-bottom: 0.8rem;
 }
 
 .subtitle {
-  font-size: var(--text-body-4);
+  font-size: var(
+    --text-body-3
+  ); /* FIX: was var(--text-body-4) (14px) — Figma is 16px, which is --text-body-3 in this scale */
   color: var(--color-text-caption);
   line-height: 1.5;
 }
@@ -34,7 +36,9 @@
 }
 
 .inputGroup label {
-  font-size: var(--text-body-4);
+  font-size: var(
+    --text-body-3
+  ); /* FIX: was var(--text-body-4) (14px) — Figma's "Email"/"Password" labels are 16px */
   font-weight: 600;
   color: var(--color-text-body);
 }
@@ -46,7 +50,9 @@
   border: 0.5px solid var(--color-border-default);
   border-radius: var(--btn-radius-md);
   outline: none;
-  font-size: var(--text-body-4);
+  font-size: var(
+    --text-body-5
+  ); /* FIX: was var(--text-body-4) (14px) — Figma's input/placeholder text is 12px */
   color: var(--color-text-body);
   background: #ffffff;
 }
@@ -95,7 +101,9 @@
 
 .forgotPassword a {
   color: var(--color-primary-dark);
-  font-size: var(--text-body-5);
+  font-size: var(
+    --text-body-3
+  ); /* FIX: was var(--text-body-5) (12px) — Figma's "Forgot Password" link is 16px */
   font-weight: 600;
   text-decoration: none;
 }
@@ -126,7 +134,9 @@
 
 .accountText {
   text-align: center;
-  font-size: var(--text-body-4);
+  font-size: var(
+    --text-body-3
+  ); /* FIX: was var(--text-body-4) (14px) — Figma's "Don't have an account?" line is 16px */
   color: var(--color-text-caption);
 }
 

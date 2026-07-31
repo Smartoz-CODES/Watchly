@@ -5,11 +5,6 @@ const AuthLayout = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.formSide}>
-        <img
-          src="/assets/logo/watchly-logo-color.png"
-          alt="Watchly"
-          className={styles.logo}
-        />
         <div className={styles.formContent}>
           <Outlet />
         </div>
