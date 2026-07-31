@@ -3,7 +3,6 @@ import { Pencil } from "lucide-react";
 import { useAuth } from "../hooks/use-auth";
 import { useCommunity } from "../hooks/use-community";
 import { useToast } from "../hooks/use-toast";
-import { supabase } from "../lib/supabase";
 import ConfirmDialog from "../components/ConfirmDialog/ConfirmDialog";
 import styles from "./SettingsPage.module.css";
 
@@ -80,7 +79,7 @@ const COMMUNITY_NOTIFICATION_ROWS: {
 ];
 
 const SettingsPage = () => {
-  const { user, deleteAccount } = useAuth();
+  const { user, deleteAccount, updateProfile } = useAuth();
   const {
     activeCommunity,
     userCommunities,
@@ -137,18 +136,15 @@ const SettingsPage = () => {
   const handleNameBlur = async () => {
     if (!user || displayName.trim() === user.name) return;
 
-    const { error } = await supabase
-      .from("users")
-      .update({ name: displayName.trim() })
-      .eq("user_id", user.user_id);
-
-    if (error) {
-      showToast("Failed to update name", error.message, "error");
+    try {
+      // Auth-only backend for now — updateProfile persists locally until
+      // a profile endpoint ships with the data API.
+      await updateProfile({ name: displayName.trim() });
+      showToast("Name updated", "Your display name has been saved.", "success");
+    } catch {
+      showToast("Failed to update name", "Please try again.", "error");
       setDisplayName(user.name); // revert on failure
-      return;
     }
-
-    showToast("Name updated", "Your display name has been saved.", "success");
   };
 
   const handlePhotoClick = () => {

@@ -18,7 +18,6 @@ import {
 import { useAuth } from "../hooks/use-auth";
 import { useCommunity } from "../hooks/use-community";
 import { useToast } from "../hooks/use-toast";
-import { supabase } from "../lib/supabase";
 import styles from "./ProfilePage.module.css";
 
 // ---------------------------------------------------------------------
@@ -348,27 +347,16 @@ const ChangePasswordModal = ({ onClose }: ChangePasswordModalProps) => {
 
     setError(null);
     setIsSubmitting(true);
-    try {
-      // Real Supabase Auth call — no custom backend endpoint needed for
-      // this one, updateUser() is native to supabase-js.
-      const { error: updateError } = await supabase.auth.updateUser({
-        password: newPassword,
-      });
-      if (updateError) throw updateError;
-
-      showToast(
-        "Password updated",
-        "Your password has been changed.",
-        "success",
-      );
-      onClose();
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Failed to update password";
-      showToast("Failed to update password", message, "error");
-    } finally {
-      setIsSubmitting(false);
-    }
+    // The deployed backend is auth-only; a change-password endpoint
+    // isn't part of the current contract. Keep the UI honest until the
+    // endpoint ships rather than faking success.
+    showToast(
+      "Not available yet",
+      "Password change ships with the next backend update.",
+      "info",
+    );
+    setIsSubmitting(false);
+    onClose();
   };
 
   return (

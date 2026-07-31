@@ -247,7 +247,7 @@ const LandingPage = () => {
           <button
             type="button"
             className={styles.getStartedButton}
-            onClick={() => navigate("/Home")}
+            onClick={() => navigate("/signup")}
           >
             Get started
           </button>

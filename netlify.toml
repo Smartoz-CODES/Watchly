@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# React Router uses BrowserRouter — every real path (e.g. /incidents/:id,
+# /c/:slug) must fall back to index.html so client-side routing can take
+# over, or a direct link / page refresh on a non-root path 404s.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

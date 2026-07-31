@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -16,7 +16,6 @@ import { useAuth } from "../hooks/use-auth";
 import { useCommunities } from "../hooks/use-communities";
 import { useCommunity } from "../hooks/use-community";
 import { useToast } from "../hooks/use-toast";
-import { supabase } from "../lib/supabase";
 import { normalizePhoneE164 } from "../lib/phone";
 import { AUTH_TOASTS, VALIDATION_TOASTS } from "../lib/toast-messages";
 
@@ -36,13 +35,20 @@ const prettifySlugAsName = (slug: string): string =>
     .join(" ");
 
 const SignupPage = () => {
-  const { signUp, verifyOtp } = useAuth();
+  const { signUp, verifyOtp, resendOtp, pendingVerification } = useAuth();
   const { joinCommunity } = useCommunities();
   const { refreshCommunities } = useCommunity();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  const [step, setStep] = useState<1 | 2>(1);
+  // A login attempt on an unverified account stages a pendingVerification
+  // and routes here — land straight on the OTP step instead of the name/
+  // email form. Computed once, in the initializer, rather than via an
+  // effect: this is derived from data that already exists at mount, not
+  // an external event to synchronize with.
+  const [step, setStep] = useState<1 | 2>(() =>
+    pendingVerification ? 2 : 1,
+  );
   const [verified, setVerified] = useState(false);
   const [joinedCommunityName, setJoinedCommunityName] = useState<string | null>(
     null,
@@ -61,7 +67,12 @@ const SignupPage = () => {
 
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
-  const [countdown, setCountdown] = useState(60);
+  // 60s when a fresh signup just issued an OTP; 0 (resend available
+  // immediately) when arriving here via a login redirect, since we
+  // don't know how long ago that account's OTP was actually sent.
+  const [countdown, setCountdown] = useState(() =>
+    pendingVerification ? 0 : 60,
+  );
 
   
   const handlePostVerification = useCallback(async () => {
@@ -190,38 +201,30 @@ const SignupPage = () => {
 
     try {
       setResending(true);
-      const normalizedPhone = normalizePhoneE164(phone);
-      const { error } = await supabase.auth.resend({
-        type: "sms",
-        phone: normalizedPhone,
-      });
-
-      if (error) {
-        if (error.status === 429) {
-          showToast(
-            AUTH_TOASTS.tooManyOtpRequests.title,
-            AUTH_TOASTS.tooManyOtpRequests.description,
-            "error",
-          );
-        } else {
-          showToast(
-            VALIDATION_TOASTS.resendFailed.title,
-            VALIDATION_TOASTS.resendFailed.description,
-            "error",
-          );
-        }
-        return;
-      }
-
+      await resendOtp();
       setCountdown(60);
-      const codeSentMessage = AUTH_TOASTS.codeSent(maskPhone(normalizedPhone));
+      const displayPhone =
+        pendingVerification?.phone || normalizePhoneE164(phone);
+      const codeSentMessage = AUTH_TOASTS.codeSent(maskPhone(displayPhone));
       showToast(codeSentMessage.title, codeSentMessage.description, "info");
-    } catch {
-      showToast(
-        VALIDATION_TOASTS.resendFailed.title,
-        VALIDATION_TOASTS.resendFailed.description,
-        "error",
-      );
+    } catch (err) {
+      const code =
+        typeof err === "object" && err !== null && "code" in err
+          ? (err as { code: string }).code
+          : "";
+      if (code === "OTP_RESEND_COOLDOWN" || code === "RATE_LIMIT_EXCEEDED") {
+        showToast(
+          AUTH_TOASTS.tooManyOtpRequests.title,
+          AUTH_TOASTS.tooManyOtpRequests.description,
+          "error",
+        );
+      } else {
+        showToast(
+          VALIDATION_TOASTS.resendFailed.title,
+          VALIDATION_TOASTS.resendFailed.description,
+          "error",
+        );
+      }
     } finally {
       setResending(false);
     }
@@ -352,6 +355,22 @@ const SignupPage = () => {
                   Check your SMS messages for a 6-digit verification code
                 </p>
               </div>
+
+              {pendingVerification?.demoOtp && (
+                <div
+                  style={{
+                    padding: "10px 14px",
+                    background: "#EEF6F6",
+                    border: "1px solid #CFE3E4",
+                    borderRadius: 10,
+                    fontSize: 13,
+                    color: "#23737D",
+                  }}
+                >
+                  Demo mode — your verification code is{" "}
+                  <strong>{pendingVerification.demoOtp}</strong>
+                </div>
+              )}
 
               <OTPInput
                 length={6}
