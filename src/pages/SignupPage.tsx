@@ -11,6 +11,7 @@ import {
   Radio,
 } from "lucide-react";
 
+import AuthLogo from "../components/AuthLogo/AuthLogo";
 import OTPInput from "../components/OTPInput/OTPInput";
 import { useAuth } from "../hooks/use-auth";
 import { useCommunities } from "../hooks/use-communities";
@@ -26,7 +27,6 @@ const maskPhone = (e164: string): string => {
   const last4 = digits.slice(-4);
   return `+234 *** *** ${last4}`;
 };
-
 
 const prettifySlugAsName = (slug: string): string =>
   slug
@@ -74,7 +74,6 @@ const SignupPage = () => {
     pendingVerification ? 0 : 60,
   );
 
-  
   const handlePostVerification = useCallback(async () => {
     const slug = new URLSearchParams(window.location.search).get("community");
 
@@ -111,7 +110,6 @@ const SignupPage = () => {
     return () => clearTimeout(timer);
   }, [countdown, step]);
 
-  
   useEffect(() => {
     if (!verified) return;
 
@@ -172,7 +170,7 @@ const SignupPage = () => {
       setStep(2);
       setCountdown(60);
     } catch {
-      // signUp already throws and shows toast
+      // signUp already throws and shows its own toast
     } finally {
       setLoading(false);
     }
@@ -234,6 +232,8 @@ const SignupPage = () => {
     <>
       {step === 1 && (
         <form className={styles.form} onSubmit={handleSignup}>
+          <AuthLogo />
+
           <div className={styles.header}>
             <h1 className={styles.title}>Let's get started</h1>
             <p className={styles.subtitle}>
@@ -346,7 +346,7 @@ const SignupPage = () => {
                 className={styles.backLink}
                 onClick={() => setStep(1)}
               >
-                <ChevronLeft size={18} /> Back
+                <ChevronLeft size={24} /> Back
               </button>
 
               <div className={styles.header}>
@@ -357,18 +357,11 @@ const SignupPage = () => {
               </div>
 
               {pendingVerification?.demoOtp && (
-                <div
-                  style={{
-                    padding: "10px 14px",
-                    background: "#EEF6F6",
-                    border: "1px solid #CFE3E4",
-                    borderRadius: 10,
-                    fontSize: 13,
-                    color: "#23737D",
-                  }}
-                >
-                  Demo mode — your verification code is{" "}
-                  <strong>{pendingVerification.demoOtp}</strong>
+                <div className={styles.demoOtpBanner}>
+                  <p className={styles.demoOtpLabel}>Demo mode — your code:</p>
+                  <p className={styles.demoOtpValue}>
+                    {pendingVerification.demoOtp}
+                  </p>
                 </div>
               )}
 
@@ -409,7 +402,7 @@ const SignupPage = () => {
             <div className={styles.fullPageStep}>
               <div className={styles.verifiedIconWrap}>
                 <div className={styles.verifiedIcon}>
-                  <Check size={20} color="#fff" />
+                  <Check className={styles.verifiedIconGlyph} color="#fff" />
                 </div>
               </div>
 
@@ -423,9 +416,11 @@ const SignupPage = () => {
 
           {joinedCommunityName && (
             <div className={styles.fullPageStep}>
+              <AuthLogo />
+
               <div className={styles.verifiedIconWrap}>
                 <div className={styles.verifiedIcon}>
-                  <Check size={20} color="#fff" />
+                  <Check className={styles.verifiedIconGlyph} color="#fff" />
                 </div>
               </div>
 

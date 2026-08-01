@@ -1,5 +1,6 @@
 ﻿import { Suspense, lazy } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import type { ComponentType } from "react";
+import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import AuthLayout from "../layouts/AuthLayout";
 import AppLayout from "../layouts/AppLayout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -27,33 +28,75 @@ const AdminQueuePage = lazy(() => import("../pages/AdminQueuePage"));
 const AdminReviewPage = lazy(() => import("../pages/AdminReviewPage"));
 const AdminPage = lazy(() => import("../pages/AdminPage"));
 
-const RouteFallback = () => <div>Loading…</div>;
+const RouteFallback = () => <div>Loading...</div>;
+
+const DEV_PAGE_MAP: Record<string, ComponentType> = {
+  homefeedpage: HomeFeedPage,
+  myreportpage: MyReportPage,
+  communitysearchpage: CommunitySearchPage,
+  reportincidentpage: ReportIncidentPage,
+  incidentdetailpage: IncidentDetailPage,
+  alertfeedpage: AlertFeedPage,
+  profilepage: ProfilePage,
+  settingspage: SettingsPage,
+  communityinfopage: CommunityInfoPage,
+  adminqueuepage: AdminQueuePage,
+  adminreviewpage: AdminReviewPage,
+  platformadminpage: PlatformAdminPage,
+};
+
+const DevPreviewRoute = () => {
+  const { pageName } = useParams();
+  const Component = pageName ? DEV_PAGE_MAP[pageName.toLowerCase()] : undefined;
+
+  if (!Component) {
+    return (
+      <div style={{ padding: "2rem", fontFamily: "monospace" }}>
+        <p>No page found for "{pageName}".</p>
+        <p>Available: {Object.keys(DEV_PAGE_MAP).join(", ")}</p>
+      </div>
+    );
+  }
+
+  return <Component />;
+};
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Suspense fallback={<RouteFallback />}>
         <Routes>
-          {/* Root URL */}
           <Route path="/" element={<LandingRedirect />} />
 
-          {/* Auth routes */}
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/forgot-password" element={<PasswordRecoveryPage />} />
           </Route>
 
-          {/* Public community detail */}
           <Route path="/c/:slug" element={<CommunityDetailPage />} />
 
-          {/* Protected routes — ProtectedRoute is the only gate here now,
-              nothing bypasses it. The dev-preview mechanism that used to
-              sit in this file was always marked temporary, in its own
-              comments, and has been removed for the push to main. */}
+          <Route element={<AuthLayout />}>
+            <Route path="/dev/preview/login" element={<LoginPage />} />
+            <Route path="/dev/preview/signup" element={<SignupPage />} />
+            <Route
+              path="/dev/preview/forgot-password"
+              element={<PasswordRecoveryPage />}
+            />
+          </Route>
+          <Route
+            path="/dev/preview/community-detail"
+            element={<CommunityDetailPage />}
+          />
+          <Route element={<AppLayout />}>
+            <Route
+              path="/dev/preview/:pageName"
+              element={<DevPreviewRoute />}
+            />
+          </Route>
+
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
-              {/* Core authenticated pages */}
               <Route path="/home" element={<HomeFeedPage />} />
               <Route path="/my-report" element={<MyReportPage />} />
               <Route path="/communities" element={<CommunitySearchPage />} />
@@ -65,11 +108,9 @@ const AppRouter = () => {
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/community-info" element={<CommunityInfoPage />} />
 
-              {/* Admin routes */}
               <Route path="/admin/queue" element={<AdminQueuePage />} />
               <Route path="/admin/review/:id" element={<AdminReviewPage />} />
 
-              {/* Platform Admin route */}
               <Route element={<PlatformAdminRoute />}>
                 <Route path="/platform-admin" element={<AdminPage />} />
               </Route>

@@ -1,0 +1,13 @@
+.logo {
+  display: block;
+  height: 3.2rem;
+  width: auto;
+  margin-bottom: 2rem;
+  align-self: flex-start;
+}
+
+@media (min-width: 768px) {
+  .logo {
+    margin-bottom: 3.2rem;
+  }
+}

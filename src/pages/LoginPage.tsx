@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import AuthLogo from "../components/AuthLogo/AuthLogo";
 import { useAuth } from "../hooks/use-auth";
 import { useToast } from "../hooks/use-toast";
 import { AUTH_TOASTS } from "../lib/toast-messages";
@@ -23,10 +24,6 @@ const LoginPage = () => {
     try {
       setIsLoading(true);
       await signIn(email, password);
-      // The old comment here claimed ProtectedRoute handles this redirect —
-      // it doesn't. ProtectedRoute only pushes logged-out users away from
-      // protected pages; nothing was pulling a freshly-logged-in user off
-      // /login. Navigating explicitly instead.
       navigate("/home");
     } catch (err) {
       // Correct credentials on an unverified account: the provider has
@@ -52,6 +49,7 @@ const LoginPage = () => {
 
   return (
     <div className={styles.loginContent}>
+      <AuthLogo />
       <div className={styles.header}>
         <h1 className={styles.title}>Welcome back!</h1>
         <p className={styles.subtitle}>

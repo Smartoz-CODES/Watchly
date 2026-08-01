@@ -22,7 +22,7 @@ body {
     "Segoe UI",
     Roboto,
     sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   color: var(--color-text-title);
@@ -84,7 +84,7 @@ a {
   --color-primary-subtle: #dafafe;
   --color-primary-lighter: #a3f3fd;
   --color-primary-light: #65eafb;
-  --color-primary: #3ac0d0;
+  --color-primary: #23737d;
   --color-primary-dark: #2f99a7;
   --color-primary-darker: #23737d;
   --color-primary-900: #174d53;
@@ -95,7 +95,7 @@ a {
   --color-surface-subtle: #fcfcfc;
   --color-surface-default: #fdfdfe;
   --color-surface-disabled: #d4d4d8;
-  --color-border-default: #d4d4d8;
+  --color-border-default: #d9dbe9;
   --color-border-disabled: #d4d4d8;
   --color-border-darker: #71717a;
   --color-border-hairline: rgba(178, 174, 185, 0.32);
@@ -144,17 +144,17 @@ a {
   --btn-v-padding-lg: 1.6rem;
 
   /* Typography scale */
-  --text-h1: 2.5rem;
-  --text-h2: 2.5rem;
-  --text-h3: 2.5rem;
-  --text-h4: 2.5rem;
-  --text-h5: 2.5rem;
-  --text-h6: 1.6rem;
-  --text-body-1: 1.6rem;
-  --text-body-2: 1.6rem;
-  --text-body-3: 1.5rem;
-  --text-body-4: 1.5rem;
-  --text-body-5: 1.3rem;
+  --text-h1: 6.4rem;
+  --text-h2: 5.6rem;
+  --text-h3: 4.8rem;
+  --text-h4: 4rem;
+  --text-h5: 3.2rem;
+  --text-h6: 2.4rem;
+  --text-body-1: 2rem;
+  --text-body-2: 1.8rem;
+  --text-body-3: 1.6rem;
+  --text-body-4: 1.4rem;
+  --text-body-5: 1.2rem;
 
   /* Status badge colors */
   --color-badge-reported-bg: #d4d4d8;

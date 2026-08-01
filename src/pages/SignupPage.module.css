@@ -1,18 +1,20 @@
 ﻿.header {
   margin-bottom: 1.6rem;
-  text-align: center;
+  text-align: left; /* FIX: was center — Figma's title/subtitle (node 2050:13817, 2427:20330) are plain left-aligned block text, no centering anywhere. Was fighting against .formSide's align-items:flex-start, which correctly positions the block on the left but couldn't stop the text itself from centering within it. */
 }
 
 .title {
   font-family: var(--font-body);
-  font-size: var(--text-h6);
+  font-size: 3.2rem; /* FIX: was var(--text-h6) (24px) — Figma "Verification code" / "Let's get started" titles are 32px, confirmed across every auth screen. No existing token matches 32px, so set explicitly. */
   font-weight: 700;
   color: var(--color-text-title);
   margin-bottom: 0.6rem;
 }
 
 .subtitle {
-  font-size: var(--text-body-4);
+  font-size: var(
+    --text-body-3
+  ); /* FIX: was var(--text-body-4) (14px) — Figma is 16px */
   color: var(--color-text-caption);
   line-height: 1.5;
 }
@@ -30,7 +32,9 @@
 }
 
 .inputGroup label {
-  font-size: var(--text-body-4);
+  font-size: var(
+    --text-body-3
+  ); /* FIX: was var(--text-body-4) (14px) — Figma's field labels are 16px */
   font-weight: 600;
   color: var(--color-text-body);
 }
@@ -38,7 +42,7 @@
 .inputWrapper {
   display: flex;
   align-items: center;
-  border: 0.5px solid var(--color-border-default);
+  border: 1px solid var(--color-border-default);
   border-radius: var(--btn-radius-md);
   padding: 0 1.4rem;
   height: 5rem;
@@ -55,7 +59,9 @@
   border: none;
   outline: none;
   background: transparent;
-  font-size: var(--text-body-4);
+  font-size: var(
+    --text-body-5
+  ); /* FIX: was var(--text-body-4) (14px) — Figma's input/placeholder text is 12px */
   color: var(--color-text-body);
 }
 
@@ -128,7 +134,9 @@
 
 .footerText {
   text-align: center;
-  font-size: var(--text-body-4);
+  font-size: var(
+    --text-body-3
+  ); /* FIX: was var(--text-body-4) (14px) — Figma's "Don't have an account?" equivalent line is 16px */
   color: var(--color-text-caption);
 }
 
@@ -146,7 +154,9 @@
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  font-size: var(--text-body-5);
+  font-size: var(
+    --text-body-3
+  ); /* FIX: was var(--text-body-5) (12px) — Figma's "Didn't receive code?" line is 16px */
   color: var(--color-text-caption);
 }
 
@@ -154,7 +164,9 @@
   background: none;
   border: none;
   color: var(--color-primary-dark);
-  font-size: var(--text-body-5);
+  font-size: var(
+    --text-body-3
+  ); /* FIX: was var(--text-body-5) (12px) — Figma's "Resend Code" is 16px, same line as the text beside it */
   font-weight: 600;
   cursor: pointer;
 }
@@ -168,13 +180,45 @@
   cursor: not-allowed;
 }
 
+/* =========================================================
+   DEMO OTP BANNER
+   DEMO_MODE only — shows the real OTP directly on screen since
+   there's no SMS provider connected yet. Remove this entire block
+   (and the JSX using it) once DEMO_MODE=false and a real SMS
+   provider is wired up on the backend, per their own
+   demo-to-production checklist.
+========================================================= */
+
+.demoOtpBanner {
+  background: var(--color-primary-subtle);
+  border: 1px dashed var(--color-primary);
+  border-radius: var(--btn-radius-md);
+  padding: 1.2rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.demoOtpLabel {
+  font-size: var(--text-body-5);
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+.demoOtpValue {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: 0.4rem;
+  color: var(--color-text-title);
+}
+
 .backLink {
   align-self: flex-start;
   background: none;
   border: none;
   color: var(--color-primary-dark);
   font-weight: 600;
-  font-size: var(--text-body-4);
+  font-size: 2rem; /* FIX: was var(--text-body-4) (14px) — Figma's "Back" link is 20px (node 2050:13817), no existing token matches, set explicitly */
   cursor: pointer;
   padding: 0;
   margin-bottom: 1.2rem;
@@ -183,9 +227,19 @@
   gap: 0.4rem;
 }
 
+/* =========================================================
+   VERIFIED / JOINED CHECKMARK — responsive sizing fix
+   Figma reference: node 2373:13170 (mobile "Community joined")
+   gives outer wrapper 84px / inner circle 69.69px; node 2050:17887
+   (desktop "Community joined") gives outer wrapper 135px / inner
+   circle 112px. The old rule was a single fixed 64px/40px at every
+   breakpoint — smaller than mobile spec and with no desktop
+   variant at all, so it never actually matched either size.
+========================================================= */
+
 .verifiedIconWrap {
-  width: 6.4rem;
-  height: 6.4rem;
+  width: 8.4rem; /* FIX: was 6.4rem (fixed everywhere) — Figma mobile is 84px */
+  height: 8.4rem;
   border-radius: 50%;
   background: var(--color-primary-lighter);
   display: flex;
@@ -194,15 +248,44 @@
 }
 
 .verifiedIcon {
-  width: 4rem;
-  height: 4rem;
+  width: 7rem; /* FIX: was 4rem (fixed everywhere) — Figma mobile is ~69.7px */
+  height: 7rem;
   border-radius: 50%;
   background: var(--color-primary-dark);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
+}
+
+.verifiedIconGlyph {
+  /*
+    FIX: new class, replaces the hardcoded <Check size={20} /> prop in
+    the JSX. A size prop writes straight to the SVG's width/height
+    attributes, which can't respond to the desktop media query below —
+    same issue as the feature-card icons on the landing page. Sized at
+    roughly the same proportion to its circle as the original 20/40px
+    ratio (50%), scaled up to the corrected circle sizes.
+  */
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+@media (min-width: 768px) {
+  .verifiedIconWrap {
+    width: 13.5rem; /* Figma desktop node 2050:17887 — 135px */
+    height: 13.5rem;
+  }
+
+  .verifiedIcon {
+    width: 11.2rem; /* Figma desktop — 112px */
+    height: 11.2rem;
+  }
+
+  .verifiedIconGlyph {
+    width: 5.6rem;
+    height: 5.6rem;
+  }
 }
 
 .verifiedTitle {
