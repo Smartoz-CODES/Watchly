@@ -42,7 +42,7 @@ const DEV_PAGE_MAP: Record<string, ComponentType> = {
   communityinfopage: CommunityInfoPage,
   adminqueuepage: AdminQueuePage,
   adminreviewpage: AdminReviewPage,
-  platformadminpage: PlatformAdminPage,
+  platformadminpage: AdminPage,
 };
 
 const DevPreviewRoute = () => {
