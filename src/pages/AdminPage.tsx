@@ -1,11 +1,16 @@
 import { useState, type ComponentType } from "react";
 import CommunityRequestsSection from "./admin/CommunityRequestsSection";
 import styles from "./AdminPage.module.css";
-
-// Add a new entry here to add a new admin tool — each section owns its own
-// data fetching and layout, this shell just switches between them.
-const ADMIN_SECTIONS: { id: string; label: string; component: ComponentType }[] = [
-  { id: "community-requests", label: "Community Requests", component: CommunityRequestsSection },
+const ADMIN_SECTIONS: {
+  id: string;
+  label: string;
+  component: ComponentType;
+}[] = [
+  {
+    id: "community-requests",
+    label: "Community Requests",
+    component: CommunityRequestsSection,
+  },
 ];
 
 const AdminPage = () => {

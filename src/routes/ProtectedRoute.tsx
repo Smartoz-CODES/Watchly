@@ -3,10 +3,6 @@ import { useAuth } from "../hooks/use-auth";
 import styles from "./ProtectedRoute.module.css";
 
 // ProtectedRoute
-//
-// Real auth now exists (see src/lib/api.ts), so the temporary demo
-// bypass that shipped with the Supabase removal has been retired.
-
 export default function ProtectedRoute() {
   const { user, loading } = useAuth();
 

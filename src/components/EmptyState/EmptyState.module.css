@@ -12,6 +12,12 @@
   color: var(--color-text-disabled);
 }
 
+.illustration {
+  width: 12rem;
+  height: 12rem;
+  object-fit: contain;
+}
+
 .title {
   font-size: var(--text-body-2);
   font-weight: 700;

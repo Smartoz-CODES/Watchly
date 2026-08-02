@@ -13,7 +13,7 @@
   border: none;
   color: var(--color-primary, #0f766e);
   font-weight: 600;
-  font-size: 1.3rem;
+  font-size: var(--text-body-3);
   cursor: pointer;
   margin-bottom: 1rem;
 }
@@ -39,7 +39,6 @@
 }
 
 /* Header */
-
 .headerRow {
   display: flex;
   align-items: flex-start;
@@ -64,23 +63,23 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: var(--text-body-4); /* FIX: was 1.3rem */
   flex-shrink: 0;
 }
 
 .reporterName {
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: var(--text-body-3);
 }
 
 .metaLine {
-  font-size: 1.3rem;
+  font-size: var(--text-body-4);
   color: var(--color-text-caption, #6b7280);
 }
 
 .categoryTag {
   display: inline-block;
-  font-size: 1.3rem;
+  font-size: var(--text-body-4);
   font-weight: 600;
   color: var(--color-text-body, #374151);
   background-color: var(--color-surface-default, #f3f4f6);
@@ -90,20 +89,19 @@
 }
 
 .title {
-  font-size: 1.3rem;
+  font-size: var(--text-body-1);
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .description {
-  font-size: 1.3rem;
+  font-size: var(--text-body-3);
   color: var(--color-text-body, #374151);
   line-height: 1.6;
   margin-bottom: 1.25rem;
 }
 
 /* Evidence */
-
 .evidenceGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -128,7 +126,6 @@
 }
 
 /* Corroboration box */
-
 .corroborationBoxOpen {
   background-color: var(--color-warning-subtle, #f9ebd5);
   border-radius: var(--btn-radius-md, 0.75rem);
@@ -149,13 +146,13 @@
 }
 
 .corroborationTitle {
-  font-size: 1.3rem;
+  font-size: var(--text-body-2);
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .corroborationExplainer {
-  font-size: 1.3rem;
+  font-size: var(--text-body-4);
   color: var(--color-text-body, #374151);
   line-height: 1.5;
   margin-bottom: 1rem;
@@ -181,7 +178,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  font-size: var(--text-body-5);
   font-weight: 700;
   color: #fff;
 }
@@ -204,40 +201,38 @@
 }
 
 .avatarRowText {
-  font-size: 1.3rem;
+  font-size: var(--text-body-4);
   font-weight: 600;
 }
 
 /* Status history */
 
 .cardTitle {
-  font-size: 1.3rem;
+  font-size: var(--text-body-2);
   font-weight: 700;
 }
 
 .cardSubtitle {
-  font-size: 1.3rem;
+  font-size: var(--text-body-4); /* FIX: was 1.3rem */
   color: var(--color-text-caption, #6b7280);
   margin-top: 0.3rem;
   margin-bottom: 1rem;
 }
 
 /* Admin verification note */
-
 .adminNoteBody {
-  font-size: 1.3rem;
+  font-size: var(--text-body-4);
   color: var(--color-text-body, #374151);
   line-height: 1.5;
   margin-bottom: 0.6rem;
 }
 
 .adminNoteAttribution {
-  font-size: 1.3rem;
+  font-size: var(--text-body-5);
   color: var(--color-text-caption, #6b7280);
 }
 
 /* Lightbox */
-
 .lightboxOverlay {
   position: fixed;
   inset: 0;
@@ -303,13 +298,13 @@
 }
 
 .successTitle {
-  font-size: 1.3rem;
+  font-size: var(--text-h6);
   font-weight: 700;
   margin-bottom: 0.6rem;
 }
 
 .successMessage {
-  font-size: 1.3rem;
+  font-size: var(--text-body-3);
   color: var(--color-text-caption, #6b7280);
   line-height: 1.5;
   margin-bottom: 1.5rem;
@@ -323,11 +318,11 @@
   border-radius: var(--btn-radius-md, 0.65rem);
   padding: 0.85rem;
   font-weight: 700;
+  font-size: var(--text-body-3);
   cursor: pointer;
 }
 
 /* Desktop */
-
 @media (min-width: 768px) {
   .grid {
     flex-direction: row;

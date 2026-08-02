@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { useCommunities } from "../hooks/use-communities";
 import { useCommunity } from "../hooks/use-community";
@@ -17,7 +16,6 @@ import styles from "./CommunitySearchPage.module.css";
 const SEARCH_DEBOUNCE_MS = 300;
 
 const CommunitySearchPage = () => {
-  const navigate = useNavigate();
   const { communities, loading, error, fetchCommunities, joinCommunity } =
     useCommunities();
   const { refreshCommunities, switchCommunity } = useCommunity();
@@ -54,13 +52,11 @@ const CommunitySearchPage = () => {
     });
   };
 
-  const handleJoinFromModal = async (communityId: string) => {
+  const handleJoin = async (communityId: string) => {
     try {
       await joinCommunity(communityId);
       await refreshCommunities();
       switchCommunity(communityId);
-      setRequestModalOpen(false);
-      navigate("/home");
     } catch (err) {
       showToast(
         "Failed to join",
@@ -70,24 +66,29 @@ const CommunitySearchPage = () => {
     }
   };
 
+  const handleJoinFromModal = async (communityId: string) => {
+    await handleJoin(communityId);
+    setRequestModalOpen(false);
+  };
+
   return (
     <div className={styles.container}>
-      <h1 className={styles.pageTitle}>Find a Community</h1>
+      <h1 className={styles.pageTitle}>Find your community</h1>
       <p className={styles.pageSubtitle}>
         Search by name, or filter by state and local government area.
       </p>
 
       <div className={styles.filterRow}>
+        <SearchBar
+          value={searchTerm}
+          onChange={setSearchTerm}
+          placeholder="Community name or ID"
+        />
         <StateLGAFilter
           selectedState={selectedState}
           selectedLga={selectedLga}
           onStateChange={setSelectedState}
           onLgaChange={setSelectedLga}
-        />
-        <SearchBar
-          value={searchTerm}
-          onChange={setSearchTerm}
-          placeholder="Search communities..."
         />
       </div>
 
@@ -117,20 +118,22 @@ const CommunitySearchPage = () => {
             <CommunityCard
               key={community.community_id}
               community={community}
-              onTap={(slug) => navigate(`/c/${slug}`)}
+              onJoin={handleJoin}
             />
           ))}
       </div>
 
       {!loading && !error && communities.length > 0 && (
-        <button
-          type="button"
-          className={styles.requestLinkButton}
-          onClick={() => setRequestModalOpen(true)}
-        >
-          <Plus size={16} />
-          Request New Community
-        </button>
+        <p className={styles.requestLinkText}>
+          Can't find your community?{" "}
+          <button
+            type="button"
+            className={styles.requestLinkButton}
+            onClick={() => setRequestModalOpen(true)}
+          >
+            Request to create one
+          </button>
+        </p>
       )}
 
       {isRequestModalOpen && (

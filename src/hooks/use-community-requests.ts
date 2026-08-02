@@ -32,10 +32,19 @@ export function useCommunityRequests(): UseCommunityRequestsReturn {
     [],
   );
 
-  const declineRequest = useCallback(async (communityId: string, reason: string) => {
-    await communitiesApi.decline(communityId, reason);
-    setRequests((prev) => prev.filter((r) => r.community_id !== communityId));
-  }, []);
+  const declineRequest = useCallback(
+    async (communityId: string, reason: string) => {
+      await communitiesApi.decline(communityId, reason);
+      setRequests((prev) => prev.filter((r) => r.community_id !== communityId));
+    },
+    [],
+  );
 
-  return { requests, loading, fetchPendingRequests, approveRequest, declineRequest };
+  return {
+    requests,
+    loading,
+    fetchPendingRequests,
+    approveRequest,
+    declineRequest,
+  };
 }

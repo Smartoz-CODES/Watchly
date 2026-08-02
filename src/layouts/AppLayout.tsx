@@ -44,19 +44,7 @@ const AppLayout = () => {
     useCommunity();
   const location = useLocation();
 
-  // NavLink's own active-matching only catches exact prefixes of its own
-  // `to` path — it has no way to know /admin/review/:id belongs to the
-  // same section as /admin/queue, since they're separate paths under
-  // /admin. Checking manually so "Review" stays highlighted on both.
-  // /platform-admin lives outside that prefix on purpose, so it doesn't
-  // fight this same check for a completely different (site-wide) role.
   const isReviewSectionActive = location.pathname.startsWith("/admin");
-
-  // "Review" only shows for real Community Admins — matches the Figma's
-  // admin-only sidebar, and matches AdminQueuePage's own access check, so
-  // there's now an actual door into a page that already had working
-  // access control but no way to reach it. "Admin" is a separate,
-  // site-wide role (isPlatformAdmin) and shows independently of it.
   let menuItems = MENU_ITEMS;
   if (isAdmin) menuItems = [...menuItems, ADMIN_MENU_ITEM];
   if (isPlatformAdmin) menuItems = [...menuItems, PLATFORM_ADMIN_MENU_ITEM];
@@ -176,61 +164,65 @@ const AppLayout = () => {
       </header>
 
       <div className={styles.body}>
-        {/* ---------- Desktop sidebar ---------- */}
+        {/* Desktop sidebar */}
         <aside className={styles.sidebarDesktop}>
-          <CommunitySwitcher
-            activeCommunity={activeCommunity}
-            otherCommunities={otherCommunities}
-            isOpen={isSwitcherOpen}
-            onToggle={() => setSwitcherOpen((v) => !v)}
-            onSwitch={handleSwitch}
-          />
+          <div>
+            <CommunitySwitcher
+              activeCommunity={activeCommunity}
+              otherCommunities={otherCommunities}
+              isOpen={isSwitcherOpen}
+              onToggle={() => setSwitcherOpen((v) => !v)}
+              onSwitch={handleSwitch}
+            />
 
-          <p className={styles.menuLabel}>MENU</p>
-          <nav className={styles.menuList}>
-            {menuItems.map(({ to, label, icon: Icon }) => (
+            <p className={styles.menuLabel}>MENU</p>
+            <nav className={styles.menuList}>
+              {menuItems.map(({ to, label, icon: Icon }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  className={({ isActive }) => {
+                    const active =
+                      to === "/admin/queue" ? isReviewSectionActive : isActive;
+                    return active
+                      ? `${styles.menuItem} ${styles.menuItemActive}`
+                      : styles.menuItem;
+                  }}
+                >
+                  <Icon size={24} />
+                  {label}
+                </NavLink>
+              ))}
               <NavLink
-                key={to}
-                to={to}
-                className={({ isActive }) => {
-                  const active =
-                    to === "/admin/queue" ? isReviewSectionActive : isActive;
-                  return active
+                to="/settings"
+                className={({ isActive }) =>
+                  isActive
                     ? `${styles.menuItem} ${styles.menuItemActive}`
-                    : styles.menuItem;
-                }}
+                    : styles.menuItem
+                }
               >
-                <Icon size={24} />
-                {label}
+                <Settings size={24} />
+                Settings
               </NavLink>
-            ))}
-            <NavLink
-              to="/settings"
-              className={({ isActive }) =>
-                isActive
-                  ? `${styles.menuItem} ${styles.menuItemActive}`
-                  : styles.menuItem
-              }
+            </nav>
+          </div>
+
+          <div>
+            <button
+              type="button"
+              className={styles.logoutButton}
+              onClick={handleSignOut}
+              disabled={isSigningOut}
             >
-              <Settings size={24} />
-              Settings
-            </NavLink>
-          </nav>
+              <LogOut size={24} />
+              {isSigningOut ? "Logging out…" : "Logout"}
+            </button>
 
-          <button
-            type="button"
-            className={styles.logoutButton}
-            onClick={handleSignOut}
-            disabled={isSigningOut}
-          >
-            <LogOut size={16} />
-            {isSigningOut ? "Logging out…" : "Logout"}
-          </button>
-
-          <StaySafeCard />
+            <StaySafeCard />
+          </div>
         </aside>
 
-        {/* ---------- Mobile drawer ---------- */}
+        {/* Mobile drawer */}
         {isDrawerOpen && (
           <div className={styles.drawerOverlay} onClick={closeDrawer}>
             <aside
@@ -282,7 +274,7 @@ const AppLayout = () => {
                             : styles.menuItem;
                         }}
                       >
-                        <Icon size={18} />
+                        <Icon size={24} />
                         {label}
                       </NavLink>
                     ))}
@@ -301,7 +293,7 @@ const AppLayout = () => {
                       onClick={closeDrawer}
                       className={styles.menuItem}
                     >
-                      <Icon size={18} />
+                      <Icon size={24} />
                       {label}
                     </NavLink>
                   ))}
@@ -314,7 +306,7 @@ const AppLayout = () => {
                   onClick={closeDrawer}
                   className={styles.menuItem}
                 >
-                  <Settings size={18} />
+                  <Settings size={24} />
                   Settings
                 </NavLink>
                 <button
@@ -326,7 +318,7 @@ const AppLayout = () => {
                     handleSignOut();
                   }}
                 >
-                  <LogOut size={16} />
+                  <LogOut size={24} />
                   {isSigningOut ? "Logging out…" : "Logout"}
                 </button>
                 <StaySafeCard />
@@ -335,18 +327,15 @@ const AppLayout = () => {
           </div>
         )}
 
-        {/* ---------- Main content ---------- */}
+        {/* Main content */}
         <main className={styles.content}>
           <Outlet />
-
-          {/* Disclaimer stacks below feed content on mobile; desktop
-              renders it in the right panel instead (see below). */}
           <div className={styles.disclaimerMobile}>
             <EmergencyDisclaimer />
           </div>
         </main>
 
-        {/* ---------- Desktop right panel ---------- */}
+        {/* Desktop right panel */}
         <aside className={styles.rightPanel}>
           {activeCommunity && (
             <div className={styles.statsCard}>
@@ -371,7 +360,7 @@ const AppLayout = () => {
           <EmergencyDisclaimer />
         </aside>
 
-        {/* ---------- Report FAB (mobile only) ---------- */}
+        {/* Report */}
         <button
           type="button"
           className={styles.fab}
@@ -427,10 +416,6 @@ const CommunitySwitcher = ({
   onSwitch,
 }: CommunitySwitcherProps) => {
   if (!activeCommunity) {
-    // LLD §7.3: zero communities joined should show the message *with*
-    // a link, not just the text alone. Since there's nothing useful to
-    // expand into anyway (no active community, no other communities to
-    // switch between), the trigger itself becomes the link directly.
     return (
       <div className={styles.switcher}>
         <NavLink to="/communities" className={styles.switcherTrigger}>
@@ -470,7 +455,7 @@ const CommunitySwitcher = ({
               className={styles.switcherItem}
               onClick={() => onSwitch(c.community_id)}
             >
-              <MapPin size={16} />
+              <MapPin size={24} />
               <span>
                 <span className={styles.switcherName}>{c.name}</span>
                 <span className={styles.switcherLocation}>
@@ -480,7 +465,7 @@ const CommunitySwitcher = ({
             </button>
           ))}
           <NavLink to="/communities" className={styles.switcherJoinLink}>
-            <Plus size={16} />
+            <Plus size={24} />
             Join another community
           </NavLink>
         </div>

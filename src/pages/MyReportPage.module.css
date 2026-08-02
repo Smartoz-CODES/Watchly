@@ -20,7 +20,6 @@
 }
 
 /* Stat tiles */
-
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -103,15 +102,13 @@
   color: var(--color-warning, #e2992f);
 }
 
-/* Status tabs */
+/* STATUS TABS */
 
 .tabsRow {
   display: flex;
+  align-items: center;
   gap: 0;
   overflow-x: auto;
-  background-color: #fff;
-  border-bottom: 0.5px solid #d4d4d8;
-  border-radius: 1rem 1rem 0 0;
   margin-bottom: 1.7rem;
 }
 
@@ -119,23 +116,23 @@
 .tabActive {
   background: none;
   border: none;
-  flex: 1 0 auto;
-  padding: 1.5rem 1rem 0.9rem;
-  font-size: 1.2rem;
-  line-height: 2rem;
+  flex-shrink: 0;
+  height: 4rem;
+  padding: 0.8rem 2.4rem;
+  border-bottom: 1px solid var(--color-text-disabled, #a1a1aa);
+  font-size: var(--text-body-3);
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  border-bottom: 2px solid transparent;
 }
 
 .tab {
-  color: var(--color-text-caption, #6b7280);
+  color: var(--color-text-disabled, #a1a1aa);
 }
 
 .tabActive {
-  color: var(--color-primary, #0f766e);
-  border-bottom-color: var(--color-primary, #0f766e);
+  color: var(--color-text-subtitle, #3f3f46);
+  border-bottom-color: var(--color-text-subtitle, #3f3f46);
 }
 
 .showingCount {
@@ -146,7 +143,6 @@
 }
 
 /* Report rows */
-
 .reportList {
   display: flex;
   flex-direction: column;
@@ -274,7 +270,7 @@
 .emptyMessage {
   text-align: center;
   color: var(--color-text-caption, #6b7280);
-  font-size: 0.68rem;
+  font-size: var(--text-body-4); /* FIX: was 0.68rem (6.8px, illegible) */
   padding: 2rem 0;
 }
 
@@ -294,7 +290,6 @@
 }
 
 /* Desktop */
-
 @media (min-width: 768px) {
   .statsGrid {
     grid-template-columns: repeat(4, 1fr);

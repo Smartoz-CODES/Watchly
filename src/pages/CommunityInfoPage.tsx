@@ -3,13 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { Copy, Check, MessageCircle, Mail } from "lucide-react";
 import { useCommunity } from "../hooks/use-community";
 import StatusBadge from "../components/StatusBadge/StatusBadge";
+import EmptyState from "../components/EmptyState/EmptyState";
 import type { Incident } from "../types/incident";
 import styles from "./CommunityInfoPage.module.css";
 
-// ---------------------------------------------------------------------
-// MOCK DATA FOR NOW, still needs real wiring to backend to define
-// where each of these actually lives.
-// ---------------------------------------------------------------------
+// MOCK DATA FOR NOW, still needs real wiring to backend to define where each of these actually lives. //
 
 const MOCK_ABOUT =
   "Landmark is one the most active residential communities on Watchly. Residents report and corroborate local security incidents, from suspicious activity, to helping community admin make faster and better informed verification decisions. This community has maintained an average admin response time of under 20 minutes.";
@@ -109,7 +107,11 @@ const CommunityInfoPage = () => {
   if (!activeCommunity) {
     return (
       <div className={styles.container}>
-        <p>Join a community to see its info page.</p>
+        <EmptyState
+          imageSrc="/assets/images/community-info.png"
+          title="No community information available"
+          description="Community details and updates will appear here once they are added."
+        />
       </div>
     );
   }

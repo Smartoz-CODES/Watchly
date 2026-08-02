@@ -1,7 +1,15 @@
 .container {
   display: flex;
+  flex-direction: column;
   gap: 1.2rem;
   position: relative;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
+  }
 }
 
 .field {
@@ -20,7 +28,7 @@
   border: 0.5px solid var(--color-border-default);
   border-radius: 999px;
   color: var(--color-text-body);
-  font-size: var(--text-body-4);
+  font-size: var(--text-body-3);
   cursor: pointer;
 }
 
@@ -66,7 +74,7 @@
   flex: 1;
   border: none;
   outline: none;
-  font-size: var(--text-body-4);
+  font-size: var(--text-body-3);
   color: var(--color-text-body);
 }
 
@@ -81,7 +89,7 @@
   padding: 1.2rem 1.4rem;
   background: none;
   border: none;
-  font-size: var(--text-body-4);
+  font-size: var(--text-body-3);
   font-weight: 600;
   color: var(--color-text-body);
   cursor: pointer;
@@ -94,5 +102,5 @@
 .emptyItem {
   padding: 1.2rem 1.4rem;
   color: var(--color-text-caption);
-  font-size: var(--text-body-4);
+  font-size: var(--text-body-3);
 }

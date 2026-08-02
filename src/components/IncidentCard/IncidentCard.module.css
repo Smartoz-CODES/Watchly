@@ -1,0 +1,113 @@
+.card {
+  background-color: var(--color-surface-subtle, #fefefe);
+  border: 1px solid var(--color-border-default, #d9dbe9);
+  border-radius: var(--btn-radius-md, 1.2rem);
+  padding: 2.4rem;
+  cursor: pointer;
+}
+
+.muted {
+  opacity: 0.85;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.avatar {
+  width: 5.6rem;
+  height: 5.6rem;
+  border-radius: 50%;
+  background-color: var(--color-primary-darker, #23737d);
+  color: var(--color-surface-subtle, #fefefe);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: var(--text-body-3, 1.6rem);
+  flex-shrink: 0;
+}
+
+.identityText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.reporterName {
+  font-weight: 600;
+  font-size: var(--text-body-2, 1.8rem);
+  color: var(--color-text-body, #18181b);
+}
+
+.metaLine {
+  font-size: var(--text-body-3, 1.6rem);
+  color: var(--color-text-caption, #52525b);
+}
+
+.categoryTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.3rem;
+  padding: 0 1.6rem;
+  border-radius: 999px;
+  background-color: #eff0f6;
+  color: var(--color-text-body, #18181b);
+  font-size: var(--text-body-3, 1.6rem);
+  font-weight: 400;
+}
+
+.title {
+  font-size: var(--text-body-1, 2rem);
+  font-weight: 600;
+  line-height: 2.4rem;
+  color: var(--color-grey-700, #27272a);
+  margin-top: 1.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.description {
+  font-size: var(--text-body-2, 1.8rem);
+  font-weight: 400;
+  line-height: 2.4rem;
+  color: var(--color-text-caption, #52525b);
+}
+
+.unverifiedLabel {
+  display: inline-block;
+  margin-top: 0.8rem;
+  font-size: var(--text-body-4, 1.4rem);
+  font-weight: 600;
+  color: var(--color-badge-not-verified-text, #cf2a2a);
+}
+
+/* ===== BOTTOM SECTION (corroboration count + action button) ===== */
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.6rem;
+  margin-top: 1.6rem;
+  border-top: 1px solid var(--color-border-default, #d9dbe9);
+}
+
+.corroborationCount {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: var(--text-body-3, 1.6rem);
+  font-weight: 600;
+  color: var(--color-text-caption, #52525b);
+}

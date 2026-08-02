@@ -6,13 +6,13 @@
 }
 
 .pageTitle {
-  font-size: var(--text-h5, 1.5rem);
+  font-size: var(--text-h6);
   font-weight: 700;
   color: var(--color-text-title, #111827);
 }
 
 .pageSubtitle {
-  font-size: var(--text-body-4, 0.9rem);
+  font-size: var(--text-body-4);
   color: var(--color-text-caption, #6b7280);
   margin-top: 0.4rem;
   margin-bottom: 1.5rem;
@@ -28,13 +28,13 @@
 }
 
 .cardTitle {
-  font-size: 1.3rem;
+  font-size: var(--text-h6);
   font-weight: 700;
   margin-bottom: 1.25rem;
 }
 
 .sectionHint {
-  font-size: 1.3rem;
+  font-size: var(--text-body-4);
   color: var(--color-text-caption, #6b7280);
   margin-top: -0.9rem;
   margin-bottom: 1.25rem;
@@ -54,27 +54,27 @@
 
 .communityGroupTitle {
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: var(--text-body-3);
   color: var(--color-primary, #0f766e);
   margin-bottom: 0.5rem;
 }
 
 .emptyCommunitiesNote {
-  font-size: 1.3rem;
+  font-size: var(--text-body-4);
   color: var(--color-text-caption, #6b7280);
 }
 
 .photoRow {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
   margin-bottom: 1.5rem;
 }
 
 .photoWrapper {
   position: relative;
-  width: 4rem;
-  height: 4rem;
+  width: 9.6rem;
+  height: 9.6rem;
   flex-shrink: 0;
 }
 
@@ -92,16 +92,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  font-size: var(--text-h5);
   font-weight: 600;
 }
 
 .photoEditButton {
   position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 1.6rem;
-  height: 1.6rem;
+  bottom: 0;
+  right: 0;
+  width: 2.4rem;
   border-radius: 50%;
   background-color: #fff;
   border: 0.5px solid var(--color-border-default);
@@ -117,17 +116,17 @@
 
 .photoLabel {
   font-weight: 600;
-  font-size: 1.3rem;
+  font-size: var(--text-body-3);
 }
 
 .photoHint {
-  font-size: 1.3rem;
+  font-size: var(--text-body-4);
   color: var(--color-text-caption, #6b7280);
 }
 
 .fieldLabel {
   display: block;
-  font-size: 1.3rem;
+  font-size: var(--text-body-3);
   font-weight: 600;
   margin-bottom: 0.4rem;
   margin-top: 1rem;
@@ -139,7 +138,7 @@
   border: none;
   border-radius: var(--btn-radius-sm, 0.5rem);
   padding: 0.75rem 1rem;
-  font-size: 1.3rem;
+  font-size: var(--text-body-4);
   background-color: var(--color-surface-default, #f3f4f6);
 }
 
@@ -173,11 +172,11 @@
 
 .toggleLabel {
   font-weight: 600;
-  font-size: 1.3rem;
+  font-size: var(--text-body-3);
 }
 
 .toggleDescription {
-  font-size: 1.3rem;
+  font-size: var(--text-body-4);
   color: var(--color-text-caption, #6b7280);
   margin-top: 0.2rem;
 }
@@ -185,12 +184,12 @@
 .switchOn,
 .switchOff {
   flex-shrink: 0;
-  width: 2.75rem;
-  height: 1.5rem;
+  width: 5.9rem;
+  height: 2.7rem;
   border-radius: 999px;
   border: none;
   cursor: pointer;
-  padding: 0.15rem;
+  padding: 0.2rem;
   display: flex;
   align-items: center;
 }
@@ -206,8 +205,8 @@
 }
 
 .switchThumb {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 2.3rem;
+  height: 2.3rem;
   border-radius: 50%;
   background-color: #fff;
 }
@@ -217,7 +216,7 @@
 }
 
 .dangerTitle {
-  font-size: 1.3rem;
+  font-size: var(--text-h6);
   font-weight: 700;
   color: var(--color-error, #cf2a2a);
   margin-bottom: 1.25rem;
@@ -239,11 +238,11 @@
 
 .dangerLabel {
   font-weight: 600;
-  font-size: 1.3rem;
+  font-size: var(--text-body-3);
 }
 
 .dangerDescription {
-  font-size: 1.3rem;
+  font-size: var(--text-body-4);
   color: var(--color-text-caption, #6b7280);
   margin-top: 0.2rem;
 }
@@ -256,7 +255,7 @@
   border-radius: var(--btn-radius-sm, 0.5rem);
   padding: 0.6rem 1.2rem;
   font-weight: 600;
-  font-size: 1.3rem;
+  font-size: var(--text-body-3);
   cursor: pointer;
 }
 
@@ -273,7 +272,7 @@
   border-radius: var(--btn-radius-sm, 0.5rem);
   padding: 0.6rem 1.2rem;
   font-weight: 600;
-  font-size: 1.3rem;
+  font-size: var(--text-body-3);
   cursor: pointer;
 }
 
@@ -305,7 +304,7 @@
     margin: 0;
     padding: 2rem 2.2rem;
     border-bottom: 0.5px solid var(--color-border-default);
-    font-size: 1.6rem;
+    font-size: var(--text-h6);
   }
 
   .container > .card:first-of-type {
@@ -322,15 +321,13 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
-    min-height: 10rem;
+    min-height: 12rem;
     margin: 0;
   }
 
   .photoWrapper {
     grid-column: 2;
     grid-row: 1;
-    width: 6.5rem;
-    height: 6.5rem;
     margin-left: 0.4rem;
   }
 
@@ -364,18 +361,6 @@
 
   .notificationCard .cardTitle + .toggleRow {
     border-top: none;
-  }
-
-  .switchOn,
-  .switchOff {
-    width: 5.6rem;
-    height: 2.6rem;
-    padding: 0.1rem;
-  }
-
-  .switchThumb {
-    width: 2.4rem;
-    height: 2.4rem;
   }
 
   .dangerCard {

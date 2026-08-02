@@ -7,11 +7,6 @@ interface DataExportRequest {
   download_url: string | null;
 }
 
-// Shell — the deployed backend is auth-only; no data-export endpoint
-// exists yet. Returns safe no-op values so anything that imports this
-// compiles and renders without crashing. Real implementation drafted
-// below, commented out, ready to uncomment once the data API ships.
-
 export function usePrivacy() {
   const [latestRequest] = useState<DataExportRequest | null>(null);
   const [loading] = useState(false);

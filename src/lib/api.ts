@@ -1,13 +1,4 @@
-﻿// Watchly Authentication API client.
-// Replaces Supabase auth with the custom REST backend documented in
-// "Watchly Authentication API — Frontend Integration & Test Handoff".
-//
-// Base URL comes from VITE_API_BASE_URL (falls back to the Render demo
-// deployment). Tokens persist in localStorage per the guide's deadline
-// note; a production hardening pass should move the refresh token into
-// a Secure, HttpOnly cookie.
-
-import type { User } from "../types/user";
+﻿import type { User } from "../types/user";
 import type {
   Community,
   CommunityMembership,

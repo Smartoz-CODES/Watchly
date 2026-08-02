@@ -34,6 +34,13 @@ const prettifySlugAsName = (slug: string): string =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
+interface SignupFieldErrors {
+  name?: string;
+  email?: string;
+  phone?: string;
+  password?: string;
+}
+
 const SignupPage = () => {
   const { signUp, verifyOtp, resendOtp, pendingVerification } = useAuth();
   const { joinCommunity } = useCommunities();
@@ -41,14 +48,7 @@ const SignupPage = () => {
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  // A login attempt on an unverified account stages a pendingVerification
-  // and routes here — land straight on the OTP step instead of the name/
-  // email form. Computed once, in the initializer, rather than via an
-  // effect: this is derived from data that already exists at mount, not
-  // an external event to synchronize with.
-  const [step, setStep] = useState<1 | 2>(() =>
-    pendingVerification ? 2 : 1,
-  );
+  const [step, setStep] = useState<1 | 2>(() => (pendingVerification ? 2 : 1));
   const [verified, setVerified] = useState(false);
   const [joinedCommunityName, setJoinedCommunityName] = useState<string | null>(
     null,
@@ -61,15 +61,13 @@ const SignupPage = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [agreePolicy, setAgreePolicy] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<SignupFieldErrors>({});
 
   const [otp, setOtp] = useState("");
   const [otpError, setOtpError] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
-  // 60s when a fresh signup just issued an OTP; 0 (resend available
-  // immediately) when arriving here via a login redirect, since we
-  // don't know how long ago that account's OTP was actually sent.
   const [countdown, setCountdown] = useState(() =>
     pendingVerification ? 0 : 60,
   );
@@ -83,20 +81,7 @@ const SignupPage = () => {
     }
 
     try {
-      // TODO: joinCommunity expects a community_id, not a slug — there's
-      // no slug-to-id lookup wired up anywhere yet. Passing the slug
-      // through as-is for now; this needs a real resolution step (or the
-      // join Edge Function needs to accept a slug directly) before this
-      // can ever actually succeed.
       await joinCommunity(slug);
-      // refreshCommunities is always correct to call here regardless of
-      // the slug issue above — it just re-fetches the real, current
-      // list. Deliberately NOT calling switchCommunity here though:
-      // that needs a real community_id, and all that exists at this
-      // point is the slug — passing it through would silently leave
-      // activeCommunity null rather than actually switching to anything.
-      // Add switchCommunity(realId) here once the slug-to-id gap above
-      // is resolved.
       await refreshCommunities();
       setJoinedCommunityName(prettifySlugAsName(slug));
     } catch {
@@ -123,6 +108,12 @@ const SignupPage = () => {
     e.preventDefault();
 
     if (!name || !email || !phone || !password) {
+      setFieldErrors({
+        name: !name ? "Full name is required" : undefined,
+        email: !email ? "Email is required" : undefined,
+        phone: !phone ? "Phone number required" : undefined,
+        password: !password ? "Password is required" : undefined,
+      });
       showToast(
         VALIDATION_TOASTS.missingFields.title,
         VALIDATION_TOASTS.missingFields.description,
@@ -131,6 +122,7 @@ const SignupPage = () => {
       return;
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
+      setFieldErrors((prev) => ({ ...prev, email: "Invalid email address" }));
       showToast(
         VALIDATION_TOASTS.invalidEmail.title,
         VALIDATION_TOASTS.invalidEmail.description,
@@ -139,6 +131,7 @@ const SignupPage = () => {
       return;
     }
     if (!/^(0|\+234)\d{10}$/.test(phone)) {
+      setFieldErrors((prev) => ({ ...prev, phone: "Phone number required" }));
       showToast(
         VALIDATION_TOASTS.invalidPhone.title,
         VALIDATION_TOASTS.invalidPhone.description,
@@ -147,6 +140,10 @@ const SignupPage = () => {
       return;
     }
     if (password.length < 8) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        password: "Password must be at least 8 characters long",
+      }));
       showToast(
         VALIDATION_TOASTS.passwordTooShort.title,
         VALIDATION_TOASTS.passwordTooShort.description,
@@ -162,6 +159,8 @@ const SignupPage = () => {
       );
       return;
     }
+
+    setFieldErrors({});
 
     try {
       setLoading(true);
@@ -244,56 +243,94 @@ const SignupPage = () => {
 
           <div className={styles.inputGroup}>
             <label htmlFor="name">Name</label>
-            <div className={styles.inputWrapper}>
+            <div
+              className={`${styles.inputWrapper} ${
+                fieldErrors.name ? styles.inputWrapperError : ""
+              }`}
+            >
               <input
                 id="name"
                 type="text"
                 placeholder="Input your full name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setFieldErrors((prev) => ({ ...prev, name: undefined }));
+                }}
               />
             </div>
+            {fieldErrors.name && (
+              <p className={styles.fieldError}>{fieldErrors.name}</p>
+            )}
           </div>
 
           <div className={styles.inputGroup}>
             <label htmlFor="email">Email</label>
-            <div className={styles.inputWrapper}>
+            <div
+              className={`${styles.inputWrapper} ${
+                fieldErrors.email ? styles.inputWrapperError : ""
+              }`}
+            >
               <input
                 id="email"
                 type="email"
                 placeholder="Input your email address"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setFieldErrors((prev) => ({ ...prev, email: undefined }));
+                }}
               />
             </div>
+            {fieldErrors.email && (
+              <p className={styles.fieldError}>{fieldErrors.email}</p>
+            )}
           </div>
 
           <div className={styles.inputGroup}>
             <label htmlFor="phone">Phone number</label>
-            <div className={styles.inputWrapper}>
+            <div
+              className={`${styles.inputWrapper} ${
+                fieldErrors.phone ? styles.inputWrapperError : ""
+              }`}
+            >
               <input
                 id="phone"
                 type="text"
                 placeholder="Input your phone number"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  setFieldErrors((prev) => ({ ...prev, phone: undefined }));
+                }}
               />
             </div>
-            <p className={styles.helperText}>
-              You will receive SMS alerts when incidents are verified in your
-              community.
-            </p>
+            {fieldErrors.phone ? (
+              <p className={styles.fieldError}>{fieldErrors.phone}</p>
+            ) : (
+              <p className={styles.helperText}>
+                You will receive SMS alerts when incidents are verified in your
+                community.
+              </p>
+            )}
           </div>
 
           <div className={styles.inputGroup}>
             <label htmlFor="password">Password</label>
-            <div className={styles.inputWrapper}>
+            <div
+              className={`${styles.inputWrapper} ${
+                fieldErrors.password ? styles.inputWrapperError : ""
+              }`}
+            >
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Create your password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setFieldErrors((prev) => ({ ...prev, password: undefined }));
+                }}
               />
               <button
                 type="button"
@@ -304,11 +341,15 @@ const SignupPage = () => {
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
-            <p className={styles.helperText}>
-              Your password should be at least 8 characters, mix of uppercase
-              letters, lowercase letters, numbers, and special characters (e.g.,
-              @, #, $, %).
-            </p>
+            {fieldErrors.password ? (
+              <p className={styles.fieldError}>{fieldErrors.password}</p>
+            ) : (
+              <p className={styles.helperText}>
+                Your password should be at least 8 characters, mix of uppercase
+                letters, lowercase letters, numbers, and special characters
+                (e.g., @, #, $, %).
+              </p>
+            )}
           </div>
 
           <label className={styles.checkboxContainer}>
@@ -339,8 +380,8 @@ const SignupPage = () => {
 
       {step === 2 && (
         <div className={styles.form}>
-          {!verified && (
-            <>
+          {!joinedCommunityName && (
+            <div className={verified ? styles.otpFormBlurred : undefined}>
               <button
                 type="button"
                 className={styles.backLink}
@@ -395,22 +436,29 @@ const SignupPage = () => {
               >
                 {loading ? "Verifying..." : "Verify"}
               </button>
-            </>
+            </div>
           )}
 
           {verified && !joinedCommunityName && (
-            <div className={styles.fullPageStep}>
-              <div className={styles.verifiedIconWrap}>
-                <div className={styles.verifiedIcon}>
-                  <Check className={styles.verifiedIconGlyph} color="#fff" />
+            <div className={styles.verifiedOverlay}>
+              <div className={styles.verifiedModal}>
+                <div className={styles.fullPageStep}>
+                  <div className={styles.verifiedIconWrap}>
+                    <div className={styles.verifiedIcon}>
+                      <Check
+                        className={styles.verifiedIconGlyph}
+                        color="#fff"
+                      />
+                    </div>
+                  </div>
+
+                  <h2 className={styles.verifiedTitle}>Phone verified</h2>
+                  <p className={styles.verifiedBody}>
+                    Your number {maskPhone(normalizePhoneE164(phone))} is
+                    confirmed. SMS alerts are now active.
+                  </p>
                 </div>
               </div>
-
-              <h2 className={styles.verifiedTitle}>Phone verified</h2>
-              <p className={styles.verifiedBody}>
-                Your number {maskPhone(normalizePhoneE164(phone))} is confirmed.
-                SMS alerts are now active.
-              </p>
             </div>
           )}
 

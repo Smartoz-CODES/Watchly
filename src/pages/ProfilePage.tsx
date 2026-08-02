@@ -20,14 +20,6 @@ import { useCommunity } from "../hooks/use-community";
 import { useToast } from "../hooks/use-toast";
 import styles from "./ProfilePage.module.css";
 
-// ---------------------------------------------------------------------
-// "Location" isn't a field on the User type anywhere in the TRD — mocked
-// here per instruction, backend conversation being handled separately.
-// The four Activity Summary numbers are the same unresolved aggregate
-// gap already flagged on MyReportPage (no per-user report stats endpoint
-// exists yet) — not re-drafting that backend note here, same fix covers
-// both pages once it exists.
-// ---------------------------------------------------------------------
 
 const MOCK_LOCATION = "Lagos, Nigeria";
 
@@ -38,7 +30,7 @@ const MOCK_ACTIVITY = {
   unverified: 2,
 };
 
-const MIN_PASSWORD_LENGTH = 8; // TRD only says "meeting minimum requirements" — guessing 8, confirm with backend/security
+const MIN_PASSWORD_LENGTH = 8;
 
 const ProfilePage = () => {
   const { user, signOut } = useAuth();
@@ -347,9 +339,6 @@ const ChangePasswordModal = ({ onClose }: ChangePasswordModalProps) => {
 
     setError(null);
     setIsSubmitting(true);
-    // The deployed backend is auth-only; a change-password endpoint
-    // isn't part of the current contract. Keep the UI honest until the
-    // endpoint ships rather than faking success.
     showToast(
       "Not available yet",
       "Password change ships with the next backend update.",

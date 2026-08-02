@@ -4,7 +4,7 @@
 
 .inputs {
   display: flex;
-  justify-content: flex-start; /* FIX: was center — this is the specific alignment fix you asked for */
+  justify-content: flex-start;
   gap: 1rem;
 }
 
@@ -30,7 +30,7 @@
 
 .errorText {
   margin-top: 0.8rem;
-  text-align: left; /* FIX: was center — matches the rest of this screen (Back, title, subtitle, Verify button are all left-aligned), so a validation message underneath should be too */
+  text-align: left;
   color: red;
   font-size: var(--text-body-5);
 }

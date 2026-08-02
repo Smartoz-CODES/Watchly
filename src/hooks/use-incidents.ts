@@ -36,8 +36,14 @@ export function useIncidents(): UseIncidentsReturn {
       setLoading(true);
       setError(null);
       try {
-        const result = await incidentsApi.listByCommunity(communityId, page, limit);
-        setIncidents((prev) => (page === 1 ? result.incidents : [...prev, ...result.incidents]));
+        const result = await incidentsApi.listByCommunity(
+          communityId,
+          page,
+          limit,
+        );
+        setIncidents((prev) =>
+          page === 1 ? result.incidents : [...prev, ...result.incidents],
+        );
         setHasMore(result.hasNextPage);
       } catch (err) {
         setError(isApiError(err) ? err.message : "Failed to load incidents");
@@ -48,20 +54,26 @@ export function useIncidents(): UseIncidentsReturn {
     [],
   );
 
-  const fetchIncidentDetail = useCallback(async (incidentId: string): Promise<Incident> => {
-    return incidentsApi.detail(incidentId);
-  }, []);
+  const fetchIncidentDetail = useCallback(
+    async (incidentId: string): Promise<Incident> => {
+      return incidentsApi.detail(incidentId);
+    },
+    [],
+  );
 
-  const createIncident = useCallback(async (data: CreateIncidentInput): Promise<string> => {
-    try {
-      return await incidentsApi.create(data);
-    } catch (err) {
-      if (isApiError(err) && err.code === "RATE_LIMIT_EXCEEDED") {
-        throw new Error("RATE_LIMITED", { cause: err });
+  const createIncident = useCallback(
+    async (data: CreateIncidentInput): Promise<string> => {
+      try {
+        return await incidentsApi.create(data);
+      } catch (err) {
+        if (isApiError(err) && err.code === "RATE_LIMIT_EXCEEDED") {
+          throw new Error("RATE_LIMITED", { cause: err });
+        }
+        throw err;
       }
-      throw err;
-    }
-  }, []);
+    },
+    [],
+  );
 
   return {
     incidents,

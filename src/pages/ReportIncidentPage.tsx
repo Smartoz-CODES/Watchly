@@ -26,16 +26,7 @@ interface EvidenceFile {
 }
 
 const MAX_DESCRIPTION_LENGTH = 500;
-
-// Reports can only be dated within the last 7 days, up to today.
-// Prevents both future-dated reports (a logical impossibility) and
-// stale reports that no longer reflect current community safety conditions.
 const MAX_PAST_DAYS = 7;
-
-// Plain dropdown per explicit decision — not the six-icon CategorySelector
-// grid. That component (components/CategorySelector/) is now unused by
-// this page; worth deciding separately whether to delete it or leave it,
-// since nothing else in the app references it per the LLD.
 const CATEGORIES: IncidentCategory[] = [
   "Theft",
   "Fire",
@@ -206,11 +197,6 @@ const ReportIncidentPage = () => {
       return;
     }
 
-    // Real, working logic — no backend dependency here, just combining
-    // the two separate form fields into the one timestamp format the
-    // real API needs. occurredDate is stored as "DD/MM/YYYY" (see
-    // handleSelectDate above), occurredTime as "HH:MM" (native <input
-    // type="time">) — neither is usable on its own as occurred_at.
     const [day, month, year] = occurredDate.split("/").map(Number);
     const [hours, minutes] = occurredTime.split(":").map(Number);
     const occurredAtDate = new Date(year, month - 1, day, hours, minutes);
@@ -506,7 +492,7 @@ const ReportIncidentPage = () => {
         <div className={styles.processingOverlay}>
           <div className={styles.processingCard}>
             <div className={styles.successIconWrap}>
-              <Check size={36} className={styles.successIcon} />
+              <Check className={styles.successIcon} />
             </div>
             <h2 className={styles.processingTitle}>Report Submitted</h2>
             <p className={styles.processingBody}>

@@ -13,6 +13,7 @@ import {
 import StatusBadge from "../components/StatusBadge/StatusBadge";
 import ErrorState from "../components/ErrorState/ErrorState";
 import SkeletonCard from "../components/SkeletonCard/SkeletonCard";
+import EmptyState from "../components/EmptyState/EmptyState";
 import { useMyReports } from "../hooks/use-my-reports";
 import type { IncidentStatus } from "../types/incident";
 import styles from "./MyReportPage.module.css";
@@ -93,6 +94,8 @@ const MyReportPage = () => {
     red: "accentRed",
   };
 
+  const hasNoReportsAtAll = !loading && !error && reports.length === 0;
+
   return (
     <div className={styles.container}>
       <h1 className={styles.pageTitle}>My Report</h1>
@@ -100,128 +103,148 @@ const MyReportPage = () => {
         Track the status of incidents you have reported
       </p>
 
-      <div className={styles.statsGrid}>
-        {statTiles.map((tile) => {
-          const Icon = tile.icon;
-          return (
-            <div key={tile.key} className={styles.statTile}>
-              <div className={styles.statTileHeader}>
-                <span>{tile.label}</span>
-                <span className={styles[accentClass[tile.accent]]}>
-                  <Icon size={24} />
-                </span>
-              </div>
-              <p className={styles.statValue}>{tile.value}</p>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className={styles.tabsRow}>
-        {STATUS_TABS.map((status) => (
-          <button
-            key={status}
-            type="button"
-            className={statusFilter === status ? styles.tabActive : styles.tab}
-            onClick={() => {
-              setStatusFilter(status);
-              setVisibleCount(PAGE_SIZE);
-            }}
-          >
-            {status}
-          </button>
-        ))}
-      </div>
-
-      {loading && reports.length === 0 && (
-        <>
-          <SkeletonCard />
-          <SkeletonCard />
-        </>
+      {hasNoReportsAtAll && (
+        <EmptyState
+          imageSrc="/assets/images/my-report.png"
+          title="No reports yet"
+          description="You haven't submitted any incident reports. Report an incident to help keep your community informed and safe."
+          actionLabel="Report an incident"
+          onAction={() => navigate("/report")}
+        />
       )}
 
-      {!loading && error && (
-        <ErrorState message={error} onRetry={fetchMyReports} />
-      )}
-
-      {!loading && !error && (
+      {!hasNoReportsAtAll && (
         <>
-          <p className={styles.showingCount}>
-            Showing {visibleReports.length} of {filteredReports.length} reports
-          </p>
-
-          <div className={styles.reportList}>
-            {visibleReports.map((report) => (
-              <div key={report.incident_id} className={styles.reportRow}>
-                <div className={styles.reportRowHeader}>
-                  <div className={styles.reportTags}>
-                    <span className={styles.reportCode}>
-                      {report.display_code}
+          <div className={styles.statsGrid}>
+            {statTiles.map((tile) => {
+              const Icon = tile.icon;
+              return (
+                <div key={tile.key} className={styles.statTile}>
+                  <div className={styles.statTileHeader}>
+                    <span>{tile.label}</span>
+                    <span className={styles[accentClass[tile.accent]]}>
+                      <Icon size={24} />
                     </span>
-                    <span className={styles.categoryTag}>
-                      {report.category === "Other" && report.other_description
-                        ? `Other — ${report.other_description}`
-                        : report.category}
-                    </span>
-                    <StatusBadge
-                      status={report.current_status}
-                      size="xs"
-                      showIcon={false}
-                    />
                   </div>
-                  <span className={styles.reportTime}>
-                    <Clock size={16} />
-                    {formatRelativeTime(report.created_at)}
-                  </span>
+                  <p className={styles.statValue}>{tile.value}</p>
                 </div>
-
-                <p className={styles.reportTitle}>
-                  {incidentTitleFrom(report.description)}
-                </p>
-
-                <div className={styles.reportMetaRow}>
-                  <span className={styles.reportLocation}>
-                    <MapPin size={18} />
-                    {report.location}
-                  </span>
-                  <span className={styles.communityBadge}>
-                    <ShieldCheck size={18} />
-                    {report.community_name}
-                  </span>
-                </div>
-
-                <div className={styles.reportFooter}>
-                  <span className={styles.corroborationCount}>
-                    <Users size={18} />
-                    {report.corroboration_count} corroboration
-                  </span>
-                  <button
-                    type="button"
-                    className={styles.viewDetailsLink}
-                    onClick={() => navigate(`/incidents/${report.incident_id}`)}
-                  >
-                    View details
-                    <ChevronRight size={18} />
-                  </button>
-                </div>
-              </div>
-            ))}
-
-            {filteredReports.length === 0 && (
-              <p className={styles.emptyMessage}>
-                No reports match this filter yet.
-              </p>
-            )}
+              );
+            })}
           </div>
 
-          {hasMore && (
-            <button
-              type="button"
-              className={styles.loadMoreButton}
-              onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
-            >
-              Load more
-            </button>
+          <div className={styles.tabsRow}>
+            {STATUS_TABS.map((status) => (
+              <button
+                key={status}
+                type="button"
+                className={
+                  statusFilter === status ? styles.tabActive : styles.tab
+                }
+                onClick={() => {
+                  setStatusFilter(status);
+                  setVisibleCount(PAGE_SIZE);
+                }}
+              >
+                {status}
+              </button>
+            ))}
+          </div>
+
+          {loading && reports.length === 0 && (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          )}
+
+          {!loading && error && (
+            <ErrorState message={error} onRetry={fetchMyReports} />
+          )}
+
+          {!loading && !error && (
+            <>
+              <p className={styles.showingCount}>
+                Showing {visibleReports.length} of {filteredReports.length}{" "}
+                reports
+              </p>
+
+              <div className={styles.reportList}>
+                {visibleReports.map((report) => (
+                  <div key={report.incident_id} className={styles.reportRow}>
+                    <div className={styles.reportRowHeader}>
+                      <div className={styles.reportTags}>
+                        <span className={styles.reportCode}>
+                          {report.display_code}
+                        </span>
+                        <span className={styles.categoryTag}>
+                          {report.category === "Other" &&
+                          report.other_description
+                            ? `Other — ${report.other_description}`
+                            : report.category}
+                        </span>
+                        <StatusBadge
+                          status={report.current_status}
+                          size="xs"
+                          showIcon={false}
+                        />
+                      </div>
+                      <span className={styles.reportTime}>
+                        <Clock size={16} />
+                        {formatRelativeTime(report.created_at)}
+                      </span>
+                    </div>
+
+                    <p className={styles.reportTitle}>
+                      {incidentTitleFrom(report.description)}
+                    </p>
+
+                    <div className={styles.reportMetaRow}>
+                      <span className={styles.reportLocation}>
+                        <MapPin size={18} />
+                        {report.location}
+                      </span>
+                      <span className={styles.communityBadge}>
+                        <ShieldCheck size={18} />
+                        {report.community_name}
+                      </span>
+                    </div>
+
+                    <div className={styles.reportFooter}>
+                      <span className={styles.corroborationCount}>
+                        <Users size={18} />
+                        {report.corroboration_count} corroboration
+                      </span>
+                      <button
+                        type="button"
+                        className={styles.viewDetailsLink}
+                        onClick={() =>
+                          navigate(`/incidents/${report.incident_id}`)
+                        }
+                      >
+                        View details
+                        <ChevronRight size={18} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {filteredReports.length === 0 && (
+                  <p className={styles.emptyMessage}>
+                    No reports match this filter yet.
+                  </p>
+                )}
+              </div>
+
+              {hasMore && (
+                <button
+                  type="button"
+                  className={styles.loadMoreButton}
+                  onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
+                >
+                  Load more
+                </button>
+              )}
+            </>
           )}
         </>
       )}

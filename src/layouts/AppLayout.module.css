@@ -6,13 +6,12 @@
 }
 
 /* Top bar */
-
 .topBar {
   display: flex;
   align-items: center;
   gap: 1.6rem;
-  min-height: 7.2rem;
-  padding: 1.2rem 2.6rem;
+  min-height: 8.8rem;
+  padding: 1.6rem 2.4rem;
   border-bottom: 0.5px solid var(--color-border-default);
   background-color: var(--color-surface-elevated, #fff);
   position: sticky;
@@ -36,7 +35,7 @@
 }
 
 .logoMark {
-  height: 3.8rem;
+  height: 4rem;
   width: auto;
   object-fit: contain;
 }
@@ -63,12 +62,12 @@
   position: absolute;
   top: -2px;
   right: -2px;
-  background-color: var(--color-error, #cf2a2a);
+  background-color: var(--color-error, #df5252);
   color: #fff;
-  font-size: 0.65rem;
+  font-size: 1rem;
   line-height: 1;
-  min-width: 1rem;
-  height: 1rem;
+  min-width: 1.6rem;
+  height: 1.6rem;
   border-radius: 999px;
   display: flex;
   align-items: center;
@@ -80,7 +79,7 @@
   margin-left: 0.8rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
 }
 
 .avatar,
@@ -97,7 +96,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
+  font-size: var(--text-body-4);
   font-weight: 600;
 }
 
@@ -106,7 +105,6 @@
 }
 
 /* Body layout */
-
 .body {
   flex: 1;
   display: flex;
@@ -149,7 +147,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 1.6rem;
   z-index: 41;
 }
 
@@ -157,33 +155,33 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 1.6rem;
 }
 
 .drawerFooter {
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding-top: 1rem;
+  gap: 0.8rem;
+  padding-top: 1.6rem;
 }
 
 /* Community switcher */
-
 .switcher {
-  margin-bottom: 1rem;
-  border: 0.5px solid var(--color-border-default);
-  border-radius: var(--btn-radius-md, 0.5rem);
+  margin-bottom: 1.6rem;
+  border-radius: var(--btn-radius-sm, 0.8rem);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
 }
 
 .switcherTrigger {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background: none;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  background: var(--color-surface-subtle, #fefefe);
   border: none;
+  border-radius: var(--btn-radius-sm, 0.8rem);
   cursor: pointer;
   text-align: left;
 }
@@ -196,32 +194,39 @@
 
 .switcherName {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(
+    --text-body-3
+  );
+  color: var(--color-text-body);
 }
 
 .switcherLocation {
-  font-size: 0.75rem;
+  font-size: var(
+    --text-body-4
+  );
   color: var(--color-text-caption);
 }
 
 .switcherPanel {
-  border-top: 0.5px solid var(--color-border-default);
-  padding: 0.5rem;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
+  border-radius: var(--btn-radius-sm, 0.8rem);
+  padding: 0.8rem;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 1.1rem;
+  margin-top: 0.4rem;
 }
 
 .switcherItem {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  gap: 0.8rem;
+  padding: 0.4rem 0.8rem;
   background: none;
   border: none;
   cursor: pointer;
   text-align: left;
-  border-radius: var(--btn-radius-sm, 0.35rem);
+  border-radius: var(--btn-radius-sm, 0.5rem);
 }
 
 .switcherItem:hover {
@@ -231,58 +236,66 @@
 .switcherJoinLink {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  color: var(--color-primary);
+  gap: 0.8rem;
+  height: 4.8rem;
+  padding: 0.8rem;
+  color: var(--color-primary-darker);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--text-body-3);
   text-decoration: none;
 }
 
 /* Menu */
 
 .menuLabel {
-  font-size: 0.75rem;
+  font-size: var(
+    --text-h6
+  );
   font-weight: 700;
-  color: var(--color-text-caption);
+  color: var(--color-text-title);
   letter-spacing: 0.04em;
-  margin: 0.5rem 0;
+  margin: 0.8rem 0;
 }
 
 .menuList {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.8rem;
 }
 
 .menuItem {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 0.5rem;
-  border-radius: var(--btn-radius-sm, 0.35rem);
-  color: var(--color-text-body);
+  gap: 0.8rem;
+  padding: 0.8rem;
+  border-radius: var(--btn-radius-sm, 0.8rem);
+  color: var(--color-text-caption);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: var(
+    --text-body-3
+  );
+  font-weight: 600;
 }
 
 .menuItemActive {
-  background-color: var(--color-primary-subtle, #e6f4f2);
-  color: var(--color-primary);
+  background-color: var(--color-primary-subtle, #dafafe);
+  color: var(--color-primary-darker);
   font-weight: 600;
 }
 
 .logoutButton {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
   background: none;
   border: none;
-  color: var(--color-error, #cf2a2a);
+  color: var(--color-error, #df5252);
   cursor: pointer;
-  padding: 0.6rem 0.5rem;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
+  padding: 0.8rem;
+  font-size: var(--text-body-3);
+  font-weight: 600;
+  margin-top: 0.8rem;
+  border-radius: var(--btn-radius-sm, 0.8rem);
 }
 
 .logoutButton:disabled {
@@ -294,55 +307,62 @@
 
 .staySafeCard,
 .disclaimerCard {
-  border: 0.5px solid var(--color-border-default);
-  border-radius: var(--btn-radius-md, 0.5rem);
-  padding: 0.85rem;
-  margin-top: 1rem;
+  background-color: var(--color-surface-default, #fdfdfe);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+  border-radius: var(--btn-radius-sm, 0.8rem);
+  padding: 0.8rem 1.6rem;
+  margin-top: 1.6rem;
 }
 
 .staySafeTitle,
 .disclaimerTitle {
-  font-weight: 700;
-  font-size: 0.85rem;
-  margin-bottom: 0.35rem;
+  font-weight: 600;
+  font-size: var(
+    --text-h6
+  );
+  color: var(--color-text-body);
+  margin-bottom: 0.6rem;
 }
 
 .staySafeBody,
 .disclaimerBody {
-  font-size: 0.8rem;
+  font-size: var(
+    --text-body-4
+  );
   color: var(--color-text-caption);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .disclaimerMobile {
-  margin-top: 1rem;
+  margin-top: 1.6rem;
 }
 
 /* Stats card */
-
 .statsCard {
   border: 0.5px solid var(--color-border-default);
-  border-radius: var(--btn-radius-md, 0.5rem);
-  padding: 0.85rem;
-  margin-bottom: 1rem;
+  border-radius: var(--btn-radius-md, 1.2rem);
+  padding: 1.6rem;
+  margin-bottom: 1.6rem;
 }
 
 .statsCardTitle {
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: var(--text-body-2);
+  color: var(--color-text-title);
 }
 
 .statsCardSubtitle {
-  font-size: 0.8rem;
+  font-size: var(--text-body-4);
   color: var(--color-text-caption);
-  margin-bottom: 0.6rem;
+  margin-bottom: 1rem;
 }
 
 .statsRow {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
-  padding: 0.3rem 0;
+  font-size: var(--text-body-4);
+  color: var(--color-text-body);
+  padding: 0.8rem 0;
   border-top: 0.5px solid var(--color-border-default);
 }
 
@@ -350,10 +370,10 @@
 
 .fab {
   position: fixed;
-  bottom: 1.25rem;
-  right: 1.25rem;
-  width: 3.25rem;
-  height: 3.25rem;
+  bottom: 2rem;
+  right: 2rem;
+  width: 5.6rem;
+  height: 5.6rem;
   border-radius: 50%;
   background-color: var(--color-primary);
   color: #fff;
@@ -367,10 +387,9 @@
 }
 
 /* Desktop */
-
 @media (min-width: 768px) {
   .topBar {
-    padding: 1.2rem 2.6rem;
+    padding: 1.6rem 2.4rem;
   }
 
   .hamburgerButton {
@@ -399,7 +418,7 @@
     border: none;
     outline: none;
     flex: 1;
-    font-size: 1.5rem;
+    font-size: var(--text-body-3);
   }
 
   .searchMobileButton {
@@ -418,7 +437,7 @@
     min-height: 4.6rem;
     justify-content: center;
     padding: 1rem 1.8rem;
-    font-size: 1.5rem;
+    font-size: var(--text-body-3);
     font-weight: 600;
     cursor: pointer;
     margin-left: auto;
@@ -429,10 +448,9 @@
   }
 
   .profileName {
-    display: none;
-    font-weight: 600;
-    color: var(--color-primary);
-    font-size: 0.9rem;
+    display: block;
+    color: var(--color-primary-darker);
+    font-size: var(--text-body-3);
   }
 
   .body {
@@ -447,84 +465,50 @@
   .sidebarDesktop {
     display: flex;
     flex-direction: column;
-    width: 28rem;
-    height: calc(100vh - 7.2rem);
+    justify-content: space-between;
+    width: 32.6rem;
+    height: calc(100vh - 8.8rem);
     position: sticky;
-    top: 7.2rem;
+    top: 8.8rem;
     align-self: flex-start;
     flex-shrink: 0;
-    padding: 2.4rem 2rem;
-    border-right: 0.5px solid var(--color-border-default);
-    background-color: #fff;
+    padding: 2.4rem;
+    border-right: 1px solid
+      var(--color-border-hairline, rgba(178, 174, 185, 0.32));
+    background-color: var(--color-surface-subtle, #fefefe);
     overflow: hidden;
   }
 
   .switcher {
-    margin-bottom: 2rem;
-    border-radius: 1.2rem;
-  }
-
-  .switcherTrigger {
-    gap: 1.2rem;
-    min-height: 5.6rem;
-    padding: 1rem 1.2rem;
-  }
-
-  .switcherName {
-    font-size: 1.3rem;
-    line-height: 1.8rem;
-  }
-
-  .switcherLocation {
-    font-size: 1.1rem;
-    line-height: 1.6rem;
+    margin-bottom: 0;
   }
 
   .menuLabel {
-    font-size: 1.4rem;
-    line-height: 1.9rem;
-    color: var(--color-text-title);
-    letter-spacing: 0;
-    margin: 0 0 1.4rem;
-  }
-
-  .menuList {
-    gap: 0.4rem;
-  }
-
-  .menuItem {
-    gap: 1.2rem;
-    min-height: 4.4rem;
-    padding: 1rem;
-    border-radius: 1rem;
-    font-size: 1.3rem;
-    line-height: 1.8rem;
-  }
-
-  .switcherJoinLink,
-  .logoutButton {
-    font-size: 1.3rem;
-    line-height: 1.8rem;
+    margin: 3.9rem 0 0.8rem;
   }
 
   .logoutButton {
-    margin-top: auto;
-    padding-top: 2.4rem;
-    border-top: 0.5px solid var(--color-border-default);
+    margin-top: 3.2rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--color-text-disabled, #a1a1aa); /* FIX: was var(--color-border-default) — Figma's divider above Logout/Stay Safe matches --color-text-disabled exactly, a darker grey */
   }
 
-  .staySafeTitle {
-    font-size: 1.4rem;
-    line-height: 1.9rem;
-  }
-
-  .staySafeBody {
-    font-size: 1.1rem;
-    line-height: 1.6rem;
+  .staySafeCard {
+    margin-top: 4.8rem;
   }
 
   .rightPanel {
-    display: none;
+    /* FIX: was display:none in both the base rules AND this desktop
+       override — the community stats card and "Not for emergencies" box
+       were completely unreachable at every breakpoint despite appearing
+       in every desktop screenshot */
+    display: flex;
+    flex-direction: column;
+    width: 30rem;
+    flex-shrink: 0;
+    padding: 2.4rem;
+    border-left: 1px solid
+      var(--color-border-hairline, rgba(178, 174, 185, 0.32));
   }
 
   .drawerOverlay,

@@ -5,11 +5,6 @@ import { useToast } from "../../hooks/use-toast";
 import { isApiError } from "../../lib/api";
 import type { Community } from "../../types/community";
 import styles from "./CommunityRequestModal.module.css";
-
-// NOTE: states-lgas.json's actual shape hasn't been confirmed in this
-// session — assuming Record<state, lga[]> here per the LLD's description
-// ("36 states + FCT, each with its LGAs"). Adjust the import/typing below
-// if the real file is shaped differently.
 import statesLgas from "../../lib/states-lgas.json";
 
 const STATE_LGA_DATA = statesLgas as Record<string, string[]>;
@@ -38,13 +33,15 @@ const CommunityRequestModal = ({
   const [state, setState] = useState(initialState);
   const [lga, setLga] = useState(initialLga);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<{ name?: string; state?: string; lga?: string }>(
-    {}
-  );
+  const [errors, setErrors] = useState<{
+    name?: string;
+    state?: string;
+    lga?: string;
+  }>({});
 
   const handleStateChange = (value: string) => {
     setState(value);
-    setLga(""); // reset LGA whenever state changes, same behavior as StateLGAFilter
+    setLga("");
   };
 
   const validate = () => {
@@ -67,7 +64,7 @@ const CommunityRequestModal = ({
       showToast(
         "Request failed",
         isApiError(err) ? err.message : "Please try again.",
-        "error"
+        "error",
       );
     } finally {
       setIsSubmitting(false);
@@ -85,7 +82,7 @@ const CommunityRequestModal = ({
         {step === "form" && (
           <>
             <div className={styles.header}>
-              <div>
+              <div className={styles.headerText}>
                 <h2 className={styles.title}>Request a New Community</h2>
                 <p className={styles.subtitle}>
                   Can't find your community? Submit a request and our platform
@@ -98,90 +95,119 @@ const CommunityRequestModal = ({
                 aria-label="Close"
                 onClick={onClose}
               >
-                <X size={20} />
+                <X size={24} />
               </button>
             </div>
 
             <div className={styles.infoBanner}>
-              <Info size={18} className={styles.infoIcon} />
+              <Info size={24} className={styles.infoIcon} />
               <p>
-                Requests are reviewed within 2-3 business days. You'll be notified by
-                email and in-app notification of the outcome.
+                Requests are reviewed within 2-3 business days. You'll be
+                notified by email and in-app notification of the outcome.
               </p>
             </div>
 
-            <label className={styles.fieldLabel} htmlFor="community-name">
-              Community Name<span className={styles.required}>*</span>
-            </label>
-            <input
-              id="community-name"
-              type="text"
-              className={styles.fieldInput}
-              placeholder="e.g Landmark Estate"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <p className={styles.fieldHint}>
-              💡 This information stays within the community and will never be shared
-              with third parties.
-            </p>
-            {errors.name && <p className={styles.fieldError}>{errors.name}</p>}
+            <div className={styles.fieldsGroup}>
+              <div className={styles.field}>
+                <label className={styles.fieldLabel} htmlFor="community-name">
+                  Community Name<span className={styles.required}>*</span>
+                </label>
+                <input
+                  id="community-name"
+                  type="text"
+                  className={styles.fieldInput}
+                  placeholder="e.g Landmark Estate"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <p className={styles.fieldHint}>
+                  💡 This information stays within the community and will never
+                  be shared with third parties.
+                </p>
+                {errors.name && (
+                  <p className={styles.fieldError}>{errors.name}</p>
+                )}
+              </div>
 
-            <label className={styles.fieldLabel} htmlFor="state-select">
-              State<span className={styles.required}>*</span>
-            </label>
-            <select
-              id="state-select"
-              className={styles.fieldSelect}
-              value={state}
-              onChange={(e) => handleStateChange(e.target.value)}
-            >
-              <option value="">Select a state</option>
-              {STATES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-            {errors.state && <p className={styles.fieldError}>{errors.state}</p>}
+              <div className={styles.field}>
+                <label className={styles.fieldLabel} htmlFor="state-select">
+                  State<span className={styles.required}>*</span>
+                </label>
+                <select
+                  id="state-select"
+                  className={styles.fieldSelect}
+                  value={state}
+                  onChange={(e) => handleStateChange(e.target.value)}
+                >
+                  <option value="">Select a state</option>
+                  {STATES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+                {errors.state && (
+                  <p className={styles.fieldError}>{errors.state}</p>
+                )}
+              </div>
 
-            <label className={styles.fieldLabel} htmlFor="lga-select">
-              Local government area (LGA)<span className={styles.required}>*</span>
-            </label>
-            <select
-              id="lga-select"
-              className={styles.fieldSelect}
-              value={lga}
-              onChange={(e) => setLga(e.target.value)}
-              disabled={!state}
-            >
-              <option value="">{state ? "Select an LGA" : "Select a state first"}</option>
-              {(STATE_LGA_DATA[state] ?? []).map((l) => (
-                <option key={l} value={l}>
-                  {l}
-                </option>
-              ))}
-            </select>
-            {!state && <p className={styles.fieldHint}>LGA options will appear after selecting a state</p>}
-            {errors.lga && <p className={styles.fieldError}>{errors.lga}</p>}
+              <div className={styles.field}>
+                <label className={styles.fieldLabel} htmlFor="lga-select">
+                  Local government area (LGA)
+                  <span className={styles.required}>*</span>
+                </label>
+                <select
+                  id="lga-select"
+                  className={styles.fieldSelect}
+                  value={lga}
+                  onChange={(e) => setLga(e.target.value)}
+                  disabled={!state}
+                >
+                  <option value="">
+                    {state ? "Select an LGA" : "Select a state first"}
+                  </option>
+                  {(STATE_LGA_DATA[state] ?? []).map((l) => (
+                    <option key={l} value={l}>
+                      {l}
+                    </option>
+                  ))}
+                </select>
+                {!state && (
+                  <p className={styles.fieldHint}>
+                    LGA options will appear after selecting a state
+                  </p>
+                )}
+                {errors.lga && (
+                  <p className={styles.fieldError}>{errors.lga}</p>
+                )}
+              </div>
+            </div>
 
-            <button
-              type="button"
-              className={styles.submitButton}
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Submitting…" : "Submit Request"}
-            </button>
-            <button type="button" className={styles.cancelLink} onClick={onClose}>
-              Cancel
-            </button>
+            <div className={styles.actions}>
+              <div className={styles.actionsButtons}>
+                <button
+                  type="button"
+                  className={styles.submitButton}
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting…" : "Submit Request"}
+                </button>
+                <button
+                  type="button"
+                  className={styles.cancelLink}
+                  onClick={onClose}
+                >
+                  Cancel
+                </button>
+              </div>
 
-            <p className={styles.footerNote}>
-              <ShieldCheck size={14} />
-              Your identity is protected. Only community administrators will see your
-              account details.
-            </p>
+              <p className={styles.footerNote}>
+                <ShieldCheck size={16} />
+                Your identity is protected. Only community administrators will
+                see your account details.
+              </p>
+            </div>
           </>
         )}
 
@@ -199,16 +225,20 @@ const CommunityRequestModal = ({
                 aria-label="Close"
                 onClick={onClose}
               >
-                <X size={20} />
+                <X size={24} />
               </button>
             </div>
             <p className={styles.subtitle}>
-              A similar community already exists. Would you like to join it instead?
+              A similar community already exists. Would you like to join it
+              instead?
             </p>
 
             <div className={styles.duplicatesList}>
               {duplicates.map((community: Community) => (
-                <div key={community.community_id} className={styles.duplicateCard}>
+                <div
+                  key={community.community_id}
+                  className={styles.duplicateCard}
+                >
                   <div>
                     <p className={styles.duplicateName}>{community.name}</p>
                     <p className={styles.duplicateLocation}>
@@ -230,16 +260,16 @@ const CommunityRequestModal = ({
               ))}
             </div>
 
-            <button type="button" className={styles.cancelLink} onClick={onClose}>
+            <button
+              type="button"
+              className={styles.cancelLink}
+              onClick={onClose}
+            >
               Cancel
             </button>
           </>
         )}
 
-        {/* Also no Figma reference — styled to match the success-modal
-            language from the corroboration/report-submitted confirmations
-            shared earlier (icon in circle, centered title + message, single
-            full-width button). */}
         {step === "success" && (
           <div className={styles.successContent}>
             <div className={styles.successIcon}>
@@ -247,10 +277,15 @@ const CommunityRequestModal = ({
             </div>
             <h2 className={styles.title}>Request submitted</h2>
             <p className={styles.subtitle}>
-              Your community request has been submitted and is pending review. You'll be
-              notified by email and in-app notification once a decision is made.
+              Your community request has been submitted and is pending review.
+              You'll be notified by email and in-app notification once a
+              decision is made.
             </p>
-            <button type="button" className={styles.submitButton} onClick={onClose}>
+            <button
+              type="button"
+              className={styles.submitButton}
+              onClick={onClose}
+            >
               Done
             </button>
           </div>

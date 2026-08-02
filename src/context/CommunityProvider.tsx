@@ -69,10 +69,6 @@ export function CommunityProvider({ children }: CommunityProviderProps) {
     }
 
     if (latestUserIdRef.current !== requestUserId) return;
-
-    // Single setState call, computed all at once — active community
-    // prefers whatever was already active, then whatever's persisted in
-    // localStorage, then falls back to the first community in the list.
     setState((prev) => {
       const stillValid =
         prev.activeCommunityId &&
@@ -99,9 +95,6 @@ export function CommunityProvider({ children }: CommunityProviderProps) {
     });
   }, [user]);
 
-  // Ref-based indirection: the mount effect below only ever calls
-  // refreshCommunitiesRef.current(), so it can always call the latest
-  // version of refreshCommunities without needing it in its own deps.
   const refreshCommunitiesRef = useRef(refreshCommunities);
 
   useEffect(() => {
