@@ -289,7 +289,10 @@ const AdminReviewPage = () => {
 
             <div className={styles.corroboratorList}>
               {visibleCorroborators.map((c, index) => (
-                <div key={`${c.name}-${index}`} className={styles.corroboratorRow}>
+                <div
+                  key={`${c.name}-${index}`}
+                  className={styles.corroboratorRow}
+                >
                   <div className={styles.corroboratorAvatar}>{c.name[0]}</div>
                   <div className={styles.corroboratorInfo}>
                     <p className={styles.corroboratorName}>{c.name}</p>
@@ -502,7 +505,6 @@ const AdminReviewPage = () => {
     </div>
   );
 };
-
 
 const formatRelativeTime = (isoDate: string) => {
   const diffMs = Date.now() - new Date(isoDate).getTime();

@@ -30,8 +30,6 @@ const DEFAULT_COMMUNITY_PREFS: CommunityNotificationPrefs = {
   notify_admin_safety: true,
 };
 
-// Account-wide: about *how* you're reached, not tied to any one
-// community — a personal habit, same everywhere.
 const ACCOUNT_NOTIFICATION_ROWS: {
   key: keyof AccountNotificationPrefs;
   label: string;
@@ -51,10 +49,6 @@ const ACCOUNT_NOTIFICATION_ROWS: {
   },
 ];
 
-// Per-community: about *what* you want to hear about, which genuinely
-// varies by community — same reasoning the TRD already applies to SMS
-// opt-out. Label text embeds the community name directly so scope is
-// never ambiguous, matching the LLD's own SMSToggle convention.
 const COMMUNITY_NOTIFICATION_ROWS: {
   key: keyof CommunityNotificationPrefs;
   label: (communityName: string) => string;
@@ -115,7 +109,7 @@ const SettingsPage = () => {
     communityId: string,
     key: keyof CommunityNotificationPrefs,
   ) => {
-    // UI-only for now — same situation as the account-wide toggles.
+    // UI-only for now
     setCommunityPrefs((prev) => {
       const current = prev[communityId] ?? DEFAULT_COMMUNITY_PREFS;
       return { ...prev, [communityId]: { ...current, [key]: !current[key] } };
@@ -126,8 +120,7 @@ const SettingsPage = () => {
     if (!user || displayName.trim() === user.name) return;
 
     try {
-      // Auth-only backend for now — updateProfile persists locally until
-      // a profile endpoint ships with the data API.
+      // Auth-only backend for now, updateProfile persists locally until a profile endpoint ships with the data API.
       await updateProfile({ name: displayName.trim() });
       showToast("Name updated", "Your display name has been saved.", "success");
     } catch {
@@ -146,7 +139,6 @@ const SettingsPage = () => {
     const file = e.target.files?.[0];
     e.target.value = ""; // allow re-selecting the same file later
     if (!file) return;
-
     // TODO: no documented Storage bucket or upload path exists yet for
     // profile photos anywhere in the TRD (incident evidence has one,
     // profile photos don't). Not wiring a real upload until backend
@@ -277,8 +269,7 @@ const SettingsPage = () => {
 
         {COMMUNITY_NOTIFICATION_ROWS.map(({ key, label, description }) => {
           const communityId = activeCommunity?.community_id ?? "default";
-          const prefs =
-            communityPrefs[communityId] ?? DEFAULT_COMMUNITY_PREFS;
+          const prefs = communityPrefs[communityId] ?? DEFAULT_COMMUNITY_PREFS;
           const displayLabel = label("").replace(/ in $/, "");
 
           return (

@@ -21,9 +21,6 @@ import {
 import { useToast } from "../hooks/use-toast";
 import { AUTH_TOASTS } from "../lib/toast-messages";
 
-// Restores a persisted session synchronously on first render. The auth
-// API has no "current user" endpoint, so the stored user is the source
-// of truth until a protected request forces a token refresh.
 function restoreSession(): { user: User | null; session: AuthSession | null } {
   const accessToken = getAccessToken();
   const refreshToken = getRefreshToken();
@@ -45,9 +42,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [session, setSession] = useState<AuthSession | null>(initial.session);
   const [pendingVerification, setPendingVerification] =
     useState<PendingVerification | null>(null);
-  // Session restore is synchronous (localStorage), so nothing is ever
-  // "still loading" — but the flag stays in the contract because
-  // ProtectedRoute and LandingRedirect key off it.
   const [loading] = useState(false);
   const { showToast } = useToast();
 
@@ -65,7 +59,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [],
   );
 
-  // signUp — creates an unverified account and stages OTP verification.
+  // signUp
   const signUp = useCallback(
     async (name: string, email: string, phone: string, password: string) => {
       try {
@@ -98,8 +92,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [showToast],
   );
 
-  // verifyOtp — keeps the historical (phone, token) signature; the
-  // backend verifies by userId, which lives in pendingVerification.
   const verifyOtp = useCallback(
     async (_phone: string, token: string) => {
       if (!pendingVerification) {
@@ -130,7 +122,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [pendingVerification, establishSession, showToast],
   );
 
-  // resendOtp — issues a fresh code for the staged account.
+  // resendOtp issues a fresh code for the staged account.
   const resendOtp = useCallback(async () => {
     if (!pendingVerification) {
       throw new Error("No pending verification");
@@ -144,7 +136,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // signIn — authenticates and creates a device session. A correct
   // password on an unverified account routes back into OTP verification
-  // (guide: 403 PHONE_NOT_VERIFIED with error.details.userId).
   const signIn = useCallback(
     async (email: string, password: string) => {
       try {
@@ -162,8 +153,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [establishSession],
   );
 
-  // signOut — revokes the server session (best effort) and always
-  // clears local state, per the guide's recommended flow.
+  // signOut revokes the server session (best effort) and always clears local state, per the guide's recommended flow.
   const signOut = useCallback(async () => {
     try {
       await authApi.logout();

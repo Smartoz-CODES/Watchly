@@ -51,10 +51,6 @@ const HomeFeedPage = () => {
   );
 
   const statusDropdownRef = useRef<HTMLDivElement | null>(null);
-
-  // Reset pagination during render (not in an effect) whenever the active
-  // community changes — React re-renders immediately before painting, so
-  // there's no flash of stale state.
   if (activeCommunity && activeCommunity.community_id !== loadedCommunityId) {
     setLoadedCommunityId(activeCommunity.community_id);
     if (page !== 1) setPage(1);
@@ -146,8 +142,11 @@ const HomeFeedPage = () => {
             className={styles.statusButton}
             onClick={() => setStatusDropdownOpen((prev) => !prev)}
           >
-            Status: <strong>{statusFilter}</strong>
-            <ChevronDown size={16} />
+            <span className={styles.statusButtonLabel}>Status :</span>
+            <span className={styles.statusButtonValue}>
+              {statusFilter}
+              <ChevronDown size={24} />
+            </span>
           </button>
 
           {statusDropdownOpen && (
@@ -196,8 +195,11 @@ const HomeFeedPage = () => {
 
         {!loading && !error && filteredIncidents.length === 0 && (
           <EmptyState
-            icon={Shield}
-            title="No incidents reported in your community yet."
+            imageSrc="/assets/images/incident-feed.png"
+            title="No incident reported yet"
+            description="Your community is safe for now. Incidents will appear here as they're reported."
+            actionLabel="Report an incident"
+            onAction={() => navigate("/report")}
           />
         )}
 

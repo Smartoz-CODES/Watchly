@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Search, ChevronDown } from "lucide-react";
 import { useCommunity } from "../hooks/use-community";
 import { useIncidents } from "../hooks/use-incidents";
+import EmptyState from "../components/EmptyState/EmptyState";
 import type { IncidentCategory, IncidentStatus } from "../types/incident";
 import styles from "./AdminQueuePage.module.css";
 
@@ -58,8 +59,6 @@ const AdminQueuePage = () => {
     null,
   );
 
-  // Reset pagination during render (not in an effect) whenever the active
-  // community changes.
   if (activeCommunity && activeCommunity.community_id !== loadedCommunityId) {
     setLoadedCommunityId(activeCommunity.community_id);
     if (page !== 1) setPage(1);
@@ -81,14 +80,6 @@ const AdminQueuePage = () => {
     return null;
   }
 
-  // NOTE: category and status filtering below happens client-side, only
-  // against whatever incidents are already loaded on screen � same known
-  // limitation already flagged on HomeFeedPage.tsx. If an incident
-  // matching the selected filter hasn't loaded yet (e.g. it's on a later
-  // page), it won't show until "Load more" is tapped. Fixing this
-  // properly needs the backend to accept category/status as real query
-  // filters on the incidents-by-community route, same request already
-  // queued for HomeFeedPage's fix.
   const filteredIncidents = incidents.filter((incident) => {
     const matchesStatus =
       statusFilter === "All Statuses" ||
@@ -103,6 +94,10 @@ const AdminQueuePage = () => {
     return matchesStatus && matchesCategory && matchesSearch;
   });
 
+  const isQueueEmpty = !loading && incidents.length === 0;
+  const isFilteredEmpty =
+    !loading && !isQueueEmpty && filteredIncidents.length === 0;
+
   const handleReviewClick = (incidentId: string) => {
     navigate(`/admin/review/${incidentId}`);
   };
@@ -116,7 +111,9 @@ const AdminQueuePage = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.pageTitle}>{activeCommunity?.name ?? "Dashboard"}</h1>
+      <h1 className={styles.pageTitle}>
+        {activeCommunity?.name ?? "Dashboard"}
+      </h1>
       <p className={styles.pageSubtitle}>
         Active Monitoring . {activeCommunity?.lga} . {activeCommunity?.state}
       </p>
@@ -195,55 +192,67 @@ const AdminQueuePage = () => {
           All Report. {filteredIncidents.length} Incident
         </p>
 
-        <div className={styles.incidentList}>
-          {!loading && filteredIncidents.length === 0 && (
-            <p className={styles.reporterText}>No incidents match this filter.</p>
-          )}
+        {isQueueEmpty && (
+          <EmptyState
+            imageSrc="/assets/images/admin-review-queue.png"
+            title="No reports awaiting review"
+            description="New incident reports submitted by community members will appear here for verification."
+          />
+        )}
 
-          {filteredIncidents.map((incident) => (
-            <div key={incident.incident_id} className={styles.incidentRow}>
-              <div className={styles.incidentMain}>
-                <p className={styles.incidentTitle}>
-                  <span className={styles.incidentCode}>
-                    {incident.display_code}
-                  </span>{" "}
-                  | {incident.category} . {incident.location}
-                </p>
-                <div className={styles.incidentMetaRow}>
-                  <span
-                    className={`${styles.pill} ${styles[STATUS_PILL_CLASS[incident.current_status]]}`}
-                  >
-                    {STATUS_LABEL[incident.current_status]}
-                  </span>
-                  <span className={styles.metaText}>
-                    {incident.corroboration_count} Corroborations .{" "}
-                    {incident.evidence.length > 0
-                      ? `${incident.evidence.length} photos`
-                      : "No photos"}{" "}
-                    . {formatRelativeTime(incident.created_at)}
-                  </span>
+        {!isQueueEmpty && (
+          <div className={styles.incidentList}>
+            {isFilteredEmpty && (
+              <p className={styles.reporterText}>
+                No incidents match this filter.
+              </p>
+            )}
+
+            {filteredIncidents.map((incident) => (
+              <div key={incident.incident_id} className={styles.incidentRow}>
+                <div className={styles.incidentMain}>
+                  <p className={styles.incidentTitle}>
+                    <span className={styles.incidentCode}>
+                      {incident.display_code}
+                    </span>{" "}
+                    | {incident.category} . {incident.location}
+                  </p>
+                  <div className={styles.incidentMetaRow}>
+                    <span
+                      className={`${styles.pill} ${styles[STATUS_PILL_CLASS[incident.current_status]]}`}
+                    >
+                      {STATUS_LABEL[incident.current_status]}
+                    </span>
+                    <span className={styles.metaText}>
+                      {incident.corroboration_count} Corroborations .{" "}
+                      {incident.evidence.length > 0
+                        ? `${incident.evidence.length} photos`
+                        : "No photos"}{" "}
+                      . {formatRelativeTime(incident.created_at)}
+                    </span>
+                  </div>
+                  <p className={styles.reporterText}>
+                    Reporter: {incident.reporter_name}
+                  </p>
                 </div>
-                <p className={styles.reporterText}>
-                  Reporter: {incident.reporter_name}
-                </p>
-              </div>
 
-              <button
-                type="button"
-                className={
-                  incident.current_status === "Reported"
-                    ? styles.actionButtonFilled
-                    : styles.actionButtonOutlined
-                }
-                onClick={() => handleReviewClick(incident.incident_id)}
-              >
-                {incident.current_status === "Reported"
-                  ? "Review Now"
-                  : "Start Review"}
-              </button>
-            </div>
-          ))}
-        </div>
+                <button
+                  type="button"
+                  className={
+                    incident.current_status === "Reported"
+                      ? styles.actionButtonFilled
+                      : styles.actionButtonOutlined
+                  }
+                  onClick={() => handleReviewClick(incident.incident_id)}
+                >
+                  {incident.current_status === "Reported"
+                    ? "Review Now"
+                    : "Start Review"}
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
         {!loading && hasMore && (
           <div className={styles.paginationRow}>

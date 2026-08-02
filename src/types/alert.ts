@@ -9,5 +9,5 @@ export interface Alert {
   incident_category: string;
   incident_status: IncidentStatus;
   created_at: string;
-  is_read: boolean; // derived from alert_views join on the backend
+  is_read: boolean;
 }

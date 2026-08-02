@@ -1,17 +1,11 @@
 import { createContext } from "react";
 import type { User } from "../types/user";
 
-/** Access/refresh token pair issued by the Watchly auth API. */
 export interface AuthSession {
   accessToken: string;
   refreshToken: string;
 }
 
-/**
- * Tracks an account that has signed up (or attempted login) but not yet
- * completed phone verification. `demoOtp` is only present while the
- * backend runs in DEMO_MODE and is rendered on the verification screen.
- */
 export interface PendingVerification {
   userId: string;
   phone: string;

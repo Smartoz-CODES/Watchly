@@ -21,8 +21,6 @@ const STATUS_EVENT_LABELS: Record<IncidentStatus, string> = {
   "Not Verified": "Marked Not verified",
 };
 
-// Keyed purely on current_status, Resolved and Not Verified are
-// terminal and correctly have no entry here at all.
 const NEXT_PENDING_LABEL: Partial<Record<IncidentStatus, string>> = {
   Reported: "Awaiting admin review",
   "Under Review": "Awaiting Verified / Not verified decision",

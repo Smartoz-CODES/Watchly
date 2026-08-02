@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, Eye, EyeOff, Info, X } from "lucide-react";
+import { ChevronLeft, Eye, EyeOff } from "lucide-react";
 
 import AuthLogo from "../components/AuthLogo/AuthLogo";
 import { useToast } from "../hooks/use-toast";
@@ -13,12 +13,8 @@ const PasswordRecoveryPage = () => {
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  // No backend endpoint yet marks a "reset" landing (Supabase used to
-  // flip this via its PASSWORD_RECOVERY auth event on email-link
-  // arrival). Stays "request" until that mechanism has a replacement;
-  // see the Send Reset Link / Set New Password handlers below.
+  // No backend endpoint yet
   const [mode] = useState<"request" | "reset">("request");
-  const [bannerVisible, setBannerVisible] = useState(false);
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -46,8 +42,6 @@ const PasswordRecoveryPage = () => {
 
     try {
       setLoading(true);
-      // The auth backend doesn't expose password-reset endpoints yet.
-      // Surface that honestly instead of pretending an email was sent.
       showToast(
         "Not available yet",
         "Password reset ships with the next backend update. Contact your community admin if you are locked out.",
@@ -111,26 +105,6 @@ const PasswordRecoveryPage = () => {
         <>
           <AuthLogo />
 
-          {bannerVisible && (
-            <div className={styles.banner}>
-              <Info size={20} className={styles.bannerIcon} />
-              <div className={styles.bannerText}>
-                <p className={styles.bannerTitle}>Check your email</p>
-                <p className={styles.bannerBody}>
-                  Password reset instructions sent to your email.
-                </p>
-              </div>
-              <button
-                type="button"
-                className={styles.bannerClose}
-                onClick={() => setBannerVisible(false)}
-                aria-label="Dismiss"
-              >
-                <X size={18} />
-              </button>
-            </div>
-          )}
-
           <form className={styles.form} onSubmit={handleSendResetLink}>
             <div className={styles.header}>
               <h1 className={styles.title}>Reset Your Password</h1>
@@ -141,12 +115,6 @@ const PasswordRecoveryPage = () => {
 
             <div className={styles.inputGroup}>
               <label htmlFor="email">Email</label>
-              {/*
-                FIX: removed the leading <Mail size={20} /> icon. Neither
-                Figma (node 2427:20330) nor your own screenshot shows an
-                icon inside this input — it was an addition that didn't
-                match either source.
-              */}
               <div className={styles.inputWrapper}>
                 <input
                   id="email"
@@ -175,19 +143,11 @@ const PasswordRecoveryPage = () => {
 
       {mode === "reset" && (
         <div className={styles.form}>
-          {/*
-            No <AuthLogo /> here on purpose — this step has a Back button,
-            and every "Back button" screen in your screenshots (this one,
-            OTP entry) skips the logo. Screens without a Back button show
-            it (except the transient "Phone verified" step, which skips
-            both).
-          */}
           <button
             type="button"
             className={styles.backLink}
             onClick={() => navigate("/login")}
           >
-            {/* FIX: was size={18} — Figma's CaretLeft (confirmed at node 2050:13817) is 24px */}
             <ChevronLeft size={24} /> Back
           </button>
 
@@ -270,10 +230,6 @@ const PasswordRecoveryPage = () => {
           </button>
 
           <p className={styles.footerText}>
-            {/* Was a dead /support link — no support page or route exists
-                anywhere in this app. Fixed to a working mailto: rather than
-                inventing a whole new page to solve one broken link. Worth
-                a real support page later if this becomes a common need. */}
             <a href="mailto:support@watchly.app">
               Experiencing Issues? Contact Support
             </a>

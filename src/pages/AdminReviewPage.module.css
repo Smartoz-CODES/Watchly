@@ -119,7 +119,6 @@
 }
 
 /* Evidence */
-
 .evidenceGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -173,7 +172,6 @@
 }
 
 /* Corroboration */
-
 .signalLabel {
   color: #d97706;
   font-weight: 700;
@@ -278,7 +276,6 @@
 }
 
 /* Decision panel */
-
 .decisionTitle {
   font-size: 1.3rem;
   font-weight: 700;

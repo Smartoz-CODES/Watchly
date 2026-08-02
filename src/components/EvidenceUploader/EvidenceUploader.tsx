@@ -1,5 +1,5 @@
 ﻿import { useRef, type ChangeEvent } from "react";
-import { Upload, X } from "lucide-react";
+import { Image as ImageIcon, X } from "lucide-react";
 
 import styles from "./EvidenceUploader.module.css";
 import { useToast } from "../../hooks/use-toast";
@@ -66,12 +66,6 @@ const EvidenceUploader = ({
       validFiles.push(file);
     });
 
-    // The disabled button only ever stops the *next* click — it can't
-    // stop a single multi-select from blowing straight past the limit,
-    // since the file input allows selecting several files at once
-    // regardless of how many are already attached. Capping here instead,
-    // so the total genuinely never exceeds maxFiles no matter how many
-    // valid files get selected in one go.
     const remainingSlots = Math.max(0, maxFiles - evidence.length);
     const filesToAdd = validFiles.slice(0, remainingSlots);
     const droppedCount = validFiles.length - filesToAdd.length;
@@ -91,6 +85,8 @@ const EvidenceUploader = ({
     event.target.value = "";
   };
 
+  const atMax = evidence.length >= maxFiles;
+
   return (
     <div className={styles.container}>
       <input
@@ -104,18 +100,20 @@ const EvidenceUploader = ({
 
       <button
         type="button"
-        className={`${styles.uploadArea} ${
-          evidence.length >= maxFiles ? styles.disabled : ""
-        }`}
+        className={`${styles.uploadArea} ${atMax ? styles.disabled : ""}`}
         onClick={openFilePicker}
-        disabled={evidence.length >= maxFiles || loading}
+        disabled={atMax || loading}
       >
-        <Upload size={24} />
-        <span>
-          {evidence.length >= maxFiles
-            ? "Maximum images reached"
-            : "Upload Evidence"}
+        <span className={styles.iconWrap}>
+          <ImageIcon size={24} className={styles.icon} />
         </span>
+
+        <span className={styles.title}>
+          {atMax ? "Maximum images reached" : "Add photos"}
+        </span>
+
+        <span className={styles.hint}>JPEG, PNG up to 5MB</span>
+        <span className={styles.hint}>Max. of {maxFiles} images</span>
       </button>
 
       {progress > 0 && progress < 100 && (

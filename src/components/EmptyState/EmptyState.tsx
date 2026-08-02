@@ -2,7 +2,9 @@
 import styles from "./EmptyState.module.css";
 
 interface EmptyStateProps {
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  imageSrc?: string;
+  imageAlt?: string;
   title: string;
   description?: string;
   actionLabel?: string;
@@ -11,6 +13,8 @@ interface EmptyStateProps {
 
 const EmptyState = ({
   icon: Icon,
+  imageSrc,
+  imageAlt = "",
   title,
   description,
   actionLabel,
@@ -18,7 +22,11 @@ const EmptyState = ({
 }: EmptyStateProps) => {
   return (
     <div className={styles.container}>
-      <Icon size={48} className={styles.icon} aria-hidden="true" />
+      {imageSrc ? (
+        <img src={imageSrc} alt={imageAlt} className={styles.illustration} />
+      ) : (
+        Icon && <Icon size={48} className={styles.icon} aria-hidden="true" />
+      )}
       <h3 className={styles.title}>{title}</h3>
       {description && <p className={styles.description}>{description}</p>}
       {actionLabel && onAction && (

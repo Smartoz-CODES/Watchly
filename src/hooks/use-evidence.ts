@@ -8,9 +8,6 @@ export interface UseEvidenceReturn {
   error: string | null;
 }
 
-// Server-mediated multipart upload via POST /incidents/:id/evidence — no
-// progress events are available from fetch() for request bodies, so
-// `progress` jumps from 0 to 100 on completion rather than incrementing.
 export function useEvidence(): UseEvidenceReturn {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -22,7 +19,9 @@ export function useEvidence(): UseEvidenceReturn {
       setError(null);
       setProgress(0);
       try {
-        const [evidence] = await incidentsApi.uploadEvidence(incidentId, [file]);
+        const [evidence] = await incidentsApi.uploadEvidence(incidentId, [
+          file,
+        ]);
         setProgress(100);
         return evidence.file_url;
       } catch (err) {

@@ -6,7 +6,6 @@
 }
 
 /* Banner */
-
 .banner {
   position: relative;
   height: 14rem;
@@ -52,7 +51,6 @@
 }
 
 /* Stats row */
-
 .statsRow {
   display: flex;
   flex-wrap: wrap;
@@ -78,7 +76,6 @@
 }
 
 /* Grid layout */
-
 .grid {
   display: flex;
   flex-direction: column;
@@ -112,7 +109,6 @@
 }
 
 /* About */
-
 .aboutText {
   font-size: 1.3rem;
   color: var(--color-text-body, #374151);
@@ -121,7 +117,6 @@
 }
 
 /* Guidelines */
-
 .guidelinesList {
   list-style: none;
   margin-top: 1rem;
@@ -156,7 +151,6 @@
 }
 
 /* Recent incidents */
-
 .viewAllLink {
   background: none;
   border: none;
@@ -197,7 +191,6 @@
 }
 
 /* Safety overview */
-
 .safetySubheading {
   font-size: 1.3rem;
   font-weight: 700;
@@ -299,7 +292,6 @@
 }
 
 /* Admin card */
-
 .adminRow {
   display: flex;
   align-items: center;
@@ -370,7 +362,6 @@
 }
 
 /* CTA card */
-
 .ctaCard {
   background-color: var(--color-primary-subtle, #e0f2f1);
   border-radius: var(--btn-radius-md, 0.75rem);
@@ -401,7 +392,6 @@
 }
 
 /* Invite card */
-
 .inviteDescription {
   font-size: 1.3rem;
   color: var(--color-text-body, #374151);
@@ -510,7 +500,6 @@
 }
 
 /* Desktop */
-
 @media (min-width: 768px) {
   .banner {
     height: 18rem;

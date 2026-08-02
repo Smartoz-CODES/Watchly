@@ -23,7 +23,9 @@ export interface UseCommunitiesReturn {
   fetchCommunities: (filters?: CommunityFilters) => Promise<void>;
   joinCommunity: (communityId: string) => Promise<void>;
   leaveCommunity: (communityId: string) => Promise<void>;
-  requestCommunity: (data: CommunityRequestInput) => Promise<"created" | "duplicates">;
+  requestCommunity: (
+    data: CommunityRequestInput,
+  ) => Promise<"created" | "duplicates">;
 }
 
 export function useCommunities(): UseCommunitiesReturn {

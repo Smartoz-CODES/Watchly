@@ -6,7 +6,7 @@ import { useCommunity } from "../hooks/use-community";
 import { useCommunities } from "../hooks/use-communities";
 import { useToast } from "../hooks/use-toast";
 import EmptyState from "../components/EmptyState/EmptyState";
-import ErrorState from "../components/ErrorState/ErrorState";
+import CommunityRequestModal from "../components/CommunityRequestModal/CommunityRequestModal";
 import type { Community } from "../types/community";
 import { communitiesApi, isApiError } from "../lib/api";
 import styles from "./CommunityDetailPage.module.css";
@@ -25,6 +25,7 @@ const CommunityDetailPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [linkCopied, setLinkCopied] = useState(false);
   const [isJoining, setIsJoining] = useState(false);
+  const [isRequestModalOpen, setRequestModalOpen] = useState(false);
 
   const loadCommunity = useCallback(async () => {
     if (!slug) return;
@@ -84,6 +85,22 @@ const CommunityDetailPage = () => {
     }
   };
 
+  const handleJoinFromModal = async (communityId: string) => {
+    try {
+      await joinCommunity(communityId);
+      await refreshCommunities();
+      switchCommunity(communityId);
+      setRequestModalOpen(false);
+      navigate("/home");
+    } catch (err) {
+      showToast(
+        "Failed to join",
+        isApiError(err) ? err.message : "Please try again.",
+        "error",
+      );
+    }
+  };
+
   if (loading) {
     return <div className={styles.page}>Loading…</div>;
   }
@@ -91,10 +108,20 @@ const CommunityDetailPage = () => {
   if (error || !community) {
     return (
       <div className={styles.page}>
-        <ErrorState
-          message={error ?? "This community could not be found."}
-          onRetry={loadCommunity}
+        <EmptyState
+          imageSrc="/assets/images/community-not-found.png"
+          title="Community not found"
+          description="We couldn't find this community. You can request a new community and help bring Watchly to your area."
+          actionLabel="Request New Community"
+          onAction={() => setRequestModalOpen(true)}
         />
+
+        {isRequestModalOpen && (
+          <CommunityRequestModal
+            onClose={() => setRequestModalOpen(false)}
+            onJoinCommunity={handleJoinFromModal}
+          />
+        )}
       </div>
     );
   }

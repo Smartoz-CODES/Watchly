@@ -74,8 +74,6 @@ const AlertFeedPage = () => {
     fetchAlerts();
   }, [fetchAlerts]);
 
-  // SMS alerts arrive outside the app entirely — only In App / Web Push
-  // are shown here.
   const displayableAlerts = alerts.filter(
     (a) => a.alert_type !== "SMS" && isDisplayableStatus(a.incident_status),
   );
@@ -124,7 +122,11 @@ const AlertFeedPage = () => {
       )}
 
       {!loading && !error && filteredAlerts.length === 0 && (
-        <EmptyState icon={ShieldCheck} title="No alerts yet." />
+        <EmptyState
+          imageSrc="/assets/images/notifications.png"
+          title="You're all caught up"
+          description="New incident updates, verification changes, and community alerts will appear here."
+        />
       )}
 
       {!loading && !error && filteredAlerts.length > 0 && (

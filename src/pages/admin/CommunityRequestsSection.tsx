@@ -9,8 +9,13 @@ import { isApiError } from "../../lib/api";
 import styles from "./CommunityRequestsSection.module.css";
 
 const CommunityRequestsSection = () => {
-  const { requests, loading, fetchPendingRequests, approveRequest, declineRequest } =
-    useCommunityRequests();
+  const {
+    requests,
+    loading,
+    fetchPendingRequests,
+    approveRequest,
+    declineRequest,
+  } = useCommunityRequests();
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -20,12 +25,16 @@ const CommunityRequestsSection = () => {
   const handleApprove = async (communityId: string, assignAdmin: boolean) => {
     try {
       await approveRequest(communityId, assignAdmin);
-      showToast("Community approved", "The requester has been notified.", "success");
+      showToast(
+        "Community approved",
+        "The requester has been notified.",
+        "success",
+      );
     } catch (err) {
       showToast(
         "Approval failed",
         isApiError(err) ? err.message : "Please try again.",
-        "error"
+        "error",
       );
     }
   };
@@ -33,12 +42,16 @@ const CommunityRequestsSection = () => {
   const handleDecline = async (communityId: string, reason: string) => {
     try {
       await declineRequest(communityId, reason);
-      showToast("Request declined", "The requester has been notified.", "success");
+      showToast(
+        "Request declined",
+        "The requester has been notified.",
+        "success",
+      );
     } catch (err) {
       showToast(
         "Decline failed",
         isApiError(err) ? err.message : "Please try again.",
-        "error"
+        "error",
       );
     }
   };
@@ -75,7 +88,11 @@ const CommunityRequestsSection = () => {
         )}
 
         {!loading && requests.length === 0 && (
-          <EmptyState icon={ShieldCheck} title="No pending community requests." />
+          <EmptyState
+            imageSrc="/assets/images/community-requests.png"
+            title="No community requests yet"
+            description="New community creation requests submitted by residents will appear here for your review."
+          />
         )}
 
         {!loading &&

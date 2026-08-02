@@ -17,7 +17,7 @@
   top: 0.9rem;
   bottom: 0;
   width: 1px;
-  background-color: var(--color-border-default, #e5e7eb);
+  background-color: var(--color-border-default, #d9dbe9);
 }
 
 .timelineDotFilled,
@@ -31,24 +31,24 @@
 }
 
 .timelineDotFilled {
-  background-color: var(--color-primary, #0f766e);
+  background-color: var(--color-success-700, #0b7b56);
 }
 
 .timelineDotRed {
-  background-color: var(--color-badge-not-verified-text, #953737);
+  background-color: var(--color-badge-not-verified-text, #cf2a2a);
 }
 
 .timelineDotPending {
-  background-color: var(--color-border-default, #d1d5db);
+  background-color: var(--color-border-default, #d9dbe9);
 }
 
 .timelineLabel {
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: var(--text-body-4);
 }
 
 .timelineTimestamp {
-  font-size: 1.3rem;
-  color: var(--color-text-caption, #6b7280);
+  font-size: var(--text-body-5);
+  color: var(--color-text-caption, #52525b);
   margin-top: 0.1rem;
 }

@@ -93,11 +93,19 @@ const IncidentDetailPage = () => {
       setShowSuccessModal(true);
     } catch (err) {
       if (isApiError(err) && err.code === "CANNOT_CORROBORATE_OWN_REPORT") {
-        showToast("Can't corroborate", "You can't corroborate your own report.", "error");
+        showToast(
+          "Can't corroborate",
+          "You can't corroborate your own report.",
+          "error",
+        );
         return;
       }
       if (isApiError(err) && err.code === "ALREADY_CORROBORATED") {
-        showToast("Already corroborated", "You've already corroborated this report.", "info");
+        showToast(
+          "Already corroborated",
+          "You've already corroborated this report.",
+          "info",
+        );
         return;
       }
       showToast(
