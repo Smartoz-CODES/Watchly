@@ -16,6 +16,7 @@ import SkeletonCard from "../components/SkeletonCard/SkeletonCard";
 import { useMyReports } from "../hooks/use-my-reports";
 import type { IncidentStatus } from "../types/incident";
 import styles from "./MyReportPage.module.css";
+import { incidentTitleFrom } from "../lib/incident-title";
 
 type StatusFilter = "All" | IncidentStatus;
 
@@ -36,13 +37,6 @@ const formatRelativeTime = (isoDate: string) => {
   if (hours < 1) return "Just now";
   if (hours < 24) return `${hours}hrs ago`;
   return `${Math.floor(hours / 24)} days ago`;
-};
-
-const incidentTitleFrom = (description: string) => {
-  const firstSentence = description.split(".")[0];
-  return firstSentence.length > 60
-    ? firstSentence.slice(0, 60) + "…"
-    : firstSentence;
 };
 
 const MyReportPage = () => {

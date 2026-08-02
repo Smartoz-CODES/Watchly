@@ -121,7 +121,7 @@ const CommunityDetailPage = () => {
         <div className={styles.card}>
           <div className={styles.communityRow}>
             <img
-              src="/assets/images/commuities-image.png"
+              src="/assets/images/communities-image.png"
               alt=""
               className={styles.communityThumb}
             />
@@ -224,7 +224,7 @@ const CommunityDetailPage = () => {
 
       <div className={styles.rightColumn}>
         <img
-          src="/assets/images/commuities-image.png"
+          src="/assets/images/communities-image.png"
           alt=""
           className={styles.collageImage}
         />
