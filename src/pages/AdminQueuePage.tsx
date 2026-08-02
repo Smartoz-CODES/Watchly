@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Search, ChevronDown } from "lucide-react";
 import { useCommunity } from "../hooks/use-community";
 import { useIncidents } from "../hooks/use-incidents";
-import type { IncidentStatus } from "../types/incident";
+import type { IncidentCategory, IncidentStatus } from "../types/incident";
 import styles from "./AdminQueuePage.module.css";
 
 const STATUS_LABEL: Record<IncidentStatus, string> = {
@@ -22,6 +22,16 @@ const STATUS_PILL_CLASS: Record<IncidentStatus, string> = {
   "Not Verified": "pillNotVerified",
 };
 
+const CATEGORY_FILTERS: ("All Categories" | IncidentCategory)[] = [
+  "All Categories",
+  "Theft",
+  "Fire",
+  "Suspicious Person",
+  "Assault",
+  "Break-in",
+  "Other",
+];
+
 const formatRelativeTime = (isoDate: string) => {
   const diffMs = Date.now() - new Date(isoDate).getTime();
   const hours = Math.floor(diffMs / 3600000);
@@ -39,6 +49,9 @@ const AdminQueuePage = () => {
   const [statusFilter, setStatusFilter] = useState<
     "All Statuses" | IncidentStatus
   >("All Statuses");
+  const [categoryFilter, setCategoryFilter] = useState<
+    "All Categories" | IncidentCategory
+  >("All Categories");
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [loadedCommunityId, setLoadedCommunityId] = useState<string | null>(
@@ -68,15 +81,26 @@ const AdminQueuePage = () => {
     return null;
   }
 
+  // NOTE: category and status filtering below happens client-side, only
+  // against whatever incidents are already loaded on screen � same known
+  // limitation already flagged on HomeFeedPage.tsx. If an incident
+  // matching the selected filter hasn't loaded yet (e.g. it's on a later
+  // page), it won't show until "Load more" is tapped. Fixing this
+  // properly needs the backend to accept category/status as real query
+  // filters on the incidents-by-community route, same request already
+  // queued for HomeFeedPage's fix.
   const filteredIncidents = incidents.filter((incident) => {
     const matchesStatus =
       statusFilter === "All Statuses" ||
       incident.current_status === statusFilter;
+    const matchesCategory =
+      categoryFilter === "All Categories" ||
+      incident.category === categoryFilter;
     const matchesSearch =
       searchTerm.trim() === "" ||
       incident.display_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
       incident.location.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesStatus && matchesSearch;
+    return matchesStatus && matchesCategory && matchesSearch;
   });
 
   const handleReviewClick = (incidentId: string) => {
@@ -150,6 +174,21 @@ const AdminQueuePage = () => {
               </div>
             )}
           </div>
+        </div>
+
+        <div className={styles.categoryTabs}>
+          {CATEGORY_FILTERS.map((cat) => (
+            <button
+              type="button"
+              key={cat}
+              className={`${styles.categoryTab} ${
+                categoryFilter === cat ? styles.categoryTabActive : ""
+              }`}
+              onClick={() => setCategoryFilter(cat)}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
 
         <p className={styles.reportCountHeading}>
