@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { MapPin, Users, ShieldCheck, Copy, Check, Ban } from "lucide-react";
 import { useAuth } from "../hooks/use-auth";
@@ -6,34 +6,13 @@ import { useCommunity } from "../hooks/use-community";
 import { useCommunities } from "../hooks/use-communities";
 import { useToast } from "../hooks/use-toast";
 import EmptyState from "../components/EmptyState/EmptyState";
+import ErrorState from "../components/ErrorState/ErrorState";
+import type { Community } from "../types/community";
+import { communitiesApi, isApiError } from "../lib/api";
 import styles from "./CommunityDetailPage.module.css";
 
-// ---------------------------------------------------------------------
-// No documented way to look up a community by slug exists anywhere in the
-// TRD (§11.2 only shows lookup by community_id). Mocked here the same way
-// every other unbuilt data source has been this session — the :slug param
-// isn't actually used to fetch anything real yet.
-//
-// Also: CommunityContext's real implementation hasn't shipped
-// (CommunityProvider is still the Day-2 no-op shell), so userCommunities
-// is always [] regardless of what's really true — meaning the
-// "authenticated member" state below is correct code that currently
-// cannot ever actually be reached, through no fault of this file.
-// ---------------------------------------------------------------------
-
-const MOCK_COMMUNITY = {
-  community_id: "c1",
-  name: "Landmark Estate",
-  state: "Lagos",
-  lga: "Ikeja",
-  member_count: 847,
-  description:
-    "Get access to verified local safety alerts, report incidents, and stay informed about what is really happening in your community.",
-  status: "Active" as "Active" | "Pending" | "Declined",
-};
-
 const CommunityDetailPage = () => {
-  const { slug } = useParams();
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { userCommunities, refreshCommunities, switchCommunity } =
@@ -41,13 +20,37 @@ const CommunityDetailPage = () => {
   const { joinCommunity } = useCommunities();
   const { showToast } = useToast();
 
+  const [community, setCommunity] = useState<Community | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [linkCopied, setLinkCopied] = useState(false);
   const [isJoining, setIsJoining] = useState(false);
 
+  const loadCommunity = useCallback(async () => {
+    if (!slug) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await communitiesApi.bySlug(slug);
+      setCommunity(data);
+    } catch (err) {
+      setError(isApiError(err) ? err.message : "Failed to load community");
+    } finally {
+      setLoading(false);
+    }
+  }, [slug]);
+
+  useEffect(() => {
+    // Fetch-on-mount/param-change: a genuine synchronization with the
+    // server, not a "derive state from props" antipattern.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadCommunity();
+  }, [loadCommunity]);
+
   const isLoggedIn = !!user;
-  const isMember = userCommunities.some(
-    (c) => c.community_id === MOCK_COMMUNITY.community_id,
-  );
+  const isMember =
+    !!community &&
+    userCommunities.some((c) => c.community_id === community.community_id);
 
   const inviteLink = `${window.location.origin}/c/${slug}`;
 
@@ -63,22 +66,17 @@ const CommunityDetailPage = () => {
   };
 
   const handleJoin = async () => {
+    if (!community) return;
     setIsJoining(true);
     try {
-      await joinCommunity(MOCK_COMMUNITY.community_id);
-      // TRD §9.4's full join trace: refresh the list, then switch to the
-      // community just joined, before redirecting. Missing this meant
-      // someone landed on /home still looking at their old active
-      // community, not the one they just joined.
+      await joinCommunity(community.community_id);
       await refreshCommunities();
-      switchCommunity(MOCK_COMMUNITY.community_id);
+      switchCommunity(community.community_id);
       navigate("/home");
-    } catch {
-      // joinCommunity is currently a stub that always throws — see
-      // hooks/use-communities.ts.
+    } catch (err) {
       showToast(
-        "Join not available yet",
-        "This feature needs a backend endpoint that doesn't exist yet.",
+        "Failed to join",
+        isApiError(err) ? err.message : "Please try again.",
         "error",
       );
     } finally {
@@ -86,11 +84,22 @@ const CommunityDetailPage = () => {
     }
   };
 
-  // TRD §13.3's named edge case: someone bookmarks this page, and the
-  // community is later declined or deleted. Checking here rather than
-  // letting the rest of the page render identically regardless of
-  // whether a real community actually still exists in this state.
-  if (MOCK_COMMUNITY.status !== "Active") {
+  if (loading) {
+    return <div className={styles.page}>Loading…</div>;
+  }
+
+  if (error || !community) {
+    return (
+      <div className={styles.page}>
+        <ErrorState
+          message={error ?? "This community could not be found."}
+          onRetry={loadCommunity}
+        />
+      </div>
+    );
+  }
+
+  if (community.status !== "Active") {
     return (
       <div className={styles.page}>
         <EmptyState icon={Ban} title="This community is no longer available." />
@@ -112,13 +121,13 @@ const CommunityDetailPage = () => {
         <div className={styles.card}>
           <div className={styles.communityRow}>
             <img
-              src="/assets/images/commuities-image.png"
+              src="/assets/images/communities-image.png"
               alt=""
               className={styles.communityThumb}
             />
             <div>
               <p className={styles.communityName}>
-                {MOCK_COMMUNITY.name}
+                {community.name}
                 <span className={styles.verifiedPill}>
                   <ShieldCheck size={12} />
                   Verified community
@@ -127,28 +136,27 @@ const CommunityDetailPage = () => {
               <div className={styles.communityMeta}>
                 <span>
                   <MapPin size={14} />
-                  {MOCK_COMMUNITY.lga}, {MOCK_COMMUNITY.state}
+                  {community.lga}, {community.state}
                 </span>
                 <span>
                   <Users size={14} />
-                  {MOCK_COMMUNITY.member_count} members
+                  {community.member_count} members
                 </span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ---------- Anonymous visitor — matches the Figma directly ---------- */}
         {!isLoggedIn && (
           <>
             <h1 className={styles.title}>
-              You've been invited to join {MOCK_COMMUNITY.name} community
+              You've been invited to join {community.name} community
             </h1>
-            <p className={styles.description}>{MOCK_COMMUNITY.description}</p>
+            <p className={styles.description}>{community.description}</p>
             <p className={styles.description}>
               The incident feed, reports, and alerts are only visible to
               members. Create an account to join and see what's happening in{" "}
-              {MOCK_COMMUNITY.name}.
+              {community.name}.
             </p>
 
             <button
@@ -171,15 +179,10 @@ const CommunityDetailPage = () => {
           </>
         )}
 
-        {/* ---------- Logged in, not yet a member — no Figma reference,
-            built to match the LLD spec and this page's own visual
-            language ---------- */}
         {isLoggedIn && !isMember && (
           <>
-            <h1 className={styles.title}>
-              Join {MOCK_COMMUNITY.name} community
-            </h1>
-            <p className={styles.description}>{MOCK_COMMUNITY.description}</p>
+            <h1 className={styles.title}>Join {community.name} community</h1>
+            <p className={styles.description}>{community.description}</p>
 
             <button
               type="button"
@@ -192,11 +195,9 @@ const CommunityDetailPage = () => {
           </>
         )}
 
-        {/* ---------- Logged in, already a member — no Figma reference,
-            same situation as above ---------- */}
         {isLoggedIn && isMember && (
           <>
-            <h1 className={styles.title}>{MOCK_COMMUNITY.name}</h1>
+            <h1 className={styles.title}>{community.name}</h1>
             <p className={styles.memberIndicator}>
               <Check size={16} />
               You're a member
@@ -223,7 +224,7 @@ const CommunityDetailPage = () => {
 
       <div className={styles.rightColumn}>
         <img
-          src="/assets/images/commuities-image.png"
+          src="/assets/images/communities-image.png"
           alt=""
           className={styles.collageImage}
         />

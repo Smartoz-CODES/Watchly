@@ -26,7 +26,7 @@ const SettingsPage = lazy(() => import("../pages/SettingsPage"));
 const CommunityInfoPage = lazy(() => import("../pages/CommunityInfoPage"));
 const AdminQueuePage = lazy(() => import("../pages/AdminQueuePage"));
 const AdminReviewPage = lazy(() => import("../pages/AdminReviewPage"));
-const PlatformAdminPage = lazy(() => import("../pages/PlatformAdminPage"));
+const AdminPage = lazy(() => import("../pages/AdminPage"));
 
 const RouteFallback = () => <div>Loading...</div>;
 
@@ -42,7 +42,7 @@ const DEV_PAGE_MAP: Record<string, ComponentType> = {
   communityinfopage: CommunityInfoPage,
   adminqueuepage: AdminQueuePage,
   adminreviewpage: AdminReviewPage,
-  platformadminpage: PlatformAdminPage,
+  platformadminpage: AdminPage,
 };
 
 const DevPreviewRoute = () => {
@@ -112,7 +112,7 @@ const AppRouter = () => {
               <Route path="/admin/review/:id" element={<AdminReviewPage />} />
 
               <Route element={<PlatformAdminRoute />}>
-                <Route path="/platform-admin" element={<PlatformAdminPage />} />
+                <Route path="/platform-admin" element={<AdminPage />} />
               </Route>
             </Route>
           </Route>

@@ -29,6 +29,7 @@ export interface StatusHistoryEntry {
 
 export interface Incident {
   incident_id: string;
+  display_code: string;
   reporter_id: string | null; // null for non-reporters and non-admin viewers
   reporter_name: string; // resolved server-side. "Anonymous Resident" for non-reporters/non-admins per TRD privacy rules, real name for the reporter themself or a Community Admin
   community_id: string;

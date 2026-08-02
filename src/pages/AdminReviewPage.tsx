@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   ChevronLeft,
   Paperclip,
@@ -13,96 +13,23 @@ import {
 } from "lucide-react";
 import { useStatusUpdate } from "../hooks/use-status-update";
 import { useCommunity } from "../hooks/use-community";
+import { useIncidents } from "../hooks/use-incidents";
 import { useToast } from "../hooks/use-toast";
 import StatusBadge from "../components/StatusBadge/StatusBadge";
 import ConfirmDialog from "../components/ConfirmDialog/ConfirmDialog";
 import StatusHistoryTimeline from "../components/StatusHistoryTimeline/StatusHistoryTimeline";
+import ErrorState from "../components/ErrorState/ErrorState";
 import type { Incident } from "../types/incident";
+import { incidentsApi, isApiError } from "../lib/api";
+import { incidentTitleFrom } from "../lib/incident-title";
 import styles from "./AdminReviewPage.module.css";
-
-// ---------------------------------------------------------------------
-// Mocked incident — useIncidents.fetchIncidentDetail() is still a stub,
-// same situation as IncidentDetailPage. The :id param isn't wired to a
-// real fetch yet.
-//
-// Reporter identity here is the real name (Anonymous Resident only
-// applies to non-admin/non-reporter viewers per FR-12) — the Figma this
-// was built from actually showed "Anonymous Resident" on this exact
-// screen, which contradicts the admin queue one screen prior (which
-// correctly showed real names like "Mary Isreal"). Treated that as a
-// copy-paste leftover from the resident-facing IncidentDetailPage mockup
-// rather than intentional, since hiding reporter identity from an admin
-// contradicts FR-12 directly.
-//
-// SMS preview text uses the TRD's actual documented template (FR-16 —
-// category + community name only, no precise location) rather than the
-// Figma's more detailed example text, which named a specific vehicle and
-// location — that goes further than what FR-16 allows.
-// ---------------------------------------------------------------------
 
 interface Corroborator {
   name: string;
-  date: string;
-  relativeTime: string;
+  timestamp: string;
 }
 
-const MOCK_INCIDENT: Incident & { reporterRealName: string } = {
-  incident_id: "2",
-  reporter_id: "u2",
-  reporter_name: "Osita Udeh",
-  reporterRealName: "Osita Udeh",
-  community_id: "c1",
-  community_name: "Landmark Estate",
-  category: "Suspicious Person",
-  other_description: null,
-  description:
-    "Latest model silver SUV (possibly Toyota Rav4 or similar) seen circling the block for approximately 20 minutes. Driver appeared to be filming houses using a handheld device. No license plate visible due to temporary paper tag that was intentionally partially obscured by a dark frame.",
-  location: "Gate 4",
-  occurred_at: new Date(Date.now() - 7200000).toISOString(),
-  created_at: new Date(Date.now() - 7200000).toISOString(),
-  current_status: "Under Review",
-  corroboration_count: 11,
-  evidence: [
-    {
-      evidence_id: "e1",
-      file_url:
-        "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=600",
-      file_type: "JPEG",
-      created_at: new Date().toISOString(),
-    },
-    {
-      evidence_id: "e2",
-      file_url:
-        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600",
-      file_type: "JPEG",
-      created_at: new Date().toISOString(),
-    },
-  ],
-  status_history: [
-    {
-      status: "Reported",
-      changed_by: null,
-      reason: null,
-      timestamp: new Date(Date.now() - 3600000 * 6).toISOString(),
-    },
-    {
-      status: "Under Review",
-      changed_by: "Community Admin",
-      reason: null,
-      timestamp: new Date(Date.now() - 3600000 * 4).toISOString(),
-    },
-  ],
-  has_user_corroborated: false,
-};
-
-const MOCK_CORROBORATORS: Corroborator[] = [
-  { name: "Aziel Destiny", date: "Jul 22, 2026", relativeTime: "35 Mins ago" },
-  { name: "Faith Ola", date: "Jul 22, 2026", relativeTime: "29 Mins ago" },
-  { name: "Mikel oji", date: "Jul 22, 2026", relativeTime: "23 Mins ago" },
-  { name: "Musa Musa", date: "Jul 22, 2026", relativeTime: "21 Mins ago" },
-  { name: "Kate Obi", date: "Jul 22, 2026", relativeTime: "40 Mins ago" },
-];
-const ADDITIONAL_CORROBORATOR_COUNT = 6;
+const INITIAL_CORROBORATOR_COUNT = 5;
 
 type Decision = "verified" | "notVerified" | null;
 
@@ -110,15 +37,18 @@ const buildSmsPreview = (category: string, communityName: string) =>
   `Watchly: A ${category} incident in ${communityName} has been verified. Open the app for details.`;
 
 const AdminReviewPage = () => {
-  // :id from the route isn't wired to a real fetch yet — same situation
-  // as IncidentDetailPage. useIncidents.fetchIncidentDetail() is still a
-  // stub, so this renders one fixed mock incident regardless of the URL.
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const { isAdmin } = useCommunity();
+  const { fetchIncidentDetail } = useIncidents();
   const { updateStatus, loading } = useStatusUpdate();
   const { showToast } = useToast();
 
-  const [incident] = useState(MOCK_INCIDENT);
+  const [incident, setIncident] = useState<Incident | null>(null);
+  const [pageLoading, setPageLoading] = useState(true);
+  const [pageError, setPageError] = useState<string | null>(null);
+  const [corroborators, setCorroborators] = useState<Corroborator[]>([]);
+
   const [decision, setDecision] = useState<Decision>(null);
   const [verificationNote, setVerificationNote] = useState("");
   const [resolveNote, setResolveNote] = useState("");
@@ -127,29 +57,79 @@ const AdminReviewPage = () => {
   const [evidenceIndex, setEvidenceIndex] = useState(0);
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
+  const loadIncident = useCallback(async () => {
+    if (!id) return;
+    setPageLoading(true);
+    setPageError(null);
+    try {
+      const [incidentData, corroboratorData] = await Promise.all([
+        fetchIncidentDetail(id),
+        incidentsApi.corroborators(id, 1, 100),
+      ]);
+      setIncident(incidentData);
+      setCorroborators(corroboratorData);
+    } catch (err) {
+      setPageError(isApiError(err) ? err.message : "Failed to load incident");
+    } finally {
+      setPageLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
   useEffect(() => {
     if (!isAdmin) {
       navigate("/home");
     }
   }, [isAdmin, navigate]);
 
+  useEffect(() => {
+    // Fetch-on-mount/param-change: a genuine synchronization with the
+    // server, not a "derive state from props" antipattern.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadIncident();
+  }, [loadIncident]);
+
   if (!isAdmin) {
     return null;
   }
 
+  if (pageLoading) {
+    return <div className={styles.container}>Loading…</div>;
+  }
+
+  if (pageError || !incident) {
+    return (
+      <div className={styles.container}>
+        <ErrorState
+          message={pageError ?? "Incident not found."}
+          onRetry={loadIncident}
+        />
+      </div>
+    );
+  }
+
+  const title = incidentTitleFrom(incident.description);
   const isNoteRequired = decision === "notVerified";
   const canConfirmVerification =
     decision !== null && (!isNoteRequired || verificationNote.trim() !== "");
+
+  const visibleCorroborators = showMoreCorroborators
+    ? corroborators
+    : corroborators.slice(0, INITIAL_CORROBORATOR_COUNT);
+  const additionalCorroboratorCount = Math.max(
+    corroborators.length - INITIAL_CORROBORATOR_COUNT,
+    0,
+  );
 
   const handleBeginReview = async () => {
     try {
       await updateStatus(incident.incident_id, "Under Review");
       showToast("Review started", "Incident moved to Under Review.", "success");
       navigate("/admin/queue");
-    } catch {
+    } catch (err) {
       showToast(
-        "Status update not available yet",
-        "This feature needs a backend endpoint that doesn't exist yet.",
+        "Failed to update status",
+        isApiError(err) ? err.message : "Please try again.",
         "error",
       );
     }
@@ -158,9 +138,6 @@ const AdminReviewPage = () => {
   const handleConfirmVerificationClick = () => {
     if (!canConfirmVerification) return;
     if (decision === "verified") {
-      // Verified triggers an SMS to every community member — this needs
-      // an explicit "are you sure" per FR-14, which the inline panel
-      // alone doesn't provide.
       setShowVerifyConfirmDialog(true);
     } else {
       performVerificationUpdate();
@@ -183,10 +160,10 @@ const AdminReviewPage = () => {
         "success",
       );
       navigate("/admin/queue");
-    } catch {
+    } catch (err) {
       showToast(
-        "Verification not available yet",
-        "This feature needs a backend endpoint that doesn't exist yet.",
+        "Failed to update status",
+        isApiError(err) ? err.message : "Please try again.",
         "error",
       );
     }
@@ -205,10 +182,10 @@ const AdminReviewPage = () => {
         "success",
       );
       navigate("/admin/queue");
-    } catch {
+    } catch (err) {
       showToast(
-        "Resolution not available yet",
-        "This feature needs a backend endpoint that doesn't exist yet.",
+        "Failed to resolve incident",
+        isApiError(err) ? err.message : "Please try again.",
         "error",
       );
     }
@@ -231,14 +208,14 @@ const AdminReviewPage = () => {
             <div className={styles.headerRow}>
               <div className={styles.reporterInfo}>
                 <div className={styles.avatarFallback}>
-                  {incident.reporterRealName
+                  {incident.reporter_name
                     .split(" ")
                     .map((w) => w[0])
                     .join("")}
                 </div>
                 <div>
                   <p className={styles.reporterName}>
-                    {incident.reporterRealName}
+                    {incident.reporter_name}
                   </p>
                   <p className={styles.metaLine}>
                     {incident.location} .{" "}
@@ -250,9 +227,7 @@ const AdminReviewPage = () => {
             </div>
 
             <span className={styles.categoryTag}>{incident.category}</span>
-            <h1 className={styles.title}>
-              {incidentTitleFrom(incident.description)}
-            </h1>
+            {title && <h1 className={styles.title}>{title}</h1>}
             <p className={styles.description}>{incident.description}</p>
           </div>
 
@@ -261,6 +236,9 @@ const AdminReviewPage = () => {
               <Paperclip size={16} />
               Submitted Evidence
             </h2>
+            {incident.evidence.length === 0 && (
+              <p className={styles.evidenceCounter}>No evidence submitted.</p>
+            )}
             <div className={styles.evidenceGrid}>
               {incident.evidence.map((item, index) => (
                 <button
@@ -276,22 +254,24 @@ const AdminReviewPage = () => {
                 </button>
               ))}
             </div>
-            <div className={styles.evidenceFooter}>
-              <p className={styles.evidenceCounter}>
-                Photo {evidenceIndex + 1} of {incident.evidence.length}
-              </p>
-              <button
-                type="button"
-                className={styles.viewFullSizeLink}
-                onClick={() =>
-                  setLightboxUrl(
-                    incident.evidence[evidenceIndex]?.file_url ?? null,
-                  )
-                }
-              >
-                View Full Size
-              </button>
-            </div>
+            {incident.evidence.length > 0 && (
+              <div className={styles.evidenceFooter}>
+                <p className={styles.evidenceCounter}>
+                  Photo {evidenceIndex + 1} of {incident.evidence.length}
+                </p>
+                <button
+                  type="button"
+                  className={styles.viewFullSizeLink}
+                  onClick={() =>
+                    setLightboxUrl(
+                      incident.evidence[evidenceIndex]?.file_url ?? null,
+                    )
+                  }
+                >
+                  View Full Size
+                </button>
+              </div>
+            )}
             <p className={styles.privacyNote}>
               Evidence is only visible to Admin and is never shared publicly.
             </p>
@@ -302,49 +282,39 @@ const AdminReviewPage = () => {
               <Users size={16} />
               Community Corroboration
             </h2>
-            <p className={styles.signalLabel}>Strong Community Signal</p>
-            <div className={styles.signalBarTrack}>
-              <div className={styles.signalBarFill} style={{ width: "72%" }} />
-            </div>
+            <p className={styles.signalLabel}>
+              {corroborators.length} corroboration
+              {corroborators.length === 1 ? "" : "s"}
+            </p>
 
             <div className={styles.corroboratorList}>
-              {MOCK_CORROBORATORS.map((c) => (
-                <div key={c.name} className={styles.corroboratorRow}>
+              {visibleCorroborators.map((c, index) => (
+                <div key={`${c.name}-${index}`} className={styles.corroboratorRow}>
                   <div className={styles.corroboratorAvatar}>{c.name[0]}</div>
                   <div className={styles.corroboratorInfo}>
                     <p className={styles.corroboratorName}>{c.name}</p>
-                    <p className={styles.corroboratorDate}>{c.date}</p>
+                    <p className={styles.corroboratorDate}>
+                      {new Date(c.timestamp).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </p>
                   </div>
-                  <p className={styles.corroboratorTime}>{c.relativeTime}</p>
+                  <p className={styles.corroboratorTime}>
+                    {formatRelativeTime(c.timestamp)}
+                  </p>
                 </div>
               ))}
-
-              {showMoreCorroborators &&
-                Array.from({ length: ADDITIONAL_CORROBORATOR_COUNT }).map(
-                  (_, i) => (
-                    <div key={`extra-${i}`} className={styles.corroboratorRow}>
-                      <div className={styles.corroboratorAvatar}>R</div>
-                      <div className={styles.corroboratorInfo}>
-                        <p className={styles.corroboratorName}>
-                          Resident {i + 6}
-                        </p>
-                        <p className={styles.corroboratorDate}>Jul 22, 2026</p>
-                      </div>
-                      <p className={styles.corroboratorTime}>
-                        {45 + i} Mins ago
-                      </p>
-                    </div>
-                  ),
-                )}
             </div>
 
-            {!showMoreCorroborators && (
+            {!showMoreCorroborators && additionalCorroboratorCount > 0 && (
               <button
                 type="button"
                 className={styles.moreCorroborationsLink}
                 onClick={() => setShowMoreCorroborators(true)}
               >
-                +{ADDITIONAL_CORROBORATOR_COUNT} more corroborations
+                +{additionalCorroboratorCount} more corroborations
                 <ChevronDown size={16} />
               </button>
             )}
@@ -533,12 +503,6 @@ const AdminReviewPage = () => {
   );
 };
 
-const incidentTitleFrom = (description: string) => {
-  const firstSentence = description.split(".")[0];
-  return firstSentence.length > 60
-    ? firstSentence.slice(0, 60) + "…"
-    : firstSentence;
-};
 
 const formatRelativeTime = (isoDate: string) => {
   const diffMs = Date.now() - new Date(isoDate).getTime();

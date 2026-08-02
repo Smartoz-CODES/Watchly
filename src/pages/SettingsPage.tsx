@@ -2,7 +2,9 @@ import { useRef, useState } from "react";
 import { Pencil } from "lucide-react";
 import { useAuth } from "../hooks/use-auth";
 import { useCommunity } from "../hooks/use-community";
+import { useCommunities } from "../hooks/use-communities";
 import { useToast } from "../hooks/use-toast";
+import { isApiError } from "../lib/api";
 import ConfirmDialog from "../components/ConfirmDialog/ConfirmDialog";
 import styles from "./SettingsPage.module.css";
 
@@ -80,9 +82,8 @@ const COMMUNITY_NOTIFICATION_ROWS: {
 
 const SettingsPage = () => {
   const { user, deleteAccount, updateProfile } = useAuth();
-  const {
-    activeCommunity,
-  } = useCommunity();
+  const { activeCommunity, refreshCommunities } = useCommunity();
+  const { leaveCommunity } = useCommunities();
   const { showToast } = useToast();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -158,15 +159,23 @@ const SettingsPage = () => {
   };
 
   const handleLeaveCommunity = async () => {
-    // TODO: no leaveCommunity method exists in useCommunities or
-    // CommunityContext per the LLD — this needs a new hook method and
-    // likely a new Edge Function before it can actually do anything.
+    if (!activeCommunity) return;
     setLeaveDialogOpen(false);
-    showToast(
-      "Leave community not available yet",
-      "This feature needs a backend endpoint that doesn't exist yet.",
-      "error",
-    );
+    try {
+      await leaveCommunity(activeCommunity.community_id);
+      await refreshCommunities();
+      showToast(
+        "Left community",
+        `You've left ${activeCommunity.name}.`,
+        "success",
+      );
+    } catch (err) {
+      showToast(
+        "Failed to leave community",
+        isApiError(err) ? err.message : "Please try again.",
+        "error",
+      );
+    }
   };
 
   const handleDeleteAccount = async () => {
